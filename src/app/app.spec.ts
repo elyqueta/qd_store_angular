@@ -1,11 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { App } from './app';
+import { provideAppI18n } from './core/i18n/i18n.providers';
 import { ThemeService } from './core/theme/theme.service';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [...provideAppI18n()],
     }).compileComponents();
   });
 

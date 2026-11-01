@@ -1,0 +1,8 @@
+{
+  "common": {
+    "close": "Fechar",
+    "error": "Ocorreu um erro.",
+    "loading": "A carregar…",
+    "retry": "Tentar novamente"
+  }
+}
