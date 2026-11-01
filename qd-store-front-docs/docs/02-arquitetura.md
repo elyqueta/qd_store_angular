@@ -1,17 +1,20 @@
 # 02 · Arquitetura
 
 ## Camadas
+
 ```
 Página (rota) → Componentes de feature → Store/estado (signals) → data-access (HTTP) → API
                          ↓
                   shared/ui (apresentação pura)
 ```
+
 - **pages/**: ligam rota, SEO e dados; pouca lógica.
 - **components/**: apresentação da feature; recebem `input()`/emitem `output()`.
 - **data-access/**: um service por recurso da API; só HTTP e mapeamento.
 - **core/**: tudo o que é singleton e transversal.
 
 ## Estrutura alvo
+
 ```
 src/
   main.ts / main.server.ts / server.ts
@@ -46,10 +49,11 @@ src/
 ```
 
 ## Padrões
+
 - **Standalone + lazy:** cada `features/<x>/<x>.routes.ts` é carregado sob demanda.
 - **Estado:** signals em stores de feature (`providedIn: 'root'` só se for realmente global). Sem NgRx.
 - **Contratos:** interfaces TS espelham o JSON da API (`docs/08-api.md`); datas chegam como ISO string.
-- **Erros:** interceptor converte respostas de erro em `ApiError`; o componente decide como mostrar (toast, erro de campo no formulário via `details[].field`).
+- **Erros:** `apiErrorInterceptor` converte respostas HTTP em `ApiError`, preservando status, corpo e `details[].field`; falhas não HTTP mantêm o erro original. O componente decide a apresentação (toast, erro de campo no formulário), por implementar depois um serviço/componente de notificações.
 - **Config por ambiente:** `API_URL` injetado por token, nunca hardcoded.
 - **Dependência entre features:** proibida; partilhar via `shared/` ou `core/`.
 - **Escalabilidade:** nova feature = nova pasta com o mesmo esqueleto + entrada lazy em `app.routes.ts` + chaves i18n + item de navegação em `NAV_ITEMS`.

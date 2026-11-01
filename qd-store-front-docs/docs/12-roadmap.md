@@ -8,7 +8,8 @@
 - [x] `environments` + token `API_URL` (produção pendente de URL aprovada)
 - [ ] Tema claro/escuro + script anti-FOUC (`04`)
 - [ ] Transloco + `pt.json` + scopes (`05`)
-- [ ] Core HTTP: interceptors (auth, erros), `ApiError`, toasts
+- [x] Core HTTP: interceptor de erros e `ApiError`
+- [ ] Interceptor de autenticação, tratamento de erros 429/422/409 e toasts acessíveis
 - [ ] Layouts public/account/admin; navbar e footer (`09`)
 - [ ] UI kit mínimo (`03`)
 - [ ] SSR híbrido configurado (`10`); `SeoService`
