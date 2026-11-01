@@ -3,7 +3,7 @@
 ## Fonte
 - **Caminho/repositório do front antigo:** `../../../qd_store` (caminho absoluto nesta máquina: `/home/elyqueta/Documentos/projectos/qd/qd_store`; repositório `qd_store`, deploy `qd-store-one.vercel.app`).
 - O front antigo **continua a existir** e é só leitura. Não o alterar.
-- Inventário inicial: [docs/migracao/inventario.md](./migracao/inventario.md). As decisões por tela permanecem pendentes de validação pelo Elizandro.
+- Inventário e mapeamento aprovados: [docs/migracao/inventario.md](./migracao/inventario.md). As decisões D-008, D-009 e D-010 estão registadas em `docs/13-decisoes.md`.
 
 ## Princípio
 O layout está **aprovado**; a tecnologia é que não era adequada. Replicar o resultado visual, **não** os idiomas do React (estado, hooks, estrutura de ficheiros).

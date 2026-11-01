@@ -12,9 +12,11 @@
 | D-007 | Âmbito v1 = só o que o back-end já implementa | 2026-11-01 | |
 | D-008 | Home v1 usa hero editorial neutro; produtos apresentados apenas a partir de listas da API | 2026-11-01 | Não inventar critério de destaque nem banners/slides sem suporte no contrato. Escolha do Elizandro. |
 | D-009 | Usar apenas as rotas canónicas Angular, sem aliases React | 2026-11-01 | Actualizar links internos para as rotas de `07`; escolha do Elizandro. |
+| D-010 | Navbar v1 mantém categorias/mega-menus, pesquisa e estilo antigo; área de conta segue `09` | 2026-11-01 | Categorias/produtos vêm da API; visitantes têm Entrar/Criar conta; autenticados têm menu de utilizador; remover carrinho e atalho público de Empresas. Escolha do Elizandro. |
+| D-011 | Paleta escura semântica para o tema v1 | 2026-11-01 | `surface #1c1c1e`, `surface-muted #111111`, `fg #f2f2f2`, `fg-muted #aeaeb2`, `line #6e6e73`, `brand #66b2ff`, `brand-fg #111111`, `danger #ff6961`, `success #4ade80`, `warning #fbbf24`. Contraste calculado ≥ 4,5:1 para texto e ≥ 3:1 para linhas. Aprovada pelo Elizandro. |
 
 ## Perguntas em aberto (o agente deve perguntar em escolha múltipla)
-- Q-01 Caminho/repo do front antigo React — respondida: `../qd_store`; registado em `docs/11-migracao-do-react.md`.
+- Q-01 Caminho/repo do front antigo React — respondida: `../../../qd_store` (relativo a este documento); registado em `docs/11-migracao-do-react.md`.
 - Q-02 Versão do Angular no repo e uso de zoneless/Vitest vs runner por defeito.
 - Q-03 Onde será o deploy (Vercel com SSR, VPS/Docker…)?
 - Q-04 ESLint (angular-eslint) e `prettier-plugin-tailwindcss` aprovados como dev-tools?

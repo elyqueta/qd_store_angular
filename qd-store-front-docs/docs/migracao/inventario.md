@@ -36,7 +36,7 @@ Os pontos de quebra indicados são os utilitários Tailwind observados no React:
 
 | Componente | Onde aparece | Comportamento e dependências |
 |---|---|---|
-| `Navbar` | Todas as rotas | Navbar fixa com estado transparente/escuro na Home e fundo translúcido após scroll; mega-menu de categorias em desktop (a partir de 1130 px); menu móvel; pesquisa, perfil e carrinho. Fecha menus ao navegar. |
+| `Navbar` | Todas as rotas | Navbar fixa com estado transparente/escuro na Home e fundo translúcido após scroll; mega-menu de categorias em desktop (a partir de 1130 px); menu móvel; pesquisa e acções dependentes da sessão. Fecha menus ao navegar. Selecção para v1 aprovada em D-010. |
 | `CartDrawer` | Todas as rotas | Painel lateral e backdrop; lista vazia ou itens, alteração de quantidades, remoção, total e navegação para checkout. Estado não persistido. |
 | `WhatsAppButton` | Todas as rotas | Botão flutuante com mini-painel e ligação externa `wa.me`; esconde-se enquanto o carrinho está aberto. |
 | `Footer` | Todas as rotas | Ligações para loja, empresas, apoio, pagamentos, WhatsApp e perfil; logótipo. |
@@ -45,6 +45,17 @@ Os pontos de quebra indicados são os utilitários Tailwind observados no React:
 | `ProductCard` | Início, catálogo, detalhe e favoritos | Imagem, badge/desconto, nome, preço, acções de favorito/carrinho e efeitos de tilt/entrada; depende dos contextos de carrinho, wishlist e notificações. |
 | `BuyModal` | Detalhe, favoritos e outros pontos de compra | Modal para fluxo pessoal/empresa, com estado e validação locais; não submete uma encomenda à API. |
 | `CreditCalculator` | Componente disponível | Calculadora visual de crédito. Não foi identificada como dependência de uma rota no `App.jsx`; confirmar se deve entrar no inventário de telas a migrar. |
+
+### Navbar — links e comportamento observados
+
+- **Logótipo:** `public/favicon.webp`, botão para `/`; navbar fixa com altura `70px`.
+- **Links desktop**, visíveis a partir de `1130px`, por ordem: Início, Smartphones, Laptops, Desktops, Som, Gaming, Extra, Empresas. Smartphones/Laptops/Desktops/Som/Gaming/Extra abrem mega-menu com cartões de produto e CTA da categoria; Início e Empresas navegam directamente.
+- **Mega-menu:** abre por hover; apresenta três cartões com imagem/nome/subtítulo e um CTA. Fecha ao sair, com atraso de `150ms`. Não foi observado um estado de rota activa nem interacção de teclado para abrir o menu.
+- **Acções à direita:** pesquisa a partir de `770px`; carrinho em todos os tamanhos; perfil e Empresas a partir de `770px`; hamburger abaixo de `770px`. O carrinho mostra badge com quantidade.
+- **Menu mobile:** drawer de ecrã inteiro com acções rápidas Pesquisa, Carrinho, Perfil e Empresas, seguido dos links na ordem desktop. O item visual “Catálogo” é rotulado como “Início” no código de dados e leva a `/`; é uma inconsistência do React, não um comportamento a preservar.
+- **Estado visual:** na Home, fundo escuro/transparente e texto claro até scroll superior a `10px`; depois usa fundo translúcido com texto escuro. Nas restantes rotas começa com fundo translúcido. Hover altera a cor do texto.
+- **Decisão para v1 (D-010):** manter links/categorias e mega-menus abastecidos pela API, pesquisa e estilo antigo; apresentar Entrar/Criar conta a visitantes e o menu de utilizador de `docs/09-navbar.md` a autenticados; remover carrinho e o atalho público de Empresas.
+- **Limite de migração:** actualizar os destinos para as rotas canónicas D-009; categorias/produtos dos mega-menus vêm da API, sem listas hardcoded do React.
 
 ## Dados e integração
 
@@ -158,7 +169,7 @@ As rotas novas acima são as rotas canónicas descritas em `docs/07-rotas-e-perf
 | `Hero` e `TeslaSection` | Componentes da feature catalog, em `features/catalog/components/` | Recriar em templates Angular com dados explicitamente aprovados; animações sem dependências React/Framer Motion. A rotação visual de slides não implica que a API forneça slides. |
 | `ProductCard` | `features/catalog/components/product-card` | Componente de apresentação com inputs tipados para produtos. Omitir acções de carrinho/wishlist na v1. |
 | `DragFollowWrapper`, `useTilt`, `useReveal`, Lenis e Framer Motion | Sem tradução directa | Efeitos não são requisitos de dados/negócio. Reavaliar apenas efeitos visuais com APIs nativas/CSS/Tailwind, respeitando acessibilidade e movimento reduzido; não adicionar bibliotecas não aprovadas. |
-| `Navbar`, `Footer` | Layout `public` / componentes de layout | Navbar tem inventário real neste documento; a selecção final de links/itens e a construção continuam sujeitas ao processo obrigatório de `docs/09-navbar.md`. Links de conta devem respeitar as rotas existentes e o perfil autenticado. |
+| `Navbar`, `Footer` | Layout `public` / componentes de layout | Navbar tem inventário real e selecção v1 aprovada em D-010; links de conta devem respeitar as rotas existentes e o perfil autenticado. |
 | `CartDrawer`, `CartContext`, `BuyModal`, `CreditCalculator` | Sem destino v1 | Dependem de carrinho, checkout ou crédito sem endpoints; não criar serviços ou dados simulados para os substituir. |
 | `WishlistContext` e tab de favoritos | Sem destino v1 | Wishlist não tem endpoint documentado. |
 | `NotificationContext` | `core/notifications/toast.service.ts` + componente `shared/ui/toast` | Apenas mensagens transitórias da interface e de erros; não representar notificações persistentes do utilizador. |
@@ -172,7 +183,7 @@ As rotas novas acima são as rotas canónicas descritas em `docs/07-rotas-e-perf
 1. **Conteúdo da Home:** decisão D-008 resolvida: hero editorial neutro e produtos apenas de listas da API; não seleccionar produtos por posição nem criar endpoint.
 2. **Rotas antigas:** decisão D-009 resolvida: usar apenas as rotas canónicas de `07` e actualizar links internos, sem aliases React.
 3. **Empresas do cliente:** a listagem própria depende de resolver L-05; não usar o endpoint admin para contornar a autorização.
-4. **Navbar:** inventário feito, mas a construção e selecção final dos itens continuam bloqueadas pela validação específica de `09-navbar.md`.
+4. **Navbar:** selecção v1 registada em D-010 e `09-navbar.md`; a implementação aguarda plano aprovado.
 5. **Fluxos adiados:** carrinho, checkout, pagamentos, encomendas, wishlist, edição de perfil e notificações persistentes permanecem sem UI funcional até existir contrato de API.
 
 ## Referências React

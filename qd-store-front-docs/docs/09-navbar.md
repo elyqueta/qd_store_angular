@@ -5,6 +5,13 @@
 2. Apresenta ao Elizandro; ele indica o que implementar agora.
 3. Só então se constrói. **Os links existentes mantêm exatamente o estilo antigo.**
 
+## Selecção aprovada para v1 (2026-11-01)
+- Manter links de categorias, mega-menus, pesquisa e estilo visual antigo; categorias e produtos dos menus são carregados da API.
+- Visitante: "Entrar" e "Criar conta".
+- Utilizador autenticado: dropdown descrito nesta documentação.
+- Remover o carrinho e o atalho público para Empresas, por não corresponderem a funcionalidades/rotas públicas da v1.
+- Registado como D-010 em `docs/13-decisoes.md`.
+
 ## O que muda
 Apenas a área do utilizador:
 - **Visitante:** links/botões "Entrar" e "Criar conta" (estilo antigo).
