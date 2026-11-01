@@ -53,7 +53,7 @@ src/
 - **Standalone + lazy:** cada `features/<x>/<x>.routes.ts` é carregado sob demanda.
 - **Estado:** signals em stores de feature (`providedIn: 'root'` só se for realmente global). Sem NgRx.
 - **Contratos:** interfaces TS espelham o JSON da API (`docs/08-api.md`); datas chegam como ISO string.
-- **Erros:** `apiErrorInterceptor` converte respostas HTTP em `ApiError`, preservando status, corpo e `details[].field`; falhas não HTTP mantêm o erro original. O componente decide a apresentação (toast, erro de campo no formulário), por implementar depois um serviço/componente de notificações.
+- **Erros:** `apiErrorInterceptor` converte respostas HTTP em `ApiError`, preservando status, corpo e `details[].field`; falhas não HTTP mantêm o erro original. Os erros de formulário são apresentados junto dos campos; a falha 401 de refresh gera toast acessível através de `ToastService` e `ToastRegionComponent`.
 - **Config por ambiente:** `API_URL` injetado por token, nunca hardcoded.
 - **Dependência entre features:** proibida; partilhar via `shared/` ou `core/`.
 - **Escalabilidade:** nova feature = nova pasta com o mesmo esqueleto + entrada lazy em `app.routes.ts` + chaves i18n + item de navegação em `NAV_ITEMS`.

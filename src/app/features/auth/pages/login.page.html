@@ -1,0 +1,80 @@
+<main class="mx-auto flex min-h-screen max-w-lg items-center px-4 py-12">
+  <section class="w-full rounded-2xl border border-line bg-surface p-6 shadow-lg sm:p-8">
+    <h1 class="text-2xl font-semibold text-fg">{{ 'auth.login.title' | transloco }}</h1>
+    <p class="mt-2 text-sm text-fg-muted">{{ 'auth.login.description' | transloco }}</p>
+
+    <form class="mt-8 space-y-5" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div>
+        <label for="login-email" class="mb-2 block text-sm font-medium text-fg">
+          {{ 'auth.fields.email' | transloco }}
+        </label>
+        <input
+          id="login-email"
+          class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          type="email"
+          autocomplete="email"
+          formControlName="email"
+          [attr.aria-invalid]="form.controls.email.invalid && form.controls.email.touched"
+          [attr.aria-describedby]="
+            form.controls.email.invalid && form.controls.email.touched ? 'login-email-error' : null
+          "
+        />
+        @if (form.controls.email.invalid && form.controls.email.touched) {
+          <p id="login-email-error" class="mt-1 text-sm text-danger" aria-live="polite">
+            {{ 'auth.validation.email' | transloco }}
+          </p>
+        }
+      </div>
+
+      <div>
+        <label for="login-password" class="mb-2 block text-sm font-medium text-fg">
+          {{ 'auth.fields.password' | transloco }}
+        </label>
+        <input
+          id="login-password"
+          class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          type="password"
+          autocomplete="current-password"
+          formControlName="password"
+          [attr.aria-invalid]="form.controls.password.invalid && form.controls.password.touched"
+          [attr.aria-describedby]="
+            form.controls.password.invalid && form.controls.password.touched
+              ? 'login-password-error'
+              : null
+          "
+        />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <p id="login-password-error" class="mt-1 text-sm text-danger" aria-live="polite">
+            {{ 'auth.validation.required' | transloco }}
+          </p>
+        }
+      </div>
+
+      @if (errorMessage(); as message) {
+        <p class="rounded-lg bg-surface-muted p-3 text-sm text-danger" role="alert">
+          {{ message }}
+        </p>
+      } @else if (submitting()) {
+        <p class="text-sm text-fg-muted" role="status">{{ 'common.loading' | transloco }}</p>
+      }
+
+      <button
+        class="w-full rounded-lg bg-brand px-4 py-3 font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60"
+        type="submit"
+        [disabled]="submitting()"
+      >
+        {{ 'auth.login.submit' | transloco }}
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-fg-muted">
+      {{ 'auth.login.registerPrompt' | transloco }}
+      <a
+        class="font-medium text-brand underline-offset-4 hover:underline"
+        routerLink="/criar-conta"
+      >
+        {{ 'auth.login.registerLink' | transloco }}
+      </a>
+    </p>
+  </section>
+</main>

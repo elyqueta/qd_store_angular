@@ -1,6 +1,6 @@
 # 08 · Contrato da API (estado atual)
 
-Base URL: token de injecção `API_URL` (dev: `http://localhost:3000`); os endpoints abaixo são relativos a `${API_URL}/api`. O cliente HTTP usa `withFetch()` para compatibilidade com SSR. Em produção, `API_URL` permanece deliberadamente por configurar: a aplicação falha explicitamente ao injectar o token até existir um destino aprovado. A configuração pode ser substituída no servidor se a API usar uma URL interna.
+Base URL: token de injecção `API_URL` (ambiente local actual: `http://localhost:1914` para Docker Compose; serviço local directo: `http://localhost:3000`); os endpoints de domínio usam o prefixo `${API_URL}/api/v1`. O cliente HTTP usa `withFetch()` para compatibilidade com SSR. Em produção, `API_URL` permanece deliberadamente por configurar: a aplicação falha explicitamente ao injectar o token até existir um destino aprovado. A configuração pode ser substituída no servidor se a API usar uma URL interna.
 
 Documentação interactiva do back-end: `/api-docs`, spec em `/openapi.json` (fora de produção). **Adicionar `http://localhost:4200` ao `CORS_ORIGIN` do back-end** em desenvolvimento.
 
@@ -34,26 +34,26 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 
 ## Endpoints
 
-**Auth** (`/api/auth`): `POST /register`, `POST /login`, `POST /refresh`, `POST /logout`.
+**Auth** (`/api/v1/auth`): `POST /register` (cria conta pessoal e devolve `User`), `POST /login` e `POST /refresh` (devolvem `AuthResult`), `POST /logout` (204). Login envia `{ email, password }`; registo envia `{ fullName, email, password, phone, accountType: 'personal', nif? }`; refresh/logout enviam `{ refreshToken }`.
 
-**Categorias** (`/api/categories`): `GET /` e `GET /:id` públicos; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se tiver produtos).
+**Categorias** (`/api/v1/categories`): `GET /` e `GET /:id` públicos; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se tiver produtos).
 
-**Produtos** (`/api/products`): `GET /?page&limit(≤100)&categoryId&status` público (inclui `categoryName`); `GET /:id`; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado).
+**Produtos** (`/api/v1/products`): `GET /?page&limit(≤100)&categoryId&status` público (inclui `categoryName`); `GET /:id`; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado).
 
-- Imagens `/api/products/:productId/images`: `GET` público; `POST`, `PATCH /:id`, `DELETE /:id` admin. Só URL (sem upload).
-- Especificações `/api/products/:productId/specifications`: idem; `displayOrder` obrigatório.
+- Imagens `/api/v1/products/:productId/images`: `GET` público; `POST`, `PATCH /:id`, `DELETE /:id` admin. Só URL (sem upload).
+- Especificações `/api/v1/products/:productId/specifications`: idem; `displayOrder` obrigatório.
 
-**Tipos de entrega** (`/api/delivery-types`): `GET /` (só ativos) e `GET /:id` públicos; `POST`, `PATCH`, `DELETE` (=desativar) admin.
+**Tipos de entrega** (`/api/v1/delivery-types`): `GET /` (só ativos) e `GET /:id` públicos; `POST`, `PATCH`, `DELETE` (=desactivar) admin.
 
-**Localizações** (`/api/locations`): `GET /` (21 províncias + municípios), `GET /provinces`, `GET /provinces/:slug/municipalities`. Públicos; carregar uma vez e cachear.
+**Localizações** (`/api/v1/locations`): `GET /` (21 províncias + municípios), `GET /provinces`, `GET /provinces/:slug/municipalities`. Públicos; carregar uma vez e cachear.
 
-**Moradas** (`/api/addresses`, auth, sempre do utilizador do token): `GET /`, `POST /`, `GET /:id`, `PATCH /:id` (province+municipality **juntos**), `DELETE /:id`, `PATCH /:id/default`. A primeira morada fica padrão automaticamente.
+**Moradas** (`/api/v1/addresses`, auth, sempre do utilizador do token): `GET /`, `POST /`, `GET /:id`, `PATCH /:id` (province+municipality **juntos**), `DELETE /:id`, `PATCH /:id/default`. A primeira morada fica padrão automaticamente.
 
-**Empresas** (`/api/companies`, auth): `POST /` (qualquer utilizador autenticado; fica proprietário), `GET /` **admin**, `GET /:id`, `PATCH /:id` e `DELETE /:id` (proprietário ou admin; `DELETE` = soft delete). `nif` imutável (enviar → 422).
+**Empresas** (`/api/v1/companies`, auth): `POST /` (qualquer utilizador autenticado; fica proprietário), `GET /` **admin**, `GET /:id`, `PATCH /:id` e `DELETE /:id` (proprietário ou admin; `DELETE` = soft delete). `nif` imutável (enviar → 422).
 
-- Utilizadores `/api/companies/:companyId/users`: `POST` (owner/admin), `GET` (admin ou membro), `PATCH /:userId` (cargo), `DELETE /:userId`.
+- Utilizadores `/api/v1/companies/:companyId/users`: `POST` (owner/admin), `GET` (admin ou membro), `PATCH /:userId` (cargo), `DELETE /:userId`.
 
-**Admin** (`/api/admin`): `GET /companies` → empresas com `users[]`.
+**Admin** (`/api/v1/admin`): `GET /companies` → empresas com `users[]`.
 
 **Saúde:** `GET /health`.
 

@@ -17,10 +17,11 @@
 
 ## Fase 1 — Autenticação
 
-- [ ] Criar conta · Login · Logout
-- [ ] AuthStore, TokenStorage, refresh single-flight, restauro no arranque
-- [ ] Guards (auth, guest, role); `returnUrl`
-- [ ] Tratamento de 429/422/409
+- [x] Criar conta pessoal · Login · Logout
+- [x] AuthStore, TokenStorage, refresh single-flight, restauro no arranque
+- [x] Guards (auth, guest, admin); `returnUrl`
+- [x] Apresentação dos erros de login/registo (inclui 409/422/429 devolvidos pela API)
+- [x] Toasts acessíveis para erros de sessão e notificações transitórias
 
 ## Fase 2 — Área pública
 
