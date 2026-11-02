@@ -49,6 +49,7 @@
     "userMenu": "Abrir menu do utilizador",
     "login": "Entrar",
     "register": "Criar conta",
+    "profile": "Perfil",
     "logout": "Sair",
     "menu": "Abrir menu",
     "themeToggle": "Alternar tema"
@@ -60,6 +61,25 @@
     "whatsapp": "WhatsApp",
     "copyright": "© {{ year }} QD · ItSOLUTIONS",
     "rights": "Todos os direitos reservados"
+  },
+  "account": {
+    "profile": {
+      "kicker": "Conta",
+      "title": "O meu perfil",
+      "description": "Consulta os dados pessoais associados à tua sessão.",
+      "personalData": "Dados pessoais",
+      "fullName": "Nome completo",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "nif": "NIF",
+      "accountType": "Tipo de conta",
+      "accountTypeValue": {
+        "personal": "Pessoal",
+        "business": "Empresarial"
+      },
+      "notProvided": "Não indicado",
+      "unavailable": "Não foi possível apresentar os dados da sessão."
+    }
   },
   "seo": {
     "home": {

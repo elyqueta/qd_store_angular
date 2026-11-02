@@ -129,22 +129,36 @@
               (keydown.arrowdown)="focusMenuItem($event, 'qd-user-menu', 1)"
               (keydown.arrowup)="focusMenuItem($event, 'qd-user-menu', -1)"
             >
-              @for (item of userMenuItems; track item.action) {
-                <button
-                  type="button"
-                  role="menuitem"
-                  (click)="handleUserMenuAction(item.action)"
-                  class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-fg transition-colors hover:bg-surface-muted"
-                >
-                  @if (item.action === 'theme') {
-                    @if (themeService.effective() === 'dark') {
-                      <span aria-hidden="true">☀️</span>
-                    } @else {
-                      <span aria-hidden="true">🌙</span>
-                    }
+              @for (item of userMenuItems; track item.labelKey) {
+                @switch (item.kind) {
+                  @case ('link') {
+                    <a
+                      [routerLink]="item.route"
+                      role="menuitem"
+                      (click)="userMenuOpen.set(false)"
+                      class="block rounded-xl px-3 py-2 text-sm text-fg transition-colors hover:bg-surface-muted"
+                    >
+                      {{ item.labelKey | transloco }}
+                    </a>
                   }
-                  {{ item.labelKey | transloco }}
-                </button>
+                  @case ('action') {
+                    <button
+                      type="button"
+                      role="menuitem"
+                      (click)="handleUserMenuAction(item.action)"
+                      class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-fg transition-colors hover:bg-surface-muted"
+                    >
+                      @if (item.action === 'theme') {
+                        @if (themeService.effective() === 'dark') {
+                          <span aria-hidden="true">☀️</span>
+                        } @else {
+                          <span aria-hidden="true">🌙</span>
+                        }
+                      }
+                      {{ item.labelKey | transloco }}
+                    </button>
+                  }
+                }
               }
             </div>
           }
@@ -220,7 +234,20 @@
           <p class="px-3 py-2 text-sm text-danger">{{ 'public.errors.categories' | transloco }}</p>
         }
 
-        @if (!isAuthenticated()) {
+        @if (isAuthenticated()) {
+          @for (item of userMenuItems; track item.labelKey) {
+            @if (item.kind === 'link') {
+              <a
+                [routerLink]="item.route"
+                routerLinkActive="text-brand"
+                class="rounded-xl px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-brand"
+                (click)="mobileOpen.set(false)"
+              >
+                {{ item.labelKey | transloco }}
+              </a>
+            }
+          }
+        } @else {
           <div class="mt-2 flex gap-2">
             <a
               class="flex-1 rounded-full border border-line px-4 py-2 text-center text-sm font-medium text-fg"

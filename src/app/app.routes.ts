@@ -1,8 +1,16 @@
 import { Routes } from '@angular/router';
-import { guestGuard } from './core/auth/auth.guards';
+import { authGuard, guestGuard } from './core/auth/auth.guards';
+import { AccountLayoutComponent } from './layouts/account/account-layout.component';
 import { PublicLayoutComponent } from './layouts/public/public-layout.component';
 
 export const routes: Routes = [
+  {
+    path: 'conta',
+    component: AccountLayoutComponent,
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./features/account/account.routes').then((module) => module.accountRoutes),
+  },
   {
     path: '',
     component: PublicLayoutComponent,

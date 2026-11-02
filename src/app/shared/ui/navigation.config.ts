@@ -5,10 +5,9 @@ export interface NavigationItem {
 
 export type UserMenuAction = 'theme' | 'logout';
 
-export interface UserMenuItem {
-  action: UserMenuAction;
-  labelKey: string;
-}
+export type UserMenuItem =
+  | { kind: 'link'; labelKey: string; route: string }
+  | { kind: 'action'; labelKey: string; action: UserMenuAction };
 
 export const NAV_ITEMS: readonly NavigationItem[] = [
   { labelKey: 'nav.home', route: '/' },
@@ -18,6 +17,7 @@ export const NAV_ITEMS: readonly NavigationItem[] = [
 ];
 
 export const USER_MENU_ITEMS: readonly UserMenuItem[] = [
-  { action: 'theme', labelKey: 'nav.themeToggle' },
-  { action: 'logout', labelKey: 'nav.logout' },
+  { kind: 'link', labelKey: 'nav.profile', route: '/conta/perfil' },
+  { kind: 'action', action: 'theme', labelKey: 'nav.themeToggle' },
+  { kind: 'action', action: 'logout', labelKey: 'nav.logout' },
 ];

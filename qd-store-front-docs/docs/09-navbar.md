@@ -21,8 +21,8 @@ Apenas a área do utilizador:
 - **Visitante:** links/botões "Entrar" e "Criar conta" (estilo antigo).
 - **Autenticado:** **ícone principal** (avatar/iniciais) que abre um **dropdown** com:
   - Perfil
-  - Moradas
-  - Empresas
+  - Moradas (quando a rota estiver implementada)
+  - Empresas (quando as rotas estiverem implementadas)
   - Painel de administração (só `admin`)
   - Alternar tema (claro/escuro/sistema)
   - Idioma (escondido até existir `en`)
@@ -37,3 +37,5 @@ Apenas a área do utilizador:
 - Sem item ativo duplicado; `routerLinkActive` com estilo do front antigo.
 
 Na implementação pública inicial, as categorias e as sugestões do menu são consultadas em `GET /api/v1/categories` e `GET /api/v1/products`; o resultado de categorias fica em cache durante a sessão. O menu abre por clique/teclado e fecha com Escape ou clique fora. As entradas de conta só são mostradas quando a respectiva rota está implementada.
+
+O perfil está disponível em `/conta/perfil` para utilizadores autenticados, no menu desktop e na navegação mobile. Mostra apenas os dados da sessão; moradas, empresas e acções sem suporte actual da API não são apresentados como atalhos activos.

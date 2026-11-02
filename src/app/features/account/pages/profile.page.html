@@ -1,0 +1,77 @@
+<main class="min-h-[60vh] bg-surface-muted pb-16">
+  <header class="border-b border-line bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+        {{ 'account.profile.kicker' | transloco }}
+      </p>
+      <h1 class="text-3xl font-semibold tracking-tight text-fg">
+        {{ 'account.profile.title' | transloco }}
+      </h1>
+      <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+        {{ 'account.profile.description' | transloco }}
+      </p>
+    </div>
+  </header>
+
+  @if (user(); as profile) {
+    <div
+      class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 pt-8 sm:px-6 lg:grid-cols-[minmax(0,280px)_1fr] lg:px-8"
+    >
+      <aside class="h-fit rounded-2xl border border-line bg-surface p-6">
+        <div class="flex items-center gap-4 lg:flex-col lg:items-start">
+          <div
+            class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand/10 text-lg font-semibold text-brand"
+            aria-hidden="true"
+          >
+            {{ initials() }}
+          </div>
+          <div class="min-w-0">
+            <h2 class="truncate text-lg font-semibold text-fg">{{ profile.fullName }}</h2>
+            <p class="break-all text-sm text-fg-muted">{{ profile.email }}</p>
+          </div>
+        </div>
+        <div class="mt-6 border-t border-line pt-5">
+          <p class="text-xs font-medium uppercase tracking-wide text-fg-muted">
+            {{ 'account.profile.accountType' | transloco }}
+          </p>
+          <p class="mt-1 text-sm font-medium text-fg">
+            {{ 'account.profile.accountTypeValue.' + profile.accountType | transloco }}
+          </p>
+        </div>
+      </aside>
+
+      <section
+        class="rounded-2xl border border-line bg-surface p-6 sm:p-8"
+        aria-labelledby="qd-profile-details-heading"
+      >
+        <h2 id="qd-profile-details-heading" class="mb-6 text-base font-semibold text-fg">
+          {{ 'account.profile.personalData' | transloco }}
+        </h2>
+        <dl class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm text-fg-muted">{{ 'account.profile.fullName' | transloco }}</dt>
+            <dd class="mt-1 break-words text-sm font-medium text-fg">{{ profile.fullName }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-fg-muted">{{ 'account.profile.email' | transloco }}</dt>
+            <dd class="mt-1 break-all text-sm font-medium text-fg">{{ profile.email }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-fg-muted">{{ 'account.profile.phone' | transloco }}</dt>
+            <dd class="mt-1 text-sm font-medium text-fg">{{ profile.phone }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-fg-muted">{{ 'account.profile.nif' | transloco }}</dt>
+            <dd class="mt-1 text-sm font-medium text-fg">
+              {{ profile.nif ?? ('account.profile.notProvided' | transloco) }}
+            </dd>
+          </div>
+        </dl>
+      </section>
+    </div>
+  } @else {
+    <p class="mx-auto max-w-7xl px-4 py-8 text-sm text-danger sm:px-6 lg:px-8" role="status">
+      {{ 'account.profile.unavailable' | transloco }}
+    </p>
+  }
+</main>
