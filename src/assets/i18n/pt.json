@@ -38,5 +38,95 @@
       "phone": "O telefone deve ter entre 9 e 20 caracteres.",
       "required": "Este campo é obrigatório."
     }
+  },
+  "nav": {
+    "home": "Início",
+    "catalog": "Catálogo",
+    "about": "Sobre nós",
+    "contact": "Contactos",
+    "primary": "Navegação principal",
+    "search": "Pesquisar produtos",
+    "userMenu": "Abrir menu do utilizador",
+    "login": "Entrar",
+    "register": "Criar conta",
+    "logout": "Sair",
+    "menu": "Abrir menu",
+    "themeToggle": "Alternar tema"
+  },
+  "footer": {
+    "description": "Explora o catálogo da QD · ItSOLUTIONS e encontra produtos de tecnologia disponíveis.",
+    "linksTitle": "Navegação",
+    "contactTitle": "Contacto",
+    "whatsapp": "WhatsApp",
+    "copyright": "© {{ year }} QD · ItSOLUTIONS",
+    "rights": "Todos os direitos reservados"
+  },
+  "public": {
+    "home": {
+      "title": "Tecnologia que acompanha o teu dia.",
+      "subtitle": "Explora o catálogo da QD · ItSOLUTIONS e conhece os produtos de tecnologia disponíveis.",
+      "primaryCta": "Explorar produtos",
+      "secondaryCta": "Conhecer a marca"
+    },
+    "categories": {
+      "label": "Categorias",
+      "title": "Explora por área",
+      "viewAll": "Ver tudo"
+    },
+    "featured": {
+      "label": "Catálogo",
+      "title": "Produtos disponíveis",
+      "empty": "Não existem produtos disponíveis neste momento."
+    },
+    "catalog": {
+      "label": "Catálogo",
+      "title": "Produtos de tecnologia",
+      "all": "Todas",
+      "empty": "Não existem produtos para os filtros seleccionados.",
+      "statusLabel": "Filtrar produtos por estado",
+      "status": {
+        "active": "Disponíveis",
+        "outOfStock": "Esgotados",
+        "inactive": "Indisponíveis"
+      },
+      "pagination": "Paginação do catálogo",
+      "previous": "Anterior",
+      "next": "Seguinte",
+      "page": "Página"
+    },
+    "product": {
+      "noDescription": "Sem descrição adicional disponível neste momento.",
+      "categoryFallback": "Tecnologia",
+      "savings": "Poupas",
+      "backToCatalog": "Voltar ao catálogo",
+      "specifications": "Especificações",
+      "related": "Produtos relacionados"
+    },
+    "about": {
+      "kicker": "Sobre nós",
+      "title": "QD · ItSOLUTIONS",
+      "description": "Consulta o catálogo para conhecer os produtos de tecnologia disponíveis."
+    },
+    "contact": {
+      "kicker": "Contactos",
+      "title": "Fala com a nossa equipa",
+      "whatsapp": "Contactar pelo WhatsApp"
+    },
+    "nav": {
+      "viewCategory": "Ver todos os produtos desta categoria"
+    },
+    "notFound": {
+      "title": "Página não encontrada",
+      "description": "A página que procuras não existe ou foi movida.",
+      "backHome": "Voltar ao início"
+    },
+    "errors": {
+      "categories": "Não foi possível carregar as categorias.",
+      "featured": "Não foi possível carregar os produtos em destaque.",
+      "catalog": "Não foi possível carregar o catálogo.",
+      "product": "Não foi possível carregar a informação do produto.",
+      "relatedProducts": "Não foi possível carregar produtos relacionados.",
+      "menuProducts": "Não foi possível carregar produtos desta categoria."
+    }
   }
 }

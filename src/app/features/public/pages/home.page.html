@@ -1,0 +1,116 @@
+<main class="bg-surface-muted">
+  <section class="relative overflow-hidden bg-fg">
+    <div class="absolute inset-0 bg-gradient-to-br from-fg via-fg/90 to-brand/50"></div>
+    <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full border border-white/10"></div>
+    <div class="absolute -right-16 -top-16 h-64 w-64 rounded-full border border-white/10"></div>
+
+    <div class="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
+      <div class="max-w-2xl">
+        <p class="text-xs font-medium uppercase tracking-[0.26em] text-surface/70">
+          QD · ItSOLUTIONS
+        </p>
+        <h1 class="mt-4 text-4xl font-semibold tracking-tight text-surface sm:text-5xl lg:text-6xl">
+          {{ 'public.home.title' | transloco }}
+        </h1>
+        <p class="mt-6 max-w-xl text-base leading-7 text-surface/80 sm:text-lg">
+          {{ 'public.home.subtitle' | transloco }}
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            [routerLink]="'/produtos'"
+            class="inline-flex items-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-fg transition-colors hover:opacity-90"
+          >
+            {{ 'public.home.primaryCta' | transloco }}
+          </a>
+          <a
+            [routerLink]="'/sobre'"
+            class="inline-flex items-center rounded-full border border-surface/30 bg-surface/5 px-6 py-3 text-sm font-semibold text-surface transition-colors hover:border-surface/60 hover:bg-surface/10"
+          >
+            {{ 'public.home.secondaryCta' | transloco }}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mb-8 flex items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-[0.22em] text-fg-muted">
+          {{ 'public.categories.label' | transloco }}
+        </p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+          {{ 'public.categories.title' | transloco }}
+        </h2>
+      </div>
+      <a
+        [routerLink]="'/produtos'"
+        class="text-sm font-medium text-brand transition-colors hover:text-brand/80"
+      >
+        {{ 'public.categories.viewAll' | transloco }}
+      </a>
+    </div>
+
+    @if (categories().length) {
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+        @for (category of categories(); track category.id) {
+          <a
+            [routerLink]="'/produtos'"
+            [queryParams]="{ categoria: category.slug }"
+            class="rounded-2xl border border-line bg-surface p-4 text-center shadow-sm transition-transform hover:-translate-y-1 hover:border-brand"
+          >
+            <div
+              class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted text-xl"
+            >
+              {{ category.icon || '📦' }}
+            </div>
+            <p class="font-medium text-fg">{{ category.label }}</p>
+          </a>
+        }
+      </div>
+    } @else if (categoriesError()) {
+      <p class="rounded-2xl border border-danger/30 bg-danger/10 p-4 text-sm text-danger">
+        {{ 'public.errors.categories' | transloco }}
+      </p>
+    }
+  </section>
+
+  <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
+    <div class="mb-8 text-center">
+      <p class="text-xs font-medium uppercase tracking-[0.22em] text-fg-muted">
+        {{ 'public.featured.label' | transloco }}
+      </p>
+      <h2 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+        {{ 'public.featured.title' | transloco }}
+      </h2>
+    </div>
+
+    @if (loading()) {
+      <div
+        role="status"
+        aria-live="polite"
+        class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+      >
+        {{ 'common.loading' | transloco }}
+      </div>
+    } @else if (error()) {
+      <div
+        role="alert"
+        class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center text-danger"
+      >
+        {{ error() | transloco }}
+      </div>
+    } @else if (!featuredProducts().length) {
+      <div class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted">
+        {{ 'public.featured.empty' | transloco }}
+      </div>
+    } @else {
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        @for (product of featuredProducts(); track product.id) {
+          <qd-product-card [product]="product" />
+        }
+      </div>
+    }
+  </section>
+</main>

@@ -1,0 +1,119 @@
+<main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  <div class="mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+    <div>
+      <p class="text-xs font-medium uppercase tracking-[0.2em] text-fg-muted">
+        {{ 'public.catalog.label' | transloco }}
+      </p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+        {{ 'public.catalog.title' | transloco }}
+      </h1>
+    </div>
+
+    <div class="flex flex-wrap gap-2">
+      <a
+        [routerLink]="'/produtos'"
+        class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+        [class.border-brand]="!selectedCategory()"
+        [class.text-brand]="!selectedCategory()"
+        [class.border-line]="selectedCategory()"
+        [class.text-fg-muted]="selectedCategory()"
+      >
+        {{ 'public.catalog.all' | transloco }}
+      </a>
+
+      @for (category of categories(); track category.id) {
+        <a
+          [routerLink]="'/produtos'"
+          [queryParams]="{ categoria: category.slug }"
+          class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+          [class.border-brand]="selectedCategory() === category.slug"
+          [class.text-brand]="selectedCategory() === category.slug"
+          [class.border-line]="selectedCategory() !== category.slug"
+          [class.text-fg-muted]="selectedCategory() !== category.slug"
+        >
+          {{ category.label }}
+        </a>
+      }
+    </div>
+  </div>
+
+  <div
+    class="mb-8 flex flex-wrap items-center gap-2"
+    [attr.aria-label]="'public.catalog.statusLabel' | transloco"
+  >
+    @for (statusOption of statusOptions; track statusOption.value) {
+      <button
+        type="button"
+        class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+        [class.border-brand]="selectedStatus() === statusOption.value"
+        [class.text-brand]="selectedStatus() === statusOption.value"
+        [class.border-line]="selectedStatus() !== statusOption.value"
+        [class.text-fg-muted]="selectedStatus() !== statusOption.value"
+        [attr.aria-pressed]="selectedStatus() === statusOption.value"
+        (click)="changeStatus(statusOption.value)"
+      >
+        {{ statusOption.label | transloco }}
+      </button>
+    }
+  </div>
+
+  @if (categoriesError()) {
+    <p class="mb-6 rounded-2xl border border-danger/30 bg-danger/10 p-4 text-sm text-danger">
+      {{ 'public.errors.categories' | transloco }}
+    </p>
+  }
+
+  @if (loading()) {
+    <div
+      role="status"
+      aria-live="polite"
+      class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+    >
+      {{ 'common.loading' | transloco }}
+    </div>
+  } @else if (error()) {
+    <div
+      role="alert"
+      class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center text-danger"
+    >
+      {{ error() | transloco }}
+    </div>
+  } @else if (!products().length) {
+    <div class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted">
+      {{ 'public.catalog.empty' | transloco }}
+    </div>
+  } @else {
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      @for (product of products(); track product.id) {
+        <qd-product-card [product]="product" />
+      }
+    </div>
+
+    @if (totalPages() > 1) {
+      <nav
+        class="mt-10 flex items-center justify-center gap-4"
+        [attr.aria-label]="'public.catalog.pagination' | transloco"
+      >
+        <button
+          type="button"
+          class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50"
+          [disabled]="currentPage() <= 1"
+          (click)="changePage(currentPage() - 1)"
+        >
+          {{ 'public.catalog.previous' | transloco }}
+        </button>
+        <span class="text-sm text-fg-muted">
+          {{ 'public.catalog.page' | transloco }} {{ currentPage() }} / {{ totalPages() }}
+        </span>
+        <button
+          type="button"
+          class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand disabled:cursor-not-allowed disabled:opacity-50"
+          [disabled]="currentPage() >= totalPages()"
+          (click)="changePage(currentPage() + 1)"
+        >
+          {{ 'public.catalog.next' | transloco }}
+        </button>
+      </nav>
+    }
+  }
+</main>

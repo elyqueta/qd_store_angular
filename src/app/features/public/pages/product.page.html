@@ -1,0 +1,127 @@
+<main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  @if (loading()) {
+    <div
+      role="status"
+      aria-live="polite"
+      class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+    >
+      {{ 'common.loading' | transloco }}
+    </div>
+  } @else if (error()) {
+    <div
+      role="alert"
+      class="rounded-2xl border border-danger/30 bg-danger/10 p-8 text-center text-danger"
+    >
+      {{ error() | transloco }}
+    </div>
+  } @else if (product(); as product) {
+    <article class="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
+      <div class="space-y-4">
+        <div class="overflow-hidden rounded-3xl border border-line bg-surface shadow-sm">
+          @if (product.images.length) {
+            <img
+              [src]="product.images[0].url"
+              [alt]="product.name"
+              class="h-full w-full object-cover"
+            />
+          } @else {
+            <div
+              class="flex aspect-[4/3] items-center justify-center bg-surface-muted"
+              aria-hidden="true"
+            >
+              <span class="text-6xl text-fg-muted">◇</span>
+            </div>
+          }
+        </div>
+
+        @if (product.images.length > 1) {
+          <div class="grid grid-cols-3 gap-3">
+            @for (image of product.images.slice(1, 4); track image.id) {
+              <img
+                [src]="image.url"
+                [alt]="product.name"
+                class="h-28 w-full rounded-2xl border border-line object-cover"
+              />
+            }
+          </div>
+        }
+      </div>
+
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <p class="text-xs font-medium uppercase tracking-[0.22em] text-fg-muted">
+            {{ product.categoryName || ('public.product.categoryFallback' | transloco) }}
+          </p>
+          <h1 class="text-3xl font-semibold tracking-tight text-fg md:text-4xl">
+            {{ product.name }}
+          </h1>
+        </div>
+
+        <div class="flex items-baseline gap-3">
+          <span class="text-3xl font-semibold text-fg">
+            {{ product.price | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
+          </span>
+          @if (product.originalPrice && product.originalPrice > product.price) {
+            <span class="text-lg text-fg-muted line-through">
+              {{ product.originalPrice | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
+            </span>
+          }
+        </div>
+
+        @if (product.badge) {
+          <span
+            class="inline-flex rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-brand"
+          >
+            {{ product.badge }}
+          </span>
+        }
+
+        <p class="text-base leading-7 text-fg-muted">
+          {{ product.description || ('public.product.noDescription' | transloco) }}
+        </p>
+
+        <div class="flex flex-wrap gap-3">
+          <a
+            [routerLink]="'/produtos'"
+            class="rounded-full border border-line px-5 py-3 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand"
+          >
+            {{ 'public.product.backToCatalog' | transloco }}
+          </a>
+        </div>
+      </div>
+    </article>
+
+    @if (product.specifications.length) {
+      <section class="mt-16">
+        <h2 class="text-2xl font-semibold tracking-tight text-fg">
+          {{ 'public.product.specifications' | transloco }}
+        </h2>
+        <div class="mt-6 overflow-hidden rounded-2xl border border-line bg-surface">
+          <dl class="divide-y divide-line">
+            @for (specification of product.specifications; track specification.id) {
+              <div class="grid grid-cols-2 gap-4 px-4 py-3 sm:px-6">
+                <dt class="font-medium text-fg-muted">{{ specification.specKey }}</dt>
+                <dd class="text-right text-fg sm:text-left">{{ specification.specValue }}</dd>
+              </div>
+            }
+          </dl>
+        </div>
+      </section>
+    }
+
+    @if (relatedProducts().length) {
+      <section class="mt-16">
+        <h2 class="text-2xl font-semibold tracking-tight text-fg">
+          {{ 'public.product.related' | transloco }}
+        </h2>
+        <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          @for (relatedProduct of relatedProducts(); track relatedProduct.id) {
+            <qd-product-card [product]="relatedProduct" />
+          }
+        </div>
+      </section>
+    } @else if (relatedError()) {
+      <p class="mt-8 text-sm text-fg-muted">{{ relatedError() | transloco }}</p>
+    }
+  }
+</main>

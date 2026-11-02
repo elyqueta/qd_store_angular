@@ -25,9 +25,11 @@
 
 ## Fase 2 — Área pública
 
-- [ ] Home · Catálogo (paginação, filtros categoria/estado) · Detalhe (galeria, especificações)
-- [ ] Páginas institucionais · 404
+- [x] Home · Catálogo (paginação, filtros categoria/estado) · Detalhe (galeria, especificações)
+- [x] Páginas institucionais · 404
 - [ ] SEO por página + JSON-LD de produto
+
+Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões usam um elemento visual neutro e a página de detalhe carrega as imagens pelo endpoint próprio.
 
 ## Fase 3 — Conta
 
