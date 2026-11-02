@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { finalize, Subscription } from 'rxjs';
+import { SeoService } from '../../../core/seo/seo.service';
 import { ProductApiService } from '../data-access/product-api.service';
 import { Product, ProductCategory, ProductStatus } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
@@ -18,6 +19,8 @@ export class CatalogPage {
   private readonly productApi = inject(ProductApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
+  private readonly seo = inject(SeoService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly categories = signal<ProductCategory[]>([]);
   readonly products = signal<Product[]>([]);
@@ -75,6 +78,7 @@ export class CatalogPage {
     this.error.set(null);
 
     const category = this.categories().find((item) => item.slug === this.selectedCategory());
+    this.updateSeo(category?.label ?? null);
 
     if (this.selectedCategory() && !category) {
       this.products.set([]);
@@ -125,5 +129,29 @@ export class CatalogPage {
 
   private isProductStatus(status: string | null): status is ProductStatus {
     return status === 'active' || status === 'inactive' || status === 'out_of_stock';
+  }
+
+  private updateSeo(categoryLabel: string | null): void {
+    const pageTitle = categoryLabel
+      ? this.transloco.translate('seo.catalog.categoryTitle', { category: categoryLabel })
+      : this.transloco.translate('seo.catalog.title');
+    const description = categoryLabel
+      ? this.transloco.translate('seo.catalog.categoryDescription', { category: categoryLabel })
+      : this.transloco.translate('seo.catalog.description');
+    const categorySlug = this.selectedCategory();
+
+    this.seo.setPage({
+      title:
+        this.currentPage() > 1
+          ? this.transloco.translate('seo.catalog.pageTitle', {
+              title: pageTitle,
+              page: this.currentPage(),
+            })
+          : pageTitle,
+      description,
+      canonicalPath: categorySlug
+        ? `/produtos?categoria=${encodeURIComponent(categorySlug)}`
+        : '/produtos',
+    });
   }
 }

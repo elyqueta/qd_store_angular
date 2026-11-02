@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { finalize } from 'rxjs';
+import { SeoService } from '../../../core/seo/seo.service';
 import { ProductApiService } from '../data-access/product-api.service';
 import { Product, ProductCategory } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
@@ -15,6 +16,8 @@ import { ProductCardComponent } from '../../../shared/ui/product-card.component'
 })
 export class HomePage {
   private readonly productApi = inject(ProductApiService);
+  private readonly seo = inject(SeoService);
+  private readonly transloco = inject(TranslocoService);
 
   readonly categories = signal<ProductCategory[]>([]);
   readonly products = signal<Product[]>([]);
@@ -25,6 +28,11 @@ export class HomePage {
   readonly featuredProducts = computed(() => this.products().slice(0, 4));
 
   constructor() {
+    this.seo.setPage({
+      title: this.transloco.translate('seo.home.title'),
+      description: this.transloco.translate('seo.home.description'),
+      canonicalPath: '/',
+    });
     this.loadProducts();
     this.loadCategories();
   }
