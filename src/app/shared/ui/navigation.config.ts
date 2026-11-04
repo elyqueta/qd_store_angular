@@ -1,3 +1,5 @@
+import { UserRole } from '../../core/auth/auth.models';
+
 export interface NavigationItem {
   labelKey: string;
   route: string;
@@ -6,8 +8,8 @@ export interface NavigationItem {
 export type UserMenuAction = 'theme' | 'logout';
 
 export type UserMenuItem =
-  | { kind: 'link'; labelKey: string; route: string }
-  | { kind: 'action'; labelKey: string; action: UserMenuAction };
+  | { kind: 'link'; labelKey: string; route: string; roles?: readonly UserRole[] }
+  | { kind: 'action'; labelKey: string; action: UserMenuAction; roles?: readonly UserRole[] };
 
 export const NAV_ITEMS: readonly NavigationItem[] = [
   { labelKey: 'nav.home', route: '/' },
@@ -17,6 +19,7 @@ export const NAV_ITEMS: readonly NavigationItem[] = [
 ];
 
 export const USER_MENU_ITEMS: readonly UserMenuItem[] = [
+  { kind: 'link', labelKey: 'nav.admin', route: '/admin', roles: ['admin'] },
   { kind: 'link', labelKey: 'nav.profile', route: '/conta/perfil' },
   { kind: 'link', labelKey: 'nav.addresses', route: '/conta/moradas' },
   { kind: 'action', action: 'theme', labelKey: 'nav.themeToggle' },

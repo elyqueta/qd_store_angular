@@ -1,0 +1,73 @@
+<main class="mx-auto min-h-[60vh] max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-8">
+    <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+      {{ 'admin.dashboard.kicker' | transloco }}
+    </p>
+    <h1 class="text-3xl font-semibold tracking-tight text-fg">
+      {{ 'admin.dashboard.title' | transloco }}
+    </h1>
+    <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+      {{ 'admin.dashboard.description' | transloco }}
+    </p>
+  </header>
+
+  @if (isLoading()) {
+    <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+      {{ 'common.loading' | transloco }}
+    </p>
+  } @else if (hasError()) {
+    <section
+      class="rounded-2xl border border-danger/40 bg-surface p-6"
+      aria-labelledby="qd-admin-dashboard-error"
+      role="alert"
+    >
+      <h2 id="qd-admin-dashboard-error" class="font-semibold text-fg">
+        {{ 'admin.dashboard.errorTitle' | transloco }}
+      </h2>
+      <p class="mt-2 text-sm text-fg-muted">
+        {{ 'admin.dashboard.errorDescription' | transloco }}
+      </p>
+      <button
+        type="button"
+        class="mt-4 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+        (click)="load()"
+      >
+        {{ 'common.retry' | transloco }}
+      </button>
+    </section>
+  } @else if (summary(); as data) {
+    <section aria-labelledby="qd-admin-dashboard-summary">
+      <h2 id="qd-admin-dashboard-summary" class="sr-only">
+        {{ 'admin.dashboard.summaryTitle' | transloco }}
+      </h2>
+      <dl class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div class="rounded-2xl border border-line bg-surface p-6">
+          <dt class="text-sm font-medium text-fg-muted">
+            {{ 'admin.dashboard.products' | transloco }}
+          </dt>
+          <dd class="mt-3 text-3xl font-semibold tracking-tight text-fg">{{ data.products }}</dd>
+        </div>
+        <div class="rounded-2xl border border-line bg-surface p-6">
+          <dt class="text-sm font-medium text-fg-muted">
+            {{ 'admin.dashboard.categories' | transloco }}
+          </dt>
+          <dd class="mt-3 text-3xl font-semibold tracking-tight text-fg">{{ data.categories }}</dd>
+        </div>
+        <div class="rounded-2xl border border-line bg-surface p-6">
+          <dt class="text-sm font-medium text-fg-muted">
+            {{ 'admin.dashboard.deliveryTypes' | transloco }}
+          </dt>
+          <dd class="mt-3 text-3xl font-semibold tracking-tight text-fg">
+            {{ data.deliveryTypes }}
+          </dd>
+        </div>
+        <div class="rounded-2xl border border-line bg-surface p-6">
+          <dt class="text-sm font-medium text-fg-muted">
+            {{ 'admin.dashboard.companies' | transloco }}
+          </dt>
+          <dd class="mt-3 text-3xl font-semibold tracking-tight text-fg">{{ data.companies }}</dd>
+        </div>
+      </dl>
+    </section>
+  }
+</main>

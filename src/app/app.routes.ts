@@ -1,9 +1,17 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/auth/auth.guards';
+import { adminGuard, authGuard, guestGuard } from './core/auth/auth.guards';
+import { AdminLayoutComponent } from './layouts/admin/admin-layout.component';
 import { AccountLayoutComponent } from './layouts/account/account-layout.component';
 import { PublicLayoutComponent } from './layouts/public/public-layout.component';
 
 export const routes: Routes = [
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
+    canActivate: [adminGuard],
+    loadChildren: () =>
+      import('./features/admin/admin.routes').then((module) => module.adminRoutes),
+  },
   {
     path: 'conta',
     component: AccountLayoutComponent,

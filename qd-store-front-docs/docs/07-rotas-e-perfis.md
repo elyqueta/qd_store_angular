@@ -2,13 +2,13 @@
 
 ## Perfis
 
-| Perfil                  | Como se determina                                | Pode                                                                   |
-| ----------------------- | ------------------------------------------------ | ---------------------------------------------------------------------- |
-| Visitante               | sem sessão                                       | catálogo, detalhe, tipos de entrega, localizações, entrar/criar conta  |
-| Cliente                 | `role = customer`                                | tudo o anterior + moradas + criar empresa + ver/gerir as suas empresas |
-| Admin                   | `role = admin`                                   | tudo + back office completo                                            |
-| Proprietário de empresa | `company.ownerId === user.id` (não vem no token) | editar/desativar a empresa, gerir utilizadores dela                    |
-| Membro de empresa       | existe em `user_company`                         | listar utilizadores da própria empresa                                 |
+| Perfil                  | Como se determina                                | Pode                                                                           |
+| ----------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------ |
+| Visitante               | sem sessão                                       | catálogo, detalhe, tipos de entrega, localizações, entrar/criar conta          |
+| Cliente                 | `role = customer`                                | tudo o anterior + moradas + criar empresa; gestão das empresas pendente (L-05) |
+| Admin                   | `role = admin`                                   | tudo + dashboard administrativo; restantes módulos do back office pendentes    |
+| Proprietário de empresa | `company.ownerId === user.id` (não vem no token) | editar/desativar a empresa, gerir utilizadores dela                            |
+| Membro de empresa       | existe em `user_company`                         | listar utilizadores da própria empresa                                         |
 
 > `user_company.role` (cargo: "Gerente"…) é texto livre e **não** é permissão. Ignorar para autorização.
 
@@ -33,6 +33,8 @@
 Slugs de rota em pt (URLs para o público angolano). Quando existir `en`, avaliar prefixo de idioma (`/en/...`) — ver `10`.
 
 Na Fase 3, `/conta/perfil` e `/conta/moradas` estão implementadas sob `authGuard` e renderização client-side. O perfil lê os dados da sessão; moradas consome os endpoints autenticados de endereços e o catálogo público de províncias/municípios. As rotas de empresas continuam pendentes, sem contornar a lacuna L-05.
+
+O dashboard `/admin` está implementado com `adminGuard`, layout próprio e renderização client-side. Apresenta contagens dos endpoints de produtos, categorias, tipos de entrega activos e empresas administrativas. As restantes rotas do back office continuam pendentes.
 
 ## Regras de UI por perfil
 

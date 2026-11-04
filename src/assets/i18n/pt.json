@@ -51,6 +51,7 @@
     "register": "Criar conta",
     "profile": "Perfil",
     "addresses": "Moradas",
+    "admin": "Painel de administração",
     "logout": "Sair",
     "menu": "Abrir menu",
     "themeToggle": "Alternar tema"
@@ -131,6 +132,29 @@
       },
       "notProvided": "Não indicado",
       "unavailable": "Não foi possível apresentar os dados da sessão."
+    }
+  },
+  "admin": {
+    "layout": {
+      "title": "QD · ItSOLUTIONS",
+      "navigation": "Navegação administrativa",
+      "dashboard": "Painel",
+      "store": "Voltar à loja",
+      "logout": "Terminar sessão"
+    },
+    "dashboard": {
+      "seoTitle": "Painel de administração | QD · ItSOLUTIONS",
+      "seoDescription": "Resumo da área administrativa da QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Painel de administração",
+      "description": "Consulta um resumo dos recursos disponíveis na plataforma.",
+      "summaryTitle": "Resumo da plataforma",
+      "products": "Produtos",
+      "categories": "Categorias",
+      "deliveryTypes": "Tipos de entrega activos",
+      "companies": "Empresas",
+      "errorTitle": "Não foi possível carregar o painel.",
+      "errorDescription": "Verifica a ligação e tenta carregar os dados novamente."
     }
   },
   "seo": {

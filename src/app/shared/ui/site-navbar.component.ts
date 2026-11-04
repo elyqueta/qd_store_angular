@@ -41,6 +41,10 @@ export class SiteNavbarComponent {
 
   readonly isAuthenticated = this.authStore.isAuthenticated;
   readonly user = this.authStore.user;
+  readonly userMenuItems = computed(() => {
+    const role = this.user()?.role ?? 'customer';
+    return USER_MENU_ITEMS.filter((item) => item.roles === undefined || item.roles.includes(role));
+  });
   readonly mobileOpen = signal(false);
   readonly userMenuOpen = signal(false);
   readonly categories = signal<ProductCategory[]>([]);
@@ -64,7 +68,6 @@ export class SiteNavbarComponent {
   });
 
   readonly navItems = NAV_ITEMS;
-  readonly userMenuItems = USER_MENU_ITEMS;
 
   constructor() {
     this.productApi

@@ -129,7 +129,7 @@
               (keydown.arrowdown)="focusMenuItem($event, 'qd-user-menu', 1)"
               (keydown.arrowup)="focusMenuItem($event, 'qd-user-menu', -1)"
             >
-              @for (item of userMenuItems; track item.labelKey) {
+              @for (item of userMenuItems(); track item.labelKey) {
                 @switch (item.kind) {
                   @case ('link') {
                     <a
@@ -235,7 +235,7 @@
         }
 
         @if (isAuthenticated()) {
-          @for (item of userMenuItems; track item.labelKey) {
+          @for (item of userMenuItems(); track item.labelKey) {
             @if (item.kind === 'link') {
               <a
                 [routerLink]="item.route"
