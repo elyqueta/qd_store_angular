@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: '',
+  apiUrl: 'https://qd-store-back-end.onrender.com',
 };
