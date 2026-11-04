@@ -1,5 +1,12 @@
 import { CurrencyPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -23,6 +30,15 @@ export class ProductPage {
   private readonly transloco = inject(TranslocoService);
 
   readonly product = signal<ProductDetail | null>(null);
+  readonly additionalImages = computed(() => {
+    const product = this.product();
+    if (!product) {
+      return [];
+    }
+
+    const mainImageId = (product.mainImage ?? product.images[0])?.id;
+    return product.images.filter((image) => image.id !== mainImageId).slice(0, 3);
+  });
   readonly relatedProducts = signal<Product[]>([]);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -76,7 +92,7 @@ export class ProductPage {
                 product.description ??
                 this.transloco.translate('seo.product.description', { name: product.name }),
               canonicalPath: `/produtos/${encodeURIComponent(product.id)}`,
-              imageUrl: product.images[0]?.url,
+              imageUrl: product.mainImage?.url ?? product.images[0]?.url,
             },
             product,
           );

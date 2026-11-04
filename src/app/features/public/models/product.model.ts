@@ -19,6 +19,7 @@ export interface Product {
   originalPrice: number | null;
   badge: string | null;
   status: ProductStatus;
+  mainImage?: ProductImage | null;
   createdAt: string;
   updatedAt: string;
 }

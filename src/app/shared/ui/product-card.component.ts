@@ -12,6 +12,7 @@ import { Product } from '../../features/public/models/product.model';
 })
 export class ProductCardComponent {
   readonly product = input.required<Product>();
+  readonly mainImageUrl = computed(() => this.product().mainImage?.url ?? null);
 
   readonly discountPercent = computed<number | null>(() => {
     const product = this.product();

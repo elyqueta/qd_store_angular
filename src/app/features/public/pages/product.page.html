@@ -18,15 +18,11 @@
     <article class="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
       <div class="space-y-4">
         <div class="overflow-hidden rounded-3xl border border-line bg-surface shadow-sm">
-          @if (product.images.length) {
-            <img
-              [src]="product.images[0].url"
-              [alt]="product.name"
-              class="h-full w-full object-cover"
-            />
+          @if (product.mainImage ?? product.images[0]; as mainImage) {
+            <img [src]="mainImage.url" [alt]="product.name" class="h-full w-full object-cover" />
           } @else {
             <div
-              class="flex aspect-[4/3] items-center justify-center bg-surface-muted"
+              class="flex aspect-4/3 items-center justify-center bg-surface-muted"
               aria-hidden="true"
             >
               <span class="text-6xl text-fg-muted">◇</span>
@@ -34,9 +30,9 @@
           }
         </div>
 
-        @if (product.images.length > 1) {
+        @if (additionalImages().length) {
           <div class="grid grid-cols-3 gap-3">
-            @for (image of product.images.slice(1, 4); track image.id) {
+            @for (image of additionalImages(); track image.id) {
               <img
                 [src]="image.url"
                 [alt]="product.name"

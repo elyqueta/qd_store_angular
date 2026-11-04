@@ -21,6 +21,47 @@ describe('ProductApiService', () => {
 
   afterEach(() => httpTesting.verify());
 
+  it('keeps the optional main image returned with catalog products', async () => {
+    const responsePromise = firstValueFrom(api.listProducts({ limit: 1 }));
+    const request = httpTesting.expectOne(
+      (candidate) =>
+        candidate.url === `${apiRoot}/products` && candidate.params.get('limit') === '1',
+    );
+
+    request.flush({
+      status: 'success',
+      data: [
+        {
+          id: 'product-1',
+          categoryId: 'category-1',
+          name: 'Computador portátil',
+          description: null,
+          price: 250000,
+          originalPrice: null,
+          badge: null,
+          status: 'active',
+          mainImage: {
+            id: 'image-1',
+            productId: 'product-1',
+            url: 'https://example.test/product-1.webp',
+            displayOrder: 0,
+            width: 1200,
+            height: 900,
+            format: 'webp',
+            sizeBytes: 12000,
+          },
+          createdAt: '2026-01-01T00:00:00.000Z',
+          updatedAt: '2026-01-01T00:00:00.000Z',
+        },
+      ],
+      pagination: { page: 1, limit: 1, total: 1, totalPages: 1 },
+    });
+
+    await expect(responsePromise).resolves.toMatchObject({
+      items: [{ mainImage: { id: 'image-1', displayOrder: 0 } }],
+    });
+  });
+
   it('sends the supported catalog filters and unwraps pagination', async () => {
     const responsePromise = firstValueFrom(
       api.listProducts({
@@ -74,6 +115,16 @@ describe('ProductApiService', () => {
         originalPrice: null,
         badge: null,
         status: 'active',
+        mainImage: {
+          id: 'main-image-1',
+          productId: 'product-1',
+          url: 'https://example.test/product-1-main.webp',
+          displayOrder: 0,
+          width: 1200,
+          height: 900,
+          format: 'webp',
+          sizeBytes: 12000,
+        },
         createdAt: '2026-01-01T00:00:00.000Z',
         updatedAt: '2026-01-01T00:00:00.000Z',
       },
@@ -108,6 +159,7 @@ describe('ProductApiService', () => {
 
     await expect(responsePromise).resolves.toMatchObject({
       id: 'product-1',
+      mainImage: { id: 'main-image-1', displayOrder: 0 },
       images: [{ id: 'image-1' }],
       specifications: [{ specKey: 'Memória', specValue: '16 GB' }],
     });

@@ -38,7 +38,29 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 
 **Categorias** (`/api/v1/categories`): `GET /` e `GET /:id` públicos; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se tiver produtos).
 
-**Produtos** (`/api/v1/products`): `GET /?page&limit(≤100)&categoryId&status` público (inclui `categoryName`); `GET /:id`; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado).
+**Produtos** (`/api/v1/products`): `GET /?page&limit(≤100)&categoryId&status` público (inclui `categoryName` e `mainImage`); `GET /:id` também inclui `mainImage`; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado).
+
+- `mainImage` é a imagem associada com menor `displayOrder`, ou `null` quando o produto ainda não tem imagens. Durante a transição, o front também tolera respostas antigas sem esta propriedade.
+- `POST /` pode receber `mainImage` opcional para criar a imagem principal na mesma operação; continua compatível criar primeiro o produto e depois usar `POST /:productId/images`.
+- Exemplo de body para criar um produto com imagem principal:
+
+```json
+{
+  "categoryId": "c1b2a3d4-e5f6-4789-a012-3456789abcde",
+  "name": "Portátil Dell Inspiron 15",
+  "price": 450000,
+  "description": "Portátil para trabalho e estudo",
+  "originalPrice": 520000,
+  "badge": "Promoção",
+  "mainImage": {
+    "url": "https://cdn.exemplo.co.ao/produtos/dell-inspiron-15.jpg",
+    "width": 1200,
+    "height": 900,
+    "format": "jpg",
+    "sizeBytes": 204800
+  }
+}
+```
 
 - Imagens `/api/v1/products/:productId/images`: `GET` público; `POST`, `PATCH /:id`, `DELETE /:id` admin. Só URL (sem upload).
 - Especificações `/api/v1/products/:productId/specifications`: idem; `displayOrder` obrigatório.
@@ -98,6 +120,7 @@ interface Product {
   originalPrice: number | null;
   badge: string | null;
   status: 'active' | 'inactive' | 'out_of_stock';
+  mainImage?: ProductImage | null;
   createdAt: string;
   updatedAt: string;
 }
