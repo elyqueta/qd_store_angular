@@ -1,0 +1,372 @@
+<main class="min-h-[60vh] bg-surface-muted pb-16">
+  <header class="border-b border-line bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+        {{ 'account.addresses.kicker' | transloco }}
+      </p>
+      <h1 class="text-3xl font-semibold tracking-tight text-fg">
+        {{ 'account.addresses.title' | transloco }}
+      </h1>
+      <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+        {{ 'account.addresses.description' | transloco }}
+      </p>
+    </div>
+  </header>
+
+  <section
+    class="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8"
+    aria-labelledby="qd-addresses-heading"
+  >
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <h2 id="qd-addresses-heading" class="text-lg font-semibold text-fg">
+        {{ 'account.addresses.savedTitle' | transloco }}
+      </h2>
+      @if (!formOpen()) {
+        <button
+          type="button"
+          class="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="openCreateForm()"
+        >
+          {{ 'account.addresses.add' | transloco }}
+        </button>
+      }
+    </div>
+
+    @if (addressesLoading()) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+        {{ 'common.loading' | transloco }}
+      </p>
+    } @else if (addressesError(); as message) {
+      <div class="rounded-2xl border border-line bg-surface p-6" role="alert">
+        <p class="text-sm text-danger">{{ message }}</p>
+        <button
+          type="button"
+          class="mt-4 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="loadAddresses()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </div>
+    } @else if (!addresses().length) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted">
+        {{ 'account.addresses.empty' | transloco }}
+      </p>
+    } @else {
+      <ul class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        @for (address of addresses(); track address.id) {
+          <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="break-words text-base font-semibold text-fg">
+                    {{ address.label || ('account.addresses.defaultLabel' | transloco) }}
+                  </h3>
+                  @if (address.isDefault) {
+                    <span
+                      class="rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand"
+                    >
+                      {{ 'account.addresses.defaultBadge' | transloco }}
+                    </span>
+                  }
+                </div>
+                <address class="mt-3 not-italic text-sm leading-6 text-fg-muted">
+                  <span>{{ address.address }}</span
+                  ><br />
+                  <span>{{ address.neighborhood }}</span
+                  ><br />
+                  <span>{{ address.municipality }}, {{ address.province }}</span>
+                  @if (address.reference) {
+                    <br />
+                    <span
+                      >{{ 'account.addresses.reference' | transloco }}:
+                      {{ address.reference }}</span
+                    >
+                  }
+                </address>
+              </div>
+
+              <div class="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+                @if (!address.isDefault) {
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full border border-line px-3 py-2 text-xs font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-wait disabled:opacity-60"
+                    [disabled]="pendingActionId() !== null"
+                    (click)="setDefault(address)"
+                  >
+                    {{ 'account.addresses.makeDefault' | transloco }}
+                  </button>
+                }
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-line px-3 py-2 text-xs font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-wait disabled:opacity-60"
+                  [disabled]="pendingActionId() !== null || formOpen()"
+                  (click)="openEditForm(address)"
+                >
+                  {{ 'account.addresses.edit' | transloco }}
+                </button>
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-danger/40 px-3 py-2 text-xs font-medium text-danger transition hover:bg-danger/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:cursor-wait disabled:opacity-60"
+                  [disabled]="pendingActionId() !== null"
+                  (click)="requestDelete(address)"
+                >
+                  {{ 'account.addresses.delete' | transloco }}
+                </button>
+              </div>
+            </div>
+
+            @if (confirmingDeletionId() === address.id) {
+              <div
+                class="mt-5 rounded-xl border border-danger/30 bg-danger/5 p-4"
+                role="group"
+                [attr.aria-label]="'account.addresses.confirmDeleteTitle' | transloco"
+              >
+                <p class="text-sm text-fg">{{ 'account.addresses.confirmDelete' | transloco }}</p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full bg-danger px-4 py-2 text-sm font-semibold text-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:opacity-60"
+                    [disabled]="pendingActionId() !== null"
+                    (click)="confirmDelete(address)"
+                  >
+                    {{ 'account.addresses.confirmDeleteAction' | transloco }}
+                  </button>
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    [disabled]="pendingActionId() !== null"
+                    (click)="cancelDelete()"
+                  >
+                    {{ 'common.close' | transloco }}
+                  </button>
+                </div>
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    }
+
+    @if (formOpen()) {
+      <section
+        class="mt-8 rounded-2xl border border-line bg-surface p-5 sm:p-8"
+        aria-labelledby="qd-address-form-heading"
+      >
+        <div class="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 id="qd-address-form-heading" class="text-lg font-semibold text-fg">
+              {{
+                (editingAddressId()
+                  ? 'account.addresses.editTitle'
+                  : 'account.addresses.createTitle'
+                ) | transloco
+              }}
+            </h2>
+            <p class="mt-1 text-sm text-fg-muted">
+              {{ 'account.addresses.formDescription' | transloco }}
+            </p>
+          </div>
+          <button
+            type="button"
+            class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [disabled]="saving()"
+            (click)="closeForm()"
+          >
+            {{ 'common.close' | transloco }}
+          </button>
+        </div>
+
+        @if (locationsLoading()) {
+          <p class="mt-5 text-sm text-fg-muted" role="status">
+            {{ 'account.addresses.loadingLocations' | transloco }}
+          </p>
+        } @else if (locationsError(); as message) {
+          <div class="mt-5 rounded-xl border border-danger/30 p-4" role="alert">
+            <p class="text-sm text-danger">{{ message }}</p>
+            <button
+              type="button"
+              class="mt-3 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              (click)="loadLocations()"
+            >
+              {{ 'common.retry' | transloco }}
+            </button>
+          </div>
+        }
+
+        <form
+          class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2"
+          [formGroup]="form"
+          (ngSubmit)="submitForm()"
+          novalidate
+        >
+          <div>
+            <label for="address-label" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.addresses.fields.label' | transloco }}
+            </label>
+            <input
+              id="address-label"
+              type="text"
+              autocomplete="off"
+              formControlName="label"
+              maxlength="100"
+              class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              [attr.aria-invalid]="form.controls.label.invalid && form.controls.label.touched"
+            />
+            @if (form.controls.label.invalid && form.controls.label.touched) {
+              <p class="mt-1 text-sm text-danger" aria-live="polite">
+                {{ 'account.addresses.validation.label' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="address-province" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.addresses.fields.province' | transloco }}
+            </label>
+            <select
+              id="address-province"
+              formControlName="province"
+              class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="locationsLoading() || locationsError() !== null"
+              [attr.aria-invalid]="form.controls.province.invalid && form.controls.province.touched"
+              (change)="onProvinceChange()"
+            >
+              <option value="">{{ 'account.addresses.selectProvince' | transloco }}</option>
+              @if (
+                selectedProvince() &&
+                !locations().some((province) => province.name === selectedProvince())
+              ) {
+                <option [value]="selectedProvince()">{{ selectedProvince() }}</option>
+              }
+              @for (province of locations(); track province.slug) {
+                <option [value]="province.name">{{ province.name }}</option>
+              }
+            </select>
+            @if (form.controls.province.invalid && form.controls.province.touched) {
+              <p class="mt-1 text-sm text-danger" aria-live="polite">
+                {{ 'account.addresses.validation.province' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="address-municipality" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.addresses.fields.municipality' | transloco }}
+            </label>
+            <select
+              id="address-municipality"
+              formControlName="municipality"
+              class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="
+                !selectedProvinceLocation() || locationsLoading() || locationsError() !== null
+              "
+              [attr.aria-invalid]="
+                form.controls.municipality.invalid && form.controls.municipality.touched
+              "
+            >
+              <option value="">{{ 'account.addresses.selectMunicipality' | transloco }}</option>
+              @for (
+                municipality of selectedProvinceLocation()?.municipalities ?? [];
+                track municipality
+              ) {
+                <option [value]="municipality">{{ municipality }}</option>
+              }
+            </select>
+            @if (form.controls.municipality.invalid && form.controls.municipality.touched) {
+              <p class="mt-1 text-sm text-danger" aria-live="polite">
+                {{ 'account.addresses.validation.municipality' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="address-neighborhood" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.addresses.fields.neighborhood' | transloco }}
+            </label>
+            <input
+              id="address-neighborhood"
+              type="text"
+              autocomplete="address-level3"
+              formControlName="neighborhood"
+              maxlength="100"
+              class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              [attr.aria-invalid]="
+                form.controls.neighborhood.invalid && form.controls.neighborhood.touched
+              "
+            />
+            @if (form.controls.neighborhood.invalid && form.controls.neighborhood.touched) {
+              <p class="mt-1 text-sm text-danger" aria-live="polite">
+                {{ 'account.addresses.validation.neighborhood' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="address-line" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.addresses.fields.address' | transloco }}
+            </label>
+            <textarea
+              id="address-line"
+              rows="2"
+              autocomplete="street-address"
+              formControlName="address"
+              maxlength="500"
+              class="w-full resize-y rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              [attr.aria-invalid]="form.controls.address.invalid && form.controls.address.touched"
+            ></textarea>
+            @if (form.controls.address.invalid && form.controls.address.touched) {
+              <p class="mt-1 text-sm text-danger" aria-live="polite">
+                {{ 'account.addresses.validation.address' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="address-reference" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.addresses.fields.reference' | transloco }}
+            </label>
+            <input
+              id="address-reference"
+              type="text"
+              autocomplete="off"
+              formControlName="reference"
+              maxlength="500"
+              class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            />
+          </div>
+
+          @if (formError(); as message) {
+            <p class="sm:col-span-2 rounded-lg bg-danger/10 p-3 text-sm text-danger" role="alert">
+              {{ message }}
+            </p>
+          }
+
+          <div class="flex flex-wrap gap-3 sm:col-span-2">
+            <button
+              type="submit"
+              class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-wait disabled:opacity-60"
+              [disabled]="saving() || (editingAddressId() !== null && form.pristine)"
+            >
+              {{
+                (saving()
+                  ? 'account.addresses.saving'
+                  : editingAddressId()
+                    ? 'account.addresses.save'
+                    : 'account.addresses.create'
+                ) | transloco
+              }}
+            </button>
+            <button
+              type="button"
+              class="min-h-11 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              [disabled]="saving()"
+              (click)="closeForm()"
+            >
+              {{ 'account.addresses.cancel' | transloco }}
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+</main>

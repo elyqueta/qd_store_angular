@@ -50,6 +50,7 @@
     "login": "Entrar",
     "register": "Criar conta",
     "profile": "Perfil",
+    "addresses": "Moradas",
     "logout": "Sair",
     "menu": "Abrir menu",
     "themeToggle": "Alternar tema"
@@ -63,6 +64,57 @@
     "rights": "Todos os direitos reservados"
   },
   "account": {
+    "addresses": {
+      "kicker": "Conta",
+      "title": "As minhas moradas",
+      "description": "Gere as moradas associadas à tua conta.",
+      "savedTitle": "Moradas guardadas",
+      "add": "Adicionar morada",
+      "empty": "Ainda não tens moradas guardadas.",
+      "defaultLabel": "Morada",
+      "defaultBadge": "Padrão",
+      "reference": "Referência",
+      "makeDefault": "Definir como padrão",
+      "edit": "Editar",
+      "delete": "Remover",
+      "confirmDeleteTitle": "Confirmar remoção da morada",
+      "confirmDelete": "Tens a certeza de que pretendes remover esta morada?",
+      "confirmDeleteAction": "Sim, remover",
+      "createTitle": "Adicionar morada",
+      "editTitle": "Editar morada",
+      "formDescription": "Os campos assinalados são necessários para guardar a morada.",
+      "loadingLocations": "A carregar províncias e municípios…",
+      "selectProvince": "Selecciona uma província",
+      "selectMunicipality": "Selecciona um município",
+      "fields": {
+        "label": "Nome da morada (opcional)",
+        "province": "Província",
+        "municipality": "Município",
+        "neighborhood": "Bairro",
+        "address": "Endereço",
+        "reference": "Ponto de referência (opcional)"
+      },
+      "validation": {
+        "label": "O nome da morada não pode exceder 100 caracteres.",
+        "province": "Selecciona uma província válida.",
+        "municipality": "Selecciona um município válido para a província.",
+        "neighborhood": "Indica um bairro válido (máximo de 100 caracteres).",
+        "address": "Indica um endereço válido (máximo de 500 caracteres)."
+      },
+      "create": "Guardar morada",
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "addressUnavailable": "Esta morada já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "created": "Morada adicionada.",
+        "updated": "Morada actualizada.",
+        "defaultUpdated": "Morada padrão actualizada.",
+        "deleted": "Morada removida."
+      }
+    },
     "profile": {
       "kicker": "Conta",
       "title": "O meu perfil",

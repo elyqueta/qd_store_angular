@@ -18,6 +18,7 @@ export const NAV_ITEMS: readonly NavigationItem[] = [
 
 export const USER_MENU_ITEMS: readonly UserMenuItem[] = [
   { kind: 'link', labelKey: 'nav.profile', route: '/conta/perfil' },
+  { kind: 'link', labelKey: 'nav.addresses', route: '/conta/moradas' },
   { kind: 'action', action: 'theme', labelKey: 'nav.themeToggle' },
   { kind: 'action', action: 'logout', labelKey: 'nav.logout' },
 ];

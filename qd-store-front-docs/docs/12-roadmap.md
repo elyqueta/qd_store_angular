@@ -34,7 +34,7 @@ Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões
 ## Fase 3 — Conta
 
 - [x] Perfil (dados da sessão; sem edição enquanto o back-end não permitir)
-- [ ] Moradas (CRUD, padrão, cascata província→município)
+- [x] Moradas (CRUD, padrão, cascata província→município)
 - [ ] Empresas (criar, ver, editar, desativar, utilizadores associados)
 
 ## Fase 4 — Back office
