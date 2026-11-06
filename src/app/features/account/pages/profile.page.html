@@ -1,32 +1,87 @@
 @if (user(); as profile) {
   <main class="min-h-[60vh]">
     <section
-      class="rounded-2xl border border-line bg-surface p-6 sm:p-8"
+      class="rounded-2xl border border-line bg-surface p-5 sm:p-6"
       aria-labelledby="qd-profile-details-heading"
     >
-      <h2 id="qd-profile-details-heading" class="mb-6 text-base font-semibold text-fg">
-        {{ 'account.profile.personalData' | transloco }}
-      </h2>
-      <dl class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-        <div>
-          <dt class="text-sm text-fg-muted">{{ 'account.profile.fullName' | transloco }}</dt>
-          <dd class="mt-1 break-words text-sm font-medium text-fg">{{ profile.fullName }}</dd>
+      <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex min-w-0 items-center gap-4">
+          <div
+            class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand"
+            aria-hidden="true"
+          >
+            <qd-icon name="user" [size]="24" />
+          </div>
+          <div class="min-w-0">
+            <h2 id="qd-profile-details-heading" class="truncate text-base font-semibold text-fg">
+              {{ profile.fullName }}
+            </h2>
+            <p class="truncate text-sm text-fg-muted">{{ profile.email }}</p>
+          </div>
         </div>
-        <div>
-          <dt class="text-sm text-fg-muted">{{ 'account.profile.email' | transloco }}</dt>
-          <dd class="mt-1 break-all text-sm font-medium text-fg">{{ profile.email }}</dd>
+        <button
+          type="button"
+          class="inline-flex min-h-10 items-center justify-center gap-2 self-start rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg transition hover:bg-brand/90 sm:self-auto"
+          (click)="toggleEdit()"
+        >
+          <qd-icon name="pen-to-square" [size]="14" />
+          {{ 'account.profile.edit' | transloco }}
+        </button>
+      </div>
+
+      <form class="mt-7" [formGroup]="form" (ngSubmit)="save()">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          @for (
+            field of [
+              { key: 'fullName', label: 'account.profile.fullName' },
+              { key: 'email', label: 'account.profile.email' },
+              { key: 'phone', label: 'account.profile.phone' },
+              { key: 'nif', label: 'account.profile.nif' },
+              { key: 'province', label: 'account.profile.province' },
+              { key: 'municipality', label: 'account.profile.municipality' },
+            ];
+            track field.key
+          ) {
+            <label class="block text-sm font-medium text-fg">
+              {{ field.label | transloco }}
+              <input
+                [formControlName]="field.key"
+                [readonly]="!editMode()"
+                class="mt-2 w-full rounded-xl border border-line bg-surface-muted px-3.5 py-2.5 text-sm text-fg outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 read-only:cursor-default read-only:opacity-80"
+              />
+            </label>
+          }
+          <label class="block text-sm font-medium text-fg">
+            {{ 'account.profile.neighborhood' | transloco }}
+            <input
+              formControlName="neighborhood"
+              [readonly]="!editMode()"
+              class="mt-2 w-full rounded-xl border border-line bg-surface-muted px-3.5 py-2.5 text-sm text-fg outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 read-only:cursor-default read-only:opacity-80"
+            />
+          </label>
+          <label class="block text-sm font-medium text-fg sm:col-span-2">
+            {{ 'account.profile.address' | transloco }}
+            <input
+              formControlName="address"
+              [readonly]="!editMode()"
+              class="mt-2 w-full rounded-xl border border-line bg-surface-muted px-3.5 py-2.5 text-sm text-fg outline-none transition focus:border-brand focus:ring-2 focus:ring-brand/20 read-only:cursor-default read-only:opacity-80"
+            />
+          </label>
         </div>
-        <div>
-          <dt class="text-sm text-fg-muted">{{ 'account.profile.phone' | transloco }}</dt>
-          <dd class="mt-1 text-sm font-medium text-fg">{{ profile.phone }}</dd>
-        </div>
-        <div>
-          <dt class="text-sm text-fg-muted">{{ 'account.profile.nif' | transloco }}</dt>
-          <dd class="mt-1 text-sm font-medium text-fg">
-            {{ profile.nif ?? ('account.profile.notProvided' | transloco) }}
-          </dd>
-        </div>
-      </dl>
+
+        @if (editMode()) {
+          <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p class="text-xs text-fg-muted">{{ 'account.profile.editUnavailable' | transloco }}</p>
+            <button
+              type="submit"
+              class="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg opacity-50"
+              disabled
+            >
+              {{ 'account.profile.save' | transloco }}
+            </button>
+          </div>
+        }
+      </form>
     </section>
   </main>
 } @else {

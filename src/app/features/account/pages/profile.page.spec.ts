@@ -30,7 +30,7 @@ describe('ProfilePage', () => {
     }).compileComponents();
   });
 
-  it('displays personal data from the authenticated session without editable controls', async () => {
+  it('displays personal data in the reference profile form', async () => {
     TestBed.inject(AuthStore).setSession(session);
     const fixture = TestBed.createComponent(ProfilePage);
 
@@ -40,9 +40,9 @@ describe('ProfilePage', () => {
     const page = fixture.nativeElement as HTMLElement;
     expect(page.textContent).toContain('Ana Silva');
     expect(page.textContent).toContain('ana@example.com');
-    expect(page.textContent).toContain('923456789');
-    expect(page.textContent).toContain('Não indicado');
-    expect(page.querySelector('input, button')).toBeNull();
+    expect(fixture.componentInstance.form.controls.phone.value).toBe('923456789');
+    expect(fixture.componentInstance.form.controls.nif.value).toBe('');
+    expect(page.querySelector('button')?.textContent).toContain('Editar');
   });
 
   it('shows an explicit session-data message when no user is available', async () => {

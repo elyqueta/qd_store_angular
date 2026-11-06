@@ -67,6 +67,13 @@
         "personal": "Pessoal",
         "business": "Empresarial"
       },
+      "edit": "Editar",
+      "save": "Guardar alterações",
+      "editUnavailable": "A edição do perfil ficará disponível quando o serviço de perfil do servidor estiver disponível.",
+      "province": "Província",
+      "municipality": "Município",
+      "neighborhood": "Bairro",
+      "address": "Endereço completo",
       "notProvided": "Não indicado",
       "unavailable": "Não foi possível apresentar os dados da sessão."
     },

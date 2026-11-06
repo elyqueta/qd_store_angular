@@ -15,11 +15,25 @@
   </header>
 
   @if (loading()) {
-    <div
-      role="status"
-      class="rounded-2xl border border-line bg-surface-muted p-8 text-center text-sm text-fg-muted"
-    >
-      {{ 'common.loading' | transloco }}
+    <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2" role="status" aria-label="A carregar">
+      @for (skeleton of [1, 2, 3, 4]; track skeleton) {
+        <div class="overflow-hidden rounded-[15px] border border-line bg-surface">
+          <div
+            class="aspect-video animate-pulse bg-surface-muted motion-reduce:animate-none"
+          ></div>
+          <div class="space-y-3 p-3">
+            <div
+              class="h-5 w-4/5 animate-pulse rounded bg-surface-muted motion-reduce:animate-none"
+            ></div>
+            <div
+              class="h-5 w-1/2 animate-pulse rounded bg-surface-muted motion-reduce:animate-none"
+            ></div>
+            <div
+              class="h-9 w-full animate-pulse rounded-full bg-surface-muted motion-reduce:animate-none"
+            ></div>
+          </div>
+        </div>
+      }
     </div>
   } @else if (error()) {
     <div role="alert" class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center">
@@ -40,7 +54,7 @@
         >
           <a
             [routerLink]="['/produtos', item.productId]"
-            class="relative block aspect-[16/9] overflow-hidden bg-surface-muted"
+            class="relative block aspect-video overflow-hidden bg-surface-muted"
             [attr.aria-label]="item.name"
           >
             @if (item.imageUrl) {
