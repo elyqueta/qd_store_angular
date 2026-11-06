@@ -141,6 +141,7 @@
       "dashboard": "Painel",
       "categories": "Categorias",
       "products": "Produtos",
+      "deliveryTypes": "Tipos de entrega",
       "store": "Voltar à loja",
       "logout": "Terminar sessão"
     },
@@ -292,6 +293,56 @@
         "specificationCreated": "Especificação adicionada.",
         "specificationUpdated": "Especificação actualizada.",
         "specificationDeleted": "Especificação removida."
+      }
+    },
+    "deliveryTypes": {
+      "seoTitle": "Tipos de entrega | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Gere os tipos de entrega da QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de tipos de entrega",
+      "description": "Cria e actualiza opções de entrega e desactiva as que já não são utilizadas.",
+      "listTitle": "Tipos activos",
+      "add": "Adicionar tipo de entrega",
+      "empty": "Não existem tipos de entrega activos.",
+      "errorTitle": "Não foi possível carregar os tipos de entrega.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "edit": "Editar",
+      "deactivate": "Desactivar",
+      "confirmTitle": "Confirmar desactivação",
+      "confirmDescription": "Pretendes desactivar “{{ name }}”? Deixará de aparecer nas opções públicas.",
+      "confirmAction": "Sim, desactivar",
+      "createTitle": "Adicionar tipo de entrega",
+      "editTitle": "Editar tipo de entrega",
+      "formDescription": "Os campos name, type e price são obrigatórios. O preço pode ser zero.",
+      "fields": {
+        "name": "Nome",
+        "type": "Modalidade",
+        "price": "Preço (Kz)",
+        "description": "Descrição (opcional)"
+      },
+      "types": {
+        "standard": "Padrão",
+        "express": "Expresso",
+        "corporate": "Empresarial",
+        "pickup": "Levantamento"
+      },
+      "validation": {
+        "name": "Indica um nome com até 100 caracteres.",
+        "price": "O preço deve ser igual ou superior a zero.",
+        "description": "A descrição não pode exceder 200 caracteres."
+      },
+      "create": "Criar tipo",
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "unavailable": "Este tipo de entrega já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "created": "Tipo de entrega criado.",
+        "updated": "Tipo de entrega actualizado.",
+        "deactivated": "Tipo de entrega desactivado.",
+        "noChanges": "Não existem alterações por guardar."
       }
     }
   },

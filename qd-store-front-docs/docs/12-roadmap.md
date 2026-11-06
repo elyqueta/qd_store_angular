@@ -42,7 +42,8 @@ Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões
 - [x] Dashboard simples (contagens fornecidas pela API)
 - [x] Categorias (admin)
 - [x] Produtos, imagens por URL e especificações (admin)
-- [ ] Tipos de entrega · Empresas (admin)
+- [x] Tipos de entrega (admin; reactivação depende de endpoint no back-end)
+- [ ] Empresas (admin)
 
 ## Fase 5 — Endurecimento
 

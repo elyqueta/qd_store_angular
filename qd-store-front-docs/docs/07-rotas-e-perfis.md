@@ -34,7 +34,7 @@ Slugs de rota em pt (URLs para o público angolano). Quando existir `en`, avalia
 
 Na Fase 3, `/conta/perfil` e `/conta/moradas` estão implementadas sob `authGuard` e renderização client-side. O perfil lê os dados da sessão; moradas consome os endpoints autenticados de endereços e o catálogo público de províncias/municípios. As rotas de empresas continuam pendentes, sem contornar a lacuna L-05.
 
-O dashboard `/admin` está implementado com `adminGuard`, layout próprio e renderização client-side. Apresenta contagens dos endpoints de produtos, categorias, tipos de entrega activos e empresas administrativas. As gestões CRUD de categorias (`/admin/categorias`) e produtos (`/admin/produtos`, `/admin/produtos/novo`, `/admin/produtos/:id`) também estão implementadas, incluindo imagens por URL e especificações. Gestão administrativa de tipos de entrega e empresas continua pendente.
+O dashboard `/admin` está implementado com `adminGuard`, layout próprio e renderização client-side. Apresenta contagens dos endpoints de produtos, categorias, tipos de entrega activos e empresas administrativas. As gestões CRUD de categorias (`/admin/categorias`) e produtos (`/admin/produtos`, `/admin/produtos/novo`, `/admin/produtos/:id`) também estão implementadas, incluindo imagens por URL e especificações. A gestão de tipos de entrega em `/admin/tipos-entrega` permite criar, editar e desactivar os tipos activos. A API não lista tipos inactivos nem permite reactivá-los; gestão administrativa de empresas continua pendente.
 
 ## Regras de UI por perfil
 

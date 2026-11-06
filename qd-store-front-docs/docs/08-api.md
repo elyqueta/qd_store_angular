@@ -68,7 +68,7 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 - Imagens `/api/v1/products/:productId/images`: `GET` público; `POST { url, displayOrder?, width?, height?, format?, sizeBytes? }`, `PATCH /:id` parcial, `DELETE /:id` admin. Só URL (sem upload); `displayOrder` é inteiro ≥ 0.
 - Especificações `/api/v1/products/:productId/specifications`: `GET` público; `POST { specKey, specValue, displayOrder }`, `PATCH /:id` parcial e `DELETE /:id` admin. Chave e valor têm até 255 caracteres; `displayOrder` inteiro ≥ 0 e obrigatório na criação.
 
-**Tipos de entrega** (`/api/v1/delivery-types`): `GET /` (só ativos) e `GET /:id` públicos; `POST`, `PATCH`, `DELETE` (=desactivar) admin.
+**Tipos de entrega** (`/api/v1/delivery-types`): `GET /` (só activos) e `GET /:id` públicos; `POST { name, description?, price, type }`, `PATCH /:id` parcial e `DELETE /:id` (=desactivar) admin. `name` tem entre 1 e 100 caracteres; `description` tem até 200 caracteres e pode ser `null` no PATCH; `price` é ≥ 0; `type` é `standard | express | corporate | pickup`. A API não disponibiliza a listagem de inactivos nem a reactivação.
 
 **Localizações** (`/api/v1/locations`): `GET /` (21 províncias + municípios), `GET /provinces`, `GET /provinces/:slug/municipalities`. Públicos; carregar uma vez e cachear.
 

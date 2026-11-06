@@ -1,0 +1,288 @@
+<main class="mx-auto min-h-[60vh] max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-8">
+    <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+      {{ 'admin.deliveryTypes.kicker' | transloco }}
+    </p>
+    <h1 class="text-3xl font-semibold tracking-tight text-fg">
+      {{ 'admin.deliveryTypes.title' | transloco }}
+    </h1>
+    <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+      {{ 'admin.deliveryTypes.description' | transloco }}
+    </p>
+  </header>
+
+  <section aria-labelledby="qd-admin-delivery-types-heading">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <h2 id="qd-admin-delivery-types-heading" class="text-lg font-semibold text-fg">
+        {{ 'admin.deliveryTypes.listTitle' | transloco }}
+      </h2>
+      @if (!isFormOpen()) {
+        <button
+          type="button"
+          class="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="openCreateForm()"
+        >
+          {{ 'admin.deliveryTypes.add' | transloco }}
+        </button>
+      }
+    </div>
+
+    @if (isLoading()) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+        {{ 'common.loading' | transloco }}
+      </p>
+    } @else if (hasLoadError()) {
+      <section
+        class="rounded-2xl border border-danger/40 bg-surface p-6"
+        aria-labelledby="qd-admin-delivery-types-error"
+        role="alert"
+      >
+        <h3 id="qd-admin-delivery-types-error" class="font-semibold text-fg">
+          {{ 'admin.deliveryTypes.errorTitle' | transloco }}
+        </h3>
+        <p class="mt-2 text-sm text-fg-muted">
+          {{ 'admin.deliveryTypes.errorDescription' | transloco }}
+        </p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="load()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </section>
+    } @else if (!deliveryTypes().length) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted">
+        {{ 'admin.deliveryTypes.empty' | transloco }}
+      </p>
+    } @else {
+      <ul class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        @for (deliveryType of deliveryTypes(); track deliveryType.id) {
+          <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <h3 class="font-semibold text-fg">{{ deliveryType.name }}</h3>
+                <p class="mt-1 text-sm text-fg-muted">
+                  {{ typeLabel(deliveryType.type) }} · {{ deliveryType.price | number }} Kz
+                </p>
+                @if (deliveryType.description) {
+                  <p class="mt-3 whitespace-pre-line text-sm text-fg-muted">
+                    {{ deliveryType.description }}
+                  </p>
+                }
+              </div>
+              <div class="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-line px-3 py-2 text-xs font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  [disabled]="saving() || pendingDeactivationId() !== null"
+                  (click)="openEditForm(deliveryType)"
+                >
+                  {{ 'admin.deliveryTypes.edit' | transloco }}
+                </button>
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-danger/40 px-3 py-2 text-xs font-medium text-danger transition hover:bg-danger/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:opacity-60"
+                  [disabled]="saving() || pendingDeactivationId() !== null"
+                  (click)="requestDeactivation(deliveryType)"
+                >
+                  {{ 'admin.deliveryTypes.deactivate' | transloco }}
+                </button>
+              </div>
+            </div>
+
+            @if (confirmingDeactivationId() === deliveryType.id) {
+              <div
+                class="mt-5 rounded-xl border border-danger/30 bg-danger/5 p-4"
+                role="group"
+                [attr.aria-label]="'admin.deliveryTypes.confirmTitle' | transloco"
+              >
+                <p class="text-sm text-fg">
+                  {{
+                    'admin.deliveryTypes.confirmDescription'
+                      | transloco: { name: deliveryType.name }
+                  }}
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full bg-danger px-4 py-2 text-sm font-semibold text-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:opacity-60"
+                    [disabled]="pendingDeactivationId() !== null"
+                    (click)="confirmDeactivation(deliveryType)"
+                  >
+                    {{ 'admin.deliveryTypes.confirmAction' | transloco }}
+                  </button>
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    [disabled]="pendingDeactivationId() !== null"
+                    (click)="cancelDeactivation()"
+                  >
+                    {{ 'common.close' | transloco }}
+                  </button>
+                </div>
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    }
+
+    @if (isFormOpen()) {
+      <section
+        class="mt-8 rounded-2xl border border-line bg-surface p-5 sm:p-8"
+        aria-labelledby="qd-admin-delivery-type-form-heading"
+      >
+        <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 id="qd-admin-delivery-type-form-heading" class="text-lg font-semibold text-fg">
+              {{
+                (editingId() ? 'admin.deliveryTypes.editTitle' : 'admin.deliveryTypes.createTitle')
+                  | transloco
+              }}
+            </h2>
+            <p class="mt-1 text-sm text-fg-muted">
+              {{ 'admin.deliveryTypes.formDescription' | transloco }}
+            </p>
+          </div>
+          <button
+            type="button"
+            class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [disabled]="saving()"
+            (click)="closeForm()"
+          >
+            {{ 'admin.deliveryTypes.cancel' | transloco }}
+          </button>
+        </div>
+
+        @if (formError(); as message) {
+          <p
+            class="mb-5 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
+            role="alert"
+          >
+            {{ message }}
+          </p>
+        }
+
+        <form
+          class="grid grid-cols-1 gap-5 md:grid-cols-2"
+          [formGroup]="form"
+          (ngSubmit)="submitForm()"
+        >
+          <div>
+            <label for="qd-delivery-name" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.deliveryTypes.fields.name' | transloco }}
+            </label>
+            <input
+              id="qd-delivery-name"
+              type="text"
+              formControlName="name"
+              maxlength="100"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched"
+              [attr.aria-describedby]="
+                form.controls.name.invalid && form.controls.name.touched
+                  ? 'qd-delivery-name-error'
+                  : null
+              "
+            />
+            @if (form.controls.name.invalid && form.controls.name.touched) {
+              <p id="qd-delivery-name-error" class="mt-1 text-sm text-danger">
+                {{ 'admin.deliveryTypes.validation.name' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-delivery-type" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.deliveryTypes.fields.type' | transloco }}
+            </label>
+            <select
+              id="qd-delivery-type"
+              formControlName="type"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            >
+              <option value="standard">
+                {{ 'admin.deliveryTypes.types.standard' | transloco }}
+              </option>
+              <option value="express">{{ 'admin.deliveryTypes.types.express' | transloco }}</option>
+              <option value="corporate">
+                {{ 'admin.deliveryTypes.types.corporate' | transloco }}
+              </option>
+              <option value="pickup">{{ 'admin.deliveryTypes.types.pickup' | transloco }}</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="qd-delivery-price" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.deliveryTypes.fields.price' | transloco }}
+            </label>
+            <input
+              id="qd-delivery-price"
+              type="number"
+              formControlName="price"
+              min="0"
+              step="0.01"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.price.invalid && form.controls.price.touched"
+            />
+            @if (form.controls.price.invalid && form.controls.price.touched) {
+              <p class="mt-1 text-sm text-danger">
+                {{ 'admin.deliveryTypes.validation.price' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-delivery-description" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.deliveryTypes.fields.description' | transloco }}
+            </label>
+            <textarea
+              id="qd-delivery-description"
+              formControlName="description"
+              maxlength="200"
+              rows="3"
+              class="w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="
+                form.controls.description.invalid && form.controls.description.touched
+              "
+            ></textarea>
+            @if (form.controls.description.invalid && form.controls.description.touched) {
+              <p class="mt-1 text-sm text-danger">
+                {{ 'admin.deliveryTypes.validation.description' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div class="flex flex-wrap gap-3 md:col-span-2">
+            <button
+              type="submit"
+              class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-wait disabled:opacity-60"
+              [disabled]="saving()"
+            >
+              {{
+                (saving()
+                  ? 'admin.deliveryTypes.saving'
+                  : editingId()
+                    ? 'admin.deliveryTypes.save'
+                    : 'admin.deliveryTypes.create'
+                ) | transloco
+              }}
+            </button>
+            <button
+              type="button"
+              class="min-h-11 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              [disabled]="saving()"
+              (click)="closeForm()"
+            >
+              {{ 'admin.deliveryTypes.cancel' | transloco }}
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+</main>
