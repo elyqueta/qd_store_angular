@@ -105,6 +105,11 @@
             [attr.aria-invalid]="
               form.controls.categoryId.invalid && form.controls.categoryId.touched
             "
+            [attr.aria-describedby]="
+              form.controls.categoryId.invalid && form.controls.categoryId.touched
+                ? 'qd-product-category-error'
+                : null
+            "
           >
             <option value="">{{ 'admin.products.selectCategory' | transloco }}</option>
             @for (category of categories(); track category.id) {
@@ -112,7 +117,7 @@
             }
           </select>
           @if (form.controls.categoryId.invalid && form.controls.categoryId.touched) {
-            <p class="mt-1 text-sm text-danger">
+            <p id="qd-product-category-error" class="mt-1 text-sm text-danger">
               {{ 'admin.products.validation.category' | transloco }}
             </p>
           }
@@ -131,9 +136,14 @@
             required
             class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             [attr.aria-invalid]="form.controls.price.invalid && form.controls.price.touched"
+            [attr.aria-describedby]="
+              form.controls.price.invalid && form.controls.price.touched
+                ? 'qd-product-price-error'
+                : null
+            "
           />
           @if (form.controls.price.invalid && form.controls.price.touched) {
-            <p class="mt-1 text-sm text-danger">
+            <p id="qd-product-price-error" class="mt-1 text-sm text-danger">
               {{ 'admin.products.validation.price' | transloco }}
             </p>
           }
@@ -150,7 +160,11 @@
             min="0"
             step="0.01"
             class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
-            [attr.aria-describedby]="'qd-product-original-price-help'"
+            [attr.aria-describedby]="
+              form.controls.originalPrice.invalid && form.controls.originalPrice.touched
+                ? 'qd-product-original-price-help qd-product-original-price-error'
+                : 'qd-product-original-price-help'
+            "
             [attr.aria-invalid]="
               form.controls.originalPrice.invalid && form.controls.originalPrice.touched
             "
@@ -159,7 +173,7 @@
             {{ 'admin.products.originalPriceHelp' | transloco }}
           </p>
           @if (form.controls.originalPrice.invalid && form.controls.originalPrice.touched) {
-            <p class="mt-1 text-sm text-danger">
+            <p id="qd-product-original-price-error" class="mt-1 text-sm text-danger">
               {{ 'admin.products.validation.originalPrice' | transloco }}
             </p>
           }
@@ -176,9 +190,14 @@
             maxlength="50"
             class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             [attr.aria-invalid]="form.controls.badge.invalid && form.controls.badge.touched"
+            [attr.aria-describedby]="
+              form.controls.badge.invalid && form.controls.badge.touched
+                ? 'qd-product-badge-error'
+                : null
+            "
           />
           @if (form.controls.badge.invalid && form.controls.badge.touched) {
-            <p class="mt-1 text-sm text-danger">
+            <p id="qd-product-badge-error" class="mt-1 text-sm text-danger">
               {{ 'admin.products.validation.badge' | transloco }}
             </p>
           }
@@ -197,9 +216,14 @@
             [attr.aria-invalid]="
               form.controls.description.invalid && form.controls.description.touched
             "
+            [attr.aria-describedby]="
+              form.controls.description.invalid && form.controls.description.touched
+                ? 'qd-product-description-error'
+                : null
+            "
           ></textarea>
           @if (form.controls.description.invalid && form.controls.description.touched) {
-            <p class="mt-1 text-sm text-danger">
+            <p id="qd-product-description-error" class="mt-1 text-sm text-danger">
               {{ 'admin.products.validation.description' | transloco }}
             </p>
           }
@@ -367,7 +391,9 @@
           }
 
           @if (imageError(); as message) {
-            <p class="mt-4 text-sm text-danger" role="alert">{{ message }}</p>
+            <p id="qd-product-image-error" class="mt-4 text-sm text-danger" role="alert">
+              {{ message }}
+            </p>
           }
 
           @if (imageFormOpen()) {
@@ -389,6 +415,7 @@
                   accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
                   [attr.aria-required]="!editingImageId() ? 'true' : null"
                   [attr.aria-invalid]="!editingImageId() && !imageFile() && !!imageError()"
+                  [attr.aria-describedby]="imageError() ? 'qd-product-image-error' : null"
                   class="block min-h-11 w-full rounded-xl border border-line bg-surface px-3 py-2 text-sm text-fg file:mr-3 file:rounded-full file:border-0 file:bg-brand file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
                   (change)="selectImageFile($event)"
                 />

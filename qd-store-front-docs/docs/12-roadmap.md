@@ -47,7 +47,10 @@ Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões
 
 ## Fase 5 — Endurecimento
 
-- [ ] Acessibilidade (auditoria) · Performance (budgets, LCP) · Testes · Sitemap/robots
+- [x] Melhorias base de acessibilidade e auditoria estática (`17`)
+- [ ] Validação manual de acessibilidade com teclado, leitores de ecrã e temas (`17`)
+- [ ] Performance (budgets, LCP) · Sitemap/robots
+- [ ] Testes de integração e E2E
 - [ ] Corrida entre abas no refresh · CI/CD e deploy
 
 ## Futuro (depende do back-end)

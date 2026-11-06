@@ -8,3 +8,4 @@ Ordem de leitura sugerida: 01 → 02 → 11 → 12 → 13; consultar 03–10 e 1
 
 - [15 · Estados de carregamento do MVP](./15-estados-de-carregamento.md): inventário, critérios de selecção e medições pendentes.
 - [16 · Prompt para listagem de empresas do cliente](./16-prompt-listagem-empresas-cliente.md): contrato e requisitos de autorização para o back-end.
+- [17 · Auditoria inicial de acessibilidade](./17-auditoria-acessibilidade.md): melhorias de teclado, foco, movimento reduzido e validação manual pendente.

@@ -48,11 +48,16 @@
     </div>
   </div>
 
-  <div class="mb-5 flex flex-wrap gap-2">
+  <div
+    class="mb-5 flex flex-wrap gap-2"
+    role="group"
+    [attr.aria-label]="'public.catalog.categoryFilters' | transloco"
+  >
     <a
       [routerLink]="'/produtos'"
       [queryParams]="{ categoria: null, pagina: 1 }"
       queryParamsHandling="merge"
+      [attr.aria-current]="!selectedCategory() ? 'page' : null"
       class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
       [class.border-brand]="!selectedCategory()"
       [class.text-brand]="!selectedCategory()"
@@ -67,6 +72,7 @@
         [routerLink]="'/produtos'"
         [queryParams]="{ categoria: category.slug, pagina: 1 }"
         queryParamsHandling="merge"
+        [attr.aria-current]="selectedCategory() === category.slug ? 'page' : null"
         class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
         [class.border-brand]="selectedCategory() === category.slug"
         [class.text-brand]="selectedCategory() === category.slug"
@@ -80,6 +86,7 @@
 
   <div
     class="mb-8 flex flex-wrap items-center gap-2"
+    role="group"
     [attr.aria-label]="'public.catalog.statusLabel' | transloco"
   >
     @for (statusOption of statusOptions; track statusOption.value) {

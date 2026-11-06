@@ -1,4 +1,10 @@
 <div class="min-h-screen bg-surface-muted">
+  <a
+    href="#qd-main-content"
+    class="sr-only fixed left-4 top-4 z-[100] rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg focus:not-sr-only"
+  >
+    {{ 'a11y.skipToContent' | transloco }}
+  </a>
   <header class="border-b border-line bg-surface">
     <div
       class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8"
@@ -23,6 +29,7 @@
         <a
           routerLink="/admin"
           routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
           [routerLinkActiveOptions]="{ exact: true }"
           class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
         >
@@ -31,6 +38,7 @@
         <a
           routerLink="/admin/categorias"
           routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
           class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
         >
           {{ 'admin.layout.categories' | transloco }}
@@ -38,6 +46,7 @@
         <a
           routerLink="/admin/produtos"
           routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
           class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
         >
           {{ 'admin.layout.products' | transloco }}
@@ -45,6 +54,7 @@
         <a
           routerLink="/admin/tipos-entrega"
           routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
           class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
         >
           {{ 'admin.layout.deliveryTypes' | transloco }}
@@ -52,6 +62,7 @@
         <a
           routerLink="/admin/empresas"
           routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
           class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
         >
           {{ 'admin.layout.companies' | transloco }}
@@ -85,5 +96,7 @@
     </div>
   </header>
 
-  <router-outlet />
+  <div id="qd-main-content" tabindex="-1">
+    <router-outlet />
+  </div>
 </div>

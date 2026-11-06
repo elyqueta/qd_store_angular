@@ -20,6 +20,7 @@
         <a
           [routerLink]="item.route"
           routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
           [routerLinkActiveOptions]="{ exact: item.route === '/' }"
           class="text-sm font-medium text-fg-muted transition-colors hover:text-brand"
         >
@@ -39,7 +40,8 @@
             "
             aria-haspopup="menu"
             (click)="toggleCategoryMenu(category)"
-            (keydown.arrowdown)="focusMenuItem($event, 'qd-category-menu-' + category.id, 1)"
+            (keydown.arrowdown)="openCategoryMenuFromKeyboard($event, category, 1)"
+            (keydown.arrowup)="openCategoryMenuFromKeyboard($event, category, -1)"
           >
             {{ category.label }}
             <span aria-hidden="true">⌄</span>
@@ -48,8 +50,11 @@
             <div
               [id]="'qd-category-menu-' + category.id"
               role="menu"
+              [attr.aria-labelledby]="'qd-category-trigger-' + category.id"
               (keydown.arrowdown)="focusMenuItem($event, 'qd-category-menu-' + category.id, 1)"
               (keydown.arrowup)="focusMenuItem($event, 'qd-category-menu-' + category.id, -1)"
+              (keydown.home)="focusMenuBoundary($event, 'qd-category-menu-' + category.id, 'first')"
+              (keydown.end)="focusMenuBoundary($event, 'qd-category-menu-' + category.id, 'last')"
               class="absolute left-0 top-full z-50 mt-3 w-80 rounded-2xl border border-line bg-surface p-4 shadow-xl"
             >
               <p class="text-xs font-semibold uppercase tracking-[0.16em] text-fg-muted">
@@ -112,7 +117,8 @@
             id="qd-user-menu-trigger"
             type="button"
             (click)="toggleUserMenu()"
-            (keydown.arrowdown)="focusMenuItem($event, 'qd-user-menu', 1)"
+            (keydown.arrowdown)="openUserMenuFromKeyboard($event, 1)"
+            (keydown.arrowup)="openUserMenuFromKeyboard($event, -1)"
             class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-fg text-sm font-semibold text-surface transition-colors hover:bg-brand hover:text-brand-fg"
             [attr.aria-label]="'nav.userMenu' | transloco"
             [attr.aria-expanded]="userMenuOpen()"
@@ -125,9 +131,12 @@
             <div
               id="qd-user-menu"
               role="menu"
+              aria-labelledby="qd-user-menu-trigger"
               class="absolute right-0 top-full z-50 mt-3 min-w-52 rounded-2xl border border-line bg-surface p-2 shadow-xl"
               (keydown.arrowdown)="focusMenuItem($event, 'qd-user-menu', 1)"
               (keydown.arrowup)="focusMenuItem($event, 'qd-user-menu', -1)"
+              (keydown.home)="focusMenuBoundary($event, 'qd-user-menu', 'first')"
+              (keydown.end)="focusMenuBoundary($event, 'qd-user-menu', 'last')"
             >
               @for (item of userMenuItems(); track item.labelKey) {
                 @switch (item.kind) {
@@ -194,24 +203,30 @@
 
       <button
         type="button"
+        id="qd-mobile-menu-trigger"
         class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-lg text-fg lg:hidden"
         (click)="mobileOpen.set(!mobileOpen())"
-        [attr.aria-label]="'nav.menu' | transloco"
+        [attr.aria-label]="(mobileOpen() ? 'nav.closeMenu' : 'nav.menu') | transloco"
         [attr.aria-expanded]="mobileOpen()"
         aria-controls="qd-mobile-navigation"
       >
-        ☰
+        <span aria-hidden="true">{{ mobileOpen() ? '×' : '☰' }}</span>
       </button>
     </div>
   </nav>
 
   @if (mobileOpen()) {
-    <div id="qd-mobile-navigation" class="border-t border-line bg-surface lg:hidden">
+    <nav
+      id="qd-mobile-navigation"
+      class="border-t border-line bg-surface lg:hidden"
+      [attr.aria-label]="'nav.mobile' | transloco"
+    >
       <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4">
         @for (item of navItems; track item.route) {
           <a
             [routerLink]="item.route"
             routerLinkActive="text-brand"
+            ariaCurrentWhenActive="page"
             [routerLinkActiveOptions]="{ exact: item.route === '/' }"
             class="rounded-xl px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-brand"
             (click)="mobileOpen.set(false)"
@@ -240,6 +255,7 @@
               <a
                 [routerLink]="item.route"
                 routerLinkActive="text-brand"
+                ariaCurrentWhenActive="page"
                 class="rounded-xl px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-brand"
                 (click)="mobileOpen.set(false)"
               >
@@ -266,6 +282,6 @@
           </div>
         }
       </div>
-    </div>
+    </nav>
   }
 </header>

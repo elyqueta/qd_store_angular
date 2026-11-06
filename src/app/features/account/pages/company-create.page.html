@@ -142,9 +142,14 @@
               autocomplete="organization-title"
               class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
               [attr.aria-invalid]="form.controls.sector.invalid && form.controls.sector.touched"
+              [attr.aria-describedby]="
+                form.controls.sector.invalid && form.controls.sector.touched
+                  ? 'qd-company-sector-error'
+                  : null
+              "
             />
             @if (form.controls.sector.invalid && form.controls.sector.touched) {
-              <p class="mt-1 text-sm text-danger">
+              <p id="qd-company-sector-error" class="mt-1 text-sm text-danger">
                 {{ 'account.companies.validation.sector' | transloco }}
               </p>
             }

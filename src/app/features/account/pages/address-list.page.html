@@ -211,9 +211,14 @@
               maxlength="100"
               class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               [attr.aria-invalid]="form.controls.label.invalid && form.controls.label.touched"
+              [attr.aria-describedby]="
+                form.controls.label.invalid && form.controls.label.touched
+                  ? 'address-label-error'
+                  : null
+              "
             />
             @if (form.controls.label.invalid && form.controls.label.touched) {
-              <p class="mt-1 text-sm text-danger" aria-live="polite">
+              <p id="address-label-error" class="mt-1 text-sm text-danger" aria-live="polite">
                 {{ 'account.addresses.validation.label' | transloco }}
               </p>
             }
@@ -229,6 +234,11 @@
               class="w-full rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60"
               [disabled]="locationsLoading() || locationsError() !== null"
               [attr.aria-invalid]="form.controls.province.invalid && form.controls.province.touched"
+              [attr.aria-describedby]="
+                form.controls.province.invalid && form.controls.province.touched
+                  ? 'address-province-error'
+                  : null
+              "
               (change)="onProvinceChange()"
             >
               <option value="">{{ 'account.addresses.selectProvince' | transloco }}</option>
@@ -243,7 +253,7 @@
               }
             </select>
             @if (form.controls.province.invalid && form.controls.province.touched) {
-              <p class="mt-1 text-sm text-danger" aria-live="polite">
+              <p id="address-province-error" class="mt-1 text-sm text-danger" aria-live="polite">
                 {{ 'account.addresses.validation.province' | transloco }}
               </p>
             }
@@ -263,6 +273,11 @@
               [attr.aria-invalid]="
                 form.controls.municipality.invalid && form.controls.municipality.touched
               "
+              [attr.aria-describedby]="
+                form.controls.municipality.invalid && form.controls.municipality.touched
+                  ? 'address-municipality-error'
+                  : null
+              "
             >
               <option value="">{{ 'account.addresses.selectMunicipality' | transloco }}</option>
               @for (
@@ -273,7 +288,11 @@
               }
             </select>
             @if (form.controls.municipality.invalid && form.controls.municipality.touched) {
-              <p class="mt-1 text-sm text-danger" aria-live="polite">
+              <p
+                id="address-municipality-error"
+                class="mt-1 text-sm text-danger"
+                aria-live="polite"
+              >
                 {{ 'account.addresses.validation.municipality' | transloco }}
               </p>
             }
@@ -293,9 +312,18 @@
               [attr.aria-invalid]="
                 form.controls.neighborhood.invalid && form.controls.neighborhood.touched
               "
+              [attr.aria-describedby]="
+                form.controls.neighborhood.invalid && form.controls.neighborhood.touched
+                  ? 'address-neighborhood-error'
+                  : null
+              "
             />
             @if (form.controls.neighborhood.invalid && form.controls.neighborhood.touched) {
-              <p class="mt-1 text-sm text-danger" aria-live="polite">
+              <p
+                id="address-neighborhood-error"
+                class="mt-1 text-sm text-danger"
+                aria-live="polite"
+              >
                 {{ 'account.addresses.validation.neighborhood' | transloco }}
               </p>
             }
@@ -313,9 +341,14 @@
               maxlength="500"
               class="w-full resize-y rounded-lg border border-line bg-surface px-3 py-2.5 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               [attr.aria-invalid]="form.controls.address.invalid && form.controls.address.touched"
+              [attr.aria-describedby]="
+                form.controls.address.invalid && form.controls.address.touched
+                  ? 'address-line-error'
+                  : null
+              "
             ></textarea>
             @if (form.controls.address.invalid && form.controls.address.touched) {
-              <p class="mt-1 text-sm text-danger" aria-live="polite">
+              <p id="address-line-error" class="mt-1 text-sm text-danger" aria-live="polite">
                 {{ 'account.addresses.validation.address' | transloco }}
               </p>
             }

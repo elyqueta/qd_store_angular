@@ -140,6 +140,34 @@ export class SiteNavbarComponent {
     items.item(nextIndex)?.focus();
   }
 
+  focusMenuBoundary(event: Event, menuId: string, boundary: 'first' | 'last'): void {
+    event.preventDefault();
+    const items = this.document
+      .getElementById(menuId)
+      ?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+    if (!items?.length) {
+      return;
+    }
+
+    items.item(boundary === 'first' ? 0 : items.length - 1)?.focus();
+  }
+
+  openCategoryMenuFromKeyboard(event: Event, category: ProductCategory, direction: -1 | 1): void {
+    event.preventDefault();
+    if (this.activeCategory()?.id !== category.id) {
+      this.toggleCategoryMenu(category);
+    }
+
+    this.focusFirstMenuItemAfterRender(`qd-category-menu-${category.id}`, direction);
+  }
+
+  openUserMenuFromKeyboard(event: Event, direction: -1 | 1): void {
+    event.preventDefault();
+    this.closeCategoryMenu();
+    this.userMenuOpen.set(true);
+    this.focusFirstMenuItemAfterRender('qd-user-menu', direction);
+  }
+
   closeCategoryMenu(): void {
     this.menuSubscription?.unsubscribe();
     this.menuSubscription = null;
@@ -162,6 +190,7 @@ export class SiteNavbarComponent {
     ) {
       this.closeCategoryMenu();
       this.userMenuOpen.set(false);
+      this.mobileOpen.set(false);
     }
   }
 
@@ -169,6 +198,7 @@ export class SiteNavbarComponent {
   closeMenuOnEscape(): void {
     const category = this.activeCategory();
     const userMenuWasOpen = this.userMenuOpen();
+    const mobileWasOpen = this.mobileOpen();
     this.closeCategoryMenu();
     this.userMenuOpen.set(false);
     this.mobileOpen.set(false);
@@ -177,6 +207,28 @@ export class SiteNavbarComponent {
       this.document.getElementById(`qd-category-trigger-${category.id}`)?.focus();
     } else if (userMenuWasOpen) {
       this.document.getElementById('qd-user-menu-trigger')?.focus();
+    } else if (mobileWasOpen) {
+      this.document.getElementById('qd-mobile-menu-trigger')?.focus();
+    }
+  }
+
+  private focusFirstMenuItemAfterRender(menuId: string, direction: -1 | 1): void {
+    const window = this.document.defaultView;
+    if (!window) {
+      return;
+    }
+
+    const focusMenuItem = (): void => {
+      const items = this.document
+        .getElementById(menuId)
+        ?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+      items?.item(direction > 0 ? 0 : (items.length ?? 1) - 1)?.focus();
+    };
+
+    if (typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(focusMenuItem);
+    } else {
+      window.setTimeout(focusMenuItem);
     }
   }
 

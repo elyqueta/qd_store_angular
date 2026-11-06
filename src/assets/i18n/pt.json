@@ -5,6 +5,12 @@
     "loading": "A carregar…",
     "retry": "Tentar novamente"
   },
+  "a11y": {
+    "skipToContent": "Saltar para o conteúdo principal"
+  },
+  "notifications": {
+    "regionLabel": "Notificações"
+  },
   "auth": {
     "fields": {
       "email": "E-mail",
@@ -55,6 +61,8 @@
     "admin": "Painel de administração",
     "logout": "Sair",
     "menu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "mobile": "Navegação móvel",
     "themeToggle": "Alternar tema"
   },
   "footer": {
@@ -491,6 +499,7 @@
       "searchPlaceholder": "Pesquisar por nome ou descrição",
       "searchSubmit": "Pesquisar",
       "sortLabel": "Ordenar produtos",
+      "categoryFilters": "Filtrar por categoria",
       "sortDefault": "Ordenação padrão",
       "sortPriceAsc": "Preço: menor primeiro",
       "sortPriceDesc": "Preço: maior primeiro",

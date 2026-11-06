@@ -35,7 +35,7 @@ describe('ProductCardComponent', () => {
     }).compileComponents();
   });
 
-  it('renders the product main image when the API provides it', async () => {
+  it('marks the main image as decorative because the link contains the product details', async () => {
     const fixture = TestBed.createComponent(ProductCardComponent);
     fixture.componentRef.setInput('product', product);
     fixture.detectChanges();
@@ -43,7 +43,8 @@ describe('ProductCardComponent', () => {
 
     const image = fixture.nativeElement.querySelector('img') as HTMLImageElement | null;
     expect(image?.getAttribute('src')).toBe(product.mainImage?.url);
-    expect(image?.alt).toBe(product.name);
+    expect(image?.alt).toBe('');
+    expect(fixture.nativeElement.querySelector('a')?.textContent).toContain(product.name);
   });
 
   it('keeps the neutral placeholder when the product has no main image', async () => {

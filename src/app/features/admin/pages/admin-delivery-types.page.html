@@ -228,9 +228,14 @@
               required
               class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
               [attr.aria-invalid]="form.controls.price.invalid && form.controls.price.touched"
+              [attr.aria-describedby]="
+                form.controls.price.invalid && form.controls.price.touched
+                  ? 'qd-delivery-price-error'
+                  : null
+              "
             />
             @if (form.controls.price.invalid && form.controls.price.touched) {
-              <p class="mt-1 text-sm text-danger">
+              <p id="qd-delivery-price-error" class="mt-1 text-sm text-danger">
                 {{ 'admin.deliveryTypes.validation.price' | transloco }}
               </p>
             }
@@ -249,9 +254,14 @@
               [attr.aria-invalid]="
                 form.controls.description.invalid && form.controls.description.touched
               "
+              [attr.aria-describedby]="
+                form.controls.description.invalid && form.controls.description.touched
+                  ? 'qd-delivery-description-error'
+                  : null
+              "
             ></textarea>
             @if (form.controls.description.invalid && form.controls.description.touched) {
-              <p class="mt-1 text-sm text-danger">
+              <p id="qd-delivery-description-error" class="mt-1 text-sm text-danger">
                 {{ 'admin.deliveryTypes.validation.description' | transloco }}
               </p>
             }
