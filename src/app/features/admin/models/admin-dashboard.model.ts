@@ -1,14 +1,8 @@
 import { AdminCompany } from './admin-company.model';
+import { DeliveryType } from '../../public/models/delivery-type.model';
 
-export interface AdminDeliveryType {
-  id: string;
-  name: string;
-  description: string | null;
-  price: number;
-  type: 'standard' | 'express' | 'corporate' | 'pickup';
+export interface AdminDeliveryType extends DeliveryType {
   isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
 }
 
 export interface AdminCompanyUser {

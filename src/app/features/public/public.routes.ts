@@ -23,6 +23,11 @@ export const publicRoutes: Routes = [
     loadComponent: () => import('./pages/contact.page').then((module) => module.ContactPage),
   },
   {
+    path: 'tipos-entrega',
+    loadComponent: () =>
+      import('./pages/delivery-types.page').then((module) => module.DeliveryTypesPage),
+  },
+  {
     path: '**',
     loadComponent: () => import('./pages/not-found.page').then((module) => module.NotFoundPage),
   },

@@ -18,7 +18,7 @@
 | --------------------------------------------------------- | ------- | ---------- | ------------ |
 | `/`                                                       | public  | —          | Server       |
 | `/produtos`, `/produtos/:id`                              | public  | —          | Server       |
-| `/sobre`, `/contactos`                                    | public  | —          | Server       |
+| `/sobre`, `/contactos`, `/tipos-entrega`                  | public  | —          | Server       |
 | `/entrar`, `/criar-conta`                                 | public  | guest      | Client       |
 | `/conta/perfil`                                           | account | auth       | Client       |
 | `/conta/moradas`                                          | account | auth       | Client       |
@@ -36,6 +36,8 @@ Slugs de rota em pt (URLs para o público angolano). Quando existir `en`, avalia
 Na Fase 3, `/conta/perfil`, `/conta/moradas` e `/conta/empresas` estão implementadas sob `authGuard` e renderização client-side. O perfil lê os dados da sessão; moradas consome os endpoints autenticados de endereços e o catálogo público de províncias/municípios. A listagem de empresas consome `GET /api/v1/companies/mine`, que limita os resultados às relações do utilizador autenticado e inclui os membros associados; `/conta/empresas/nova` cria uma empresa pela API. Não usar a listagem administrativa nem IDs arbitrários para descobrir empresas.
 
 O dashboard `/admin` está implementado com `adminGuard`, layout próprio e renderização client-side. Apresenta contagens dos endpoints de produtos, categorias, tipos de entrega activos e empresas administrativas. As gestões CRUD de categorias (`/admin/categorias`) e produtos (`/admin/produtos`, `/admin/produtos/novo`, `/admin/produtos/:id`) também estão implementadas, incluindo upload de imagens e especificações. A gestão de tipos de entrega em `/admin/tipos-entrega` permite criar, editar e desactivar os tipos activos. A API não lista tipos inactivos nem permite reactivá-los. A gestão administrativa de empresas em `/admin/empresas` lista empresas e membros, permite editar nome/sector e desactivar; não permite alterar NIF nem reactivar empresas. O catálogo público integra pesquisa e ordenação com os parâmetros suportados pela API.
+
+A página pública `/tipos-entrega` consulta `GET /api/v1/delivery-types`, apresenta as opções activas devolvidas pela API e inclui estados de carregamento, vazio, erro e repetição. A rota é renderizada no servidor e está ligada no rodapé público.
 
 ## Regras de UI por perfil
 

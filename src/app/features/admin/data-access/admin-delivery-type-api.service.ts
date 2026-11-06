@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { API_URL } from '../../../core/config/api-url.token';
+import { DeliveryTypeApiService } from '../../public/data-access/delivery-type-api.service';
 import { ApiSingleResponse } from '../../public/models/product.model';
 import { AdminDeliveryType } from '../models/admin-dashboard.model';
 import {
@@ -9,20 +10,20 @@ import {
   UpdateAdminDeliveryTypeInput,
 } from '../models/admin-delivery-type.model';
 
-interface ApiListResponse<T> {
-  status: 'success';
-  data: T[];
-}
-
 @Injectable({ providedIn: 'root' })
 export class AdminDeliveryTypeApiService {
   private readonly http = inject(HttpClient);
+  private readonly deliveryTypeApi = inject(DeliveryTypeApiService);
   private readonly endpoint = `${inject(API_URL).replace(/\/+$/, '')}/api/v1/delivery-types`;
 
   listActive(): Observable<AdminDeliveryType[]> {
-    return this.http
-      .get<ApiListResponse<AdminDeliveryType>>(this.endpoint)
-      .pipe(map((response) => response.data));
+    return this.deliveryTypeApi
+      .listActive()
+      .pipe(
+        map((deliveryTypes) =>
+          deliveryTypes.map((deliveryType) => ({ ...deliveryType, isActive: true })),
+        ),
+      );
   }
 
   create(input: CreateAdminDeliveryTypeInput): Observable<AdminDeliveryType> {

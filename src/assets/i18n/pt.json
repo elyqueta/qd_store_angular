@@ -48,6 +48,7 @@
   "nav": {
     "home": "Início",
     "catalog": "Catálogo",
+    "deliveryTypes": "Tipos de entrega",
     "about": "Sobre nós",
     "contact": "Contactos",
     "primary": "Navegação principal",
@@ -468,6 +469,10 @@
       "title": "Contactos | QD · ItSOLUTIONS",
       "description": "Contacta a equipa da QD · ItSOLUTIONS através do WhatsApp."
     },
+    "deliveryTypes": {
+      "title": "Tipos de entrega | QD · ItSOLUTIONS",
+      "description": "Consulta as opções de entrega disponíveis na QD · ItSOLUTIONS."
+    },
     "notFound": {
       "title": "Página não encontrada | QD · ItSOLUTIONS",
       "description": "A página que procuras não existe ou foi movida."
@@ -532,6 +537,21 @@
       "kicker": "Contactos",
       "title": "Fala com a nossa equipa",
       "whatsapp": "Contactar pelo WhatsApp"
+    },
+    "deliveryTypes": {
+      "kicker": "Entregas",
+      "title": "Opções de entrega",
+      "description": "Consulta as modalidades de entrega actualmente disponíveis.",
+      "listTitle": "Tipos de entrega disponíveis",
+      "empty": "Não existem opções de entrega disponíveis neste momento.",
+      "errorTitle": "Não foi possível carregar as opções de entrega.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "types": {
+        "standard": "Padrão",
+        "express": "Expresso",
+        "corporate": "Empresarial",
+        "pickup": "Levantamento"
+      }
     },
     "nav": {
       "viewCategory": "Ver todos os produtos desta categoria"

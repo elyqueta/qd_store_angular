@@ -27,6 +27,7 @@
 
 - [x] Home · Catálogo (paginação, filtros categoria/estado, pesquisa e ordenação via API) · Detalhe (galeria, especificações)
 - [x] Páginas institucionais · 404
+- [x] Consulta pública dos tipos de entrega activos
 - [x] SEO por página + JSON-LD de produto
 
 Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões usam um elemento visual neutro e a página de detalhe carrega as imagens pelo endpoint próprio.

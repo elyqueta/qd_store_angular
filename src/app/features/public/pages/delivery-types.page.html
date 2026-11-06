@@ -1,0 +1,74 @@
+<main class="mx-auto min-h-[60vh] max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+  <header class="mb-8">
+    <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+      {{ 'public.deliveryTypes.kicker' | transloco }}
+    </p>
+    <h1 class="text-3xl font-semibold tracking-tight text-fg">
+      {{ 'public.deliveryTypes.title' | transloco }}
+    </h1>
+    <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+      {{ 'public.deliveryTypes.description' | transloco }}
+    </p>
+  </header>
+
+  <section aria-labelledby="qd-delivery-types-heading">
+    <h2 id="qd-delivery-types-heading" class="mb-6 text-lg font-semibold text-fg">
+      {{ 'public.deliveryTypes.listTitle' | transloco }}
+    </h2>
+
+    @if (isLoading()) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+        {{ 'common.loading' | transloco }}
+      </p>
+    } @else if (loadError()) {
+      <section
+        class="rounded-2xl border border-danger/40 bg-surface p-6"
+        aria-labelledby="qd-delivery-types-error"
+        role="alert"
+      >
+        <h3 id="qd-delivery-types-error" class="font-semibold text-fg">
+          {{ 'public.deliveryTypes.errorTitle' | transloco }}
+        </h3>
+        <p class="mt-2 text-sm text-fg-muted">
+          {{ 'public.deliveryTypes.errorDescription' | transloco }}
+        </p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="load()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </section>
+    } @else if (!deliveryTypes().length) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted">
+        {{ 'public.deliveryTypes.empty' | transloco }}
+      </p>
+    } @else {
+      <ul class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        @for (deliveryType of deliveryTypes(); track deliveryType.id) {
+          <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <h3 class="wrap-break-word text-lg font-semibold text-fg">
+                  {{ deliveryType.name }}
+                </h3>
+                <p class="mt-1 text-sm text-fg-muted">
+                  {{ typeLabel(deliveryType.type) }}
+                </p>
+              </div>
+              <p class="w-fit rounded-full bg-brand/10 px-3 py-1 text-sm font-semibold text-brand">
+                {{ deliveryType.price | number }} Kz
+              </p>
+            </div>
+            @if (deliveryType.description) {
+              <p class="mt-4 whitespace-pre-line text-sm leading-6 text-fg-muted">
+                {{ deliveryType.description }}
+              </p>
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</main>
