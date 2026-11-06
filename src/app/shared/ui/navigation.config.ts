@@ -22,6 +22,7 @@ export const USER_MENU_ITEMS: readonly UserMenuItem[] = [
   { kind: 'link', labelKey: 'nav.admin', route: '/admin', roles: ['admin'] },
   { kind: 'link', labelKey: 'nav.profile', route: '/conta/perfil' },
   { kind: 'link', labelKey: 'nav.addresses', route: '/conta/moradas' },
+  { kind: 'link', labelKey: 'nav.createCompany', route: '/conta/empresas/nova' },
   { kind: 'action', action: 'theme', labelKey: 'nav.themeToggle' },
   { kind: 'action', action: 'logout', labelKey: 'nav.logout' },
 ];

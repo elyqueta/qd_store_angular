@@ -10,4 +10,9 @@ export const accountRoutes: Routes = [
     loadComponent: () =>
       import('./pages/address-list.page').then((module) => module.AddressListPage),
   },
+  {
+    path: 'empresas/nova',
+    loadComponent: () =>
+      import('./pages/company-create.page').then((module) => module.CompanyCreatePage),
+  },
 ];

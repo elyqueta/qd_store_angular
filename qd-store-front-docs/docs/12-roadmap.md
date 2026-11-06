@@ -25,7 +25,7 @@
 
 ## Fase 2 — Área pública
 
-- [x] Home · Catálogo (paginação, filtros categoria/estado) · Detalhe (galeria, especificações)
+- [x] Home · Catálogo (paginação, filtros categoria/estado, pesquisa e ordenação via API) · Detalhe (galeria, especificações)
 - [x] Páginas institucionais · 404
 - [x] SEO por página + JSON-LD de produto
 
@@ -35,7 +35,7 @@ Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões
 
 - [x] Perfil (dados da sessão; sem edição enquanto o back-end não permitir)
 - [x] Moradas (CRUD, padrão, cascata província→município)
-- [ ] Empresas (criar, ver, editar, desativar, utilizadores associados)
+- [x] Criar empresa autenticada (ver/gerir empresas e membros aguarda endpoint de listagem própria)
 
 ## Fase 4 — Back office
 

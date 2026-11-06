@@ -54,7 +54,7 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 
 **Moradas** (`/api/v1/addresses`, auth, sempre do utilizador do token): `GET /`, `POST /`, `GET /:id`, `PATCH /:id` (province+municipality **juntos**), `DELETE /:id`, `PATCH /:id/default`. A primeira morada fica padrão automaticamente.
 
-**Empresas** (`/api/v1/companies`, auth): `POST /` (qualquer utilizador autenticado; fica proprietário), `GET /` **admin**, `GET /:id`, `PATCH /:id` e `DELETE /:id` (proprietário ou admin; `DELETE` = soft delete). `nif` imutável (enviar → 422).
+**Empresas** (`/api/v1/companies`, auth): `POST / { name, nif, sector? }` (qualquer utilizador autenticado; fica proprietário, resposta `201`); `GET /` **admin**; `GET /:id`, `PATCH /:id` e `DELETE /:id` requerem proprietário ou admin (`DELETE` = soft delete). `name` é obrigatório (1–200 caracteres), `nif` obrigatório (1–20 caracteres) e imutável, `sector` opcional (até 100 caracteres). O cliente ainda não dispõe de um endpoint para listar as próprias empresas com os membros associados.
 
 - O back office usa `GET /api/v1/admin/companies` (admin) para obter todas as empresas com os utilizadores associados numa única resposta. A edição administrativa envia apenas `name` e/ou `sector` por `PATCH /api/v1/companies/:id`; `sector: null` remove o valor. `DELETE /api/v1/companies/:id` desactiva a empresa e devolve `204`; não existe operação de reactivação.
 - Utilizadores `/api/v1/companies/:companyId/users`: `POST` (owner/admin), `GET` (admin ou membro), `PATCH /:userId` (cargo), `DELETE /:userId`. A associação exige um `userId` UUID e a API não expõe pesquisa/listagem administrativa de utilizadores para apoiar essa operação.

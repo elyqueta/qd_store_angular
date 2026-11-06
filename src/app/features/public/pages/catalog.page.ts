@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { finalize, Subscription } from 'rxjs';
 import { SeoService } from '../../../core/seo/seo.service';
-import { ProductApiService } from '../data-access/product-api.service';
+import { ProductApiService, ProductSort } from '../data-access/product-api.service';
 import { Product, ProductCategory, ProductStatus } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
 
@@ -26,6 +26,9 @@ export class CatalogPage {
   readonly products = signal<Product[]>([]);
   readonly selectedCategory = signal<string | null>(null);
   readonly selectedStatus = signal<ProductStatus>('active');
+  readonly searchInput = signal('');
+  readonly selectedSearch = signal('');
+  readonly selectedSort = signal<ProductSort | ''>('');
   readonly currentPage = signal(1);
   readonly totalPages = signal(1);
   readonly loading = signal(true);
@@ -35,6 +38,12 @@ export class CatalogPage {
     { value: 'active', label: 'public.catalog.status.active' },
     { value: 'out_of_stock', label: 'public.catalog.status.outOfStock' },
     { value: 'inactive', label: 'public.catalog.status.inactive' },
+  ];
+  readonly sortOptions: ReadonlyArray<{ value: ProductSort | ''; label: string }> = [
+    { value: '', label: 'public.catalog.sortDefault' },
+    { value: 'price_asc', label: 'public.catalog.sortPriceAsc' },
+    { value: 'price_desc', label: 'public.catalog.sortPriceDesc' },
+    { value: 'name_asc', label: 'public.catalog.sortNameAsc' },
   ];
   private categoriesLoaded = false;
   private productsSubscription: Subscription | null = null;
@@ -46,6 +55,13 @@ export class CatalogPage {
       this.selectedCategory.set(categorySlug);
       const requestedStatus = params.get('estado');
       this.selectedStatus.set(this.isProductStatus(requestedStatus) ? requestedStatus : 'active');
+      const search = params.get('pesquisa')?.trim() ?? '';
+      if (search !== this.selectedSearch()) {
+        this.searchInput.set(search);
+      }
+      this.selectedSearch.set(search);
+      const sort = params.get('ordem');
+      this.selectedSort.set(this.isProductSort(sort) ? sort : '');
       const page = Number(params.get('pagina'));
       this.currentPage.set(Number.isInteger(page) && page > 0 ? page : 1);
       if (this.categoriesLoaded) {
@@ -87,12 +103,16 @@ export class CatalogPage {
       return;
     }
 
+    const search = this.selectedSearch();
+    const sort = this.selectedSort();
     this.productsSubscription = this.productApi
       .listProducts({
         page: this.currentPage(),
         categoryId: category?.id,
         limit: 12,
         status: this.selectedStatus(),
+        ...(search ? { search } : {}),
+        ...(sort ? { sort } : {}),
       })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -115,6 +135,36 @@ export class CatalogPage {
     });
   }
 
+  setSearchInput(event: Event): void {
+    const input = event.target;
+    if (input instanceof HTMLInputElement) {
+      this.searchInput.set(input.value);
+    }
+  }
+
+  submitSearch(event?: Event): void {
+    event?.preventDefault();
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { pesquisa: this.searchInput().trim() || null, pagina: 1 },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  changeSort(event: Event): void {
+    const select = event.target;
+    if (!(select instanceof HTMLSelectElement)) {
+      return;
+    }
+
+    const sort = select.value;
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { ordem: this.isProductSort(sort) ? sort : null, pagina: 1 },
+      queryParamsHandling: 'merge',
+    });
+  }
+
   changePage(page: number): void {
     if (page < 1 || page > this.totalPages()) {
       return;
@@ -129,6 +179,17 @@ export class CatalogPage {
 
   private isProductStatus(status: string | null): status is ProductStatus {
     return status === 'active' || status === 'inactive' || status === 'out_of_stock';
+  }
+
+  private isProductSort(sort: string | null): sort is ProductSort {
+    return (
+      sort === 'createdAt_desc' ||
+      sort === 'createdAt_asc' ||
+      sort === 'name_asc' ||
+      sort === 'name_desc' ||
+      sort === 'price_asc' ||
+      sort === 'price_desc'
+    );
   }
 
   private updateSeo(categoryLabel: string | null): void {

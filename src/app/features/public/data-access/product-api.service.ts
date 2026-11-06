@@ -11,13 +11,16 @@ import {
   ProductListPage,
 } from '../models/product.model';
 
-interface ListProductsParams {
+export type ProductSort =
+  'createdAt_desc' | 'createdAt_asc' | 'name_asc' | 'name_desc' | 'price_asc' | 'price_desc';
+
+export interface ListProductsParams {
   page?: number;
   limit?: number;
   categoryId?: string;
   status?: 'active' | 'inactive' | 'out_of_stock';
   search?: string;
-  sort?: 'createdAt_desc' | 'createdAt_asc' | 'name_asc' | 'name_desc' | 'price_asc' | 'price_desc';
+  sort?: ProductSort;
   priceMin?: number;
   priceMax?: number;
   availableOnly?: boolean;

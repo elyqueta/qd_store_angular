@@ -51,6 +51,7 @@
     "register": "Criar conta",
     "profile": "Perfil",
     "addresses": "Moradas",
+    "createCompany": "Criar empresa",
     "admin": "Painel de administração",
     "logout": "Sair",
     "menu": "Abrir menu",
@@ -132,6 +133,29 @@
       },
       "notProvided": "Não indicado",
       "unavailable": "Não foi possível apresentar os dados da sessão."
+    },
+    "companies": {
+      "kicker": "Conta empresarial",
+      "title": "Registar empresa",
+      "description": "Regista uma empresa associada à tua conta.",
+      "formDescription": "O NIF é obrigatório e não poderá ser alterado depois do registo. O sector é opcional.",
+      "fields": {
+        "name": "Nome da empresa",
+        "nif": "NIF",
+        "sector": "Sector (opcional)"
+      },
+      "validation": {
+        "name": "Indica um nome com até 200 caracteres.",
+        "nif": "Indica um NIF com até 20 caracteres.",
+        "sector": "O sector não pode exceder 100 caracteres."
+      },
+      "create": "Registar empresa",
+      "saving": "A registar…",
+      "cancel": "Cancelar",
+      "backToProfile": "Voltar ao perfil",
+      "createdTitle": "Empresa registada",
+      "createdDescription": "A empresa foi associada à tua conta.",
+      "managementPending": "A listagem de empresas e a gestão de membros ainda não estão disponíveis na API para a conta do cliente."
     }
   },
   "admin": {
@@ -450,6 +474,14 @@
       "title": "Produtos de tecnologia",
       "all": "Todas",
       "empty": "Não existem produtos para os filtros seleccionados.",
+      "searchLabel": "Pesquisar produtos",
+      "searchPlaceholder": "Pesquisar por nome ou descrição",
+      "searchSubmit": "Pesquisar",
+      "sortLabel": "Ordenar produtos",
+      "sortDefault": "Ordenação padrão",
+      "sortPriceAsc": "Preço: menor primeiro",
+      "sortPriceDesc": "Preço: maior primeiro",
+      "sortNameAsc": "Nome: A–Z",
       "statusLabel": "Filtrar produtos por estado",
       "status": {
         "active": "Disponíveis",

@@ -8,33 +8,74 @@
         {{ 'public.catalog.title' | transloco }}
       </h1>
     </div>
+  </div>
 
-    <div class="flex flex-wrap gap-2">
+  <div class="mb-5 flex flex-col gap-3 sm:flex-row">
+    <form class="flex min-w-0 flex-1 gap-2" role="search" (submit)="submitSearch($event)">
+      <label class="sr-only" for="qd-catalog-search">
+        {{ 'public.catalog.searchLabel' | transloco }}
+      </label>
+      <input
+        id="qd-catalog-search"
+        type="search"
+        [value]="searchInput()"
+        [placeholder]="'public.catalog.searchPlaceholder' | transloco"
+        class="min-h-11 min-w-0 flex-1 rounded-full border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none placeholder:text-fg-muted focus:border-brand focus:ring-2 focus:ring-brand/20"
+        (input)="setSearchInput($event)"
+      />
+      <button
+        type="submit"
+        class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        {{ 'public.catalog.searchSubmit' | transloco }}
+      </button>
+    </form>
+
+    <div class="sm:w-56">
+      <label class="sr-only" for="qd-catalog-sort">
+        {{ 'public.catalog.sortLabel' | transloco }}
+      </label>
+      <select
+        id="qd-catalog-sort"
+        class="min-h-11 w-full rounded-full border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+        [value]="selectedSort()"
+        (change)="changeSort($event)"
+      >
+        @for (option of sortOptions; track option.value) {
+          <option [value]="option.value">{{ option.label | transloco }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="mb-5 flex flex-wrap gap-2">
+    <a
+      [routerLink]="'/produtos'"
+      [queryParams]="{ categoria: null, pagina: 1 }"
+      queryParamsHandling="merge"
+      class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
+      [class.border-brand]="!selectedCategory()"
+      [class.text-brand]="!selectedCategory()"
+      [class.border-line]="selectedCategory()"
+      [class.text-fg-muted]="selectedCategory()"
+    >
+      {{ 'public.catalog.all' | transloco }}
+    </a>
+
+    @for (category of categories(); track category.id) {
       <a
         [routerLink]="'/produtos'"
+        [queryParams]="{ categoria: category.slug, pagina: 1 }"
+        queryParamsHandling="merge"
         class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
-        [class.border-brand]="!selectedCategory()"
-        [class.text-brand]="!selectedCategory()"
-        [class.border-line]="selectedCategory()"
-        [class.text-fg-muted]="selectedCategory()"
+        [class.border-brand]="selectedCategory() === category.slug"
+        [class.text-brand]="selectedCategory() === category.slug"
+        [class.border-line]="selectedCategory() !== category.slug"
+        [class.text-fg-muted]="selectedCategory() !== category.slug"
       >
-        {{ 'public.catalog.all' | transloco }}
+        {{ category.label }}
       </a>
-
-      @for (category of categories(); track category.id) {
-        <a
-          [routerLink]="'/produtos'"
-          [queryParams]="{ categoria: category.slug }"
-          class="rounded-full border px-4 py-2 text-sm font-medium transition-colors"
-          [class.border-brand]="selectedCategory() === category.slug"
-          [class.text-brand]="selectedCategory() === category.slug"
-          [class.border-line]="selectedCategory() !== category.slug"
-          [class.text-fg-muted]="selectedCategory() !== category.slug"
-        >
-          {{ category.label }}
-        </a>
-      }
-    </div>
+    }
   </div>
 
   <div

@@ -1,0 +1,175 @@
+<main class="min-h-[60vh] bg-surface-muted pb-16">
+  <header class="border-b border-line bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <a
+        routerLink="/conta/perfil"
+        class="text-sm font-medium text-brand underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        {{ 'account.companies.backToProfile' | transloco }}
+      </a>
+      <p class="mb-1 mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+        {{ 'account.companies.kicker' | transloco }}
+      </p>
+      <h1 class="text-3xl font-semibold tracking-tight text-fg">
+        {{ 'account.companies.title' | transloco }}
+      </h1>
+      <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+        {{ 'account.companies.description' | transloco }}
+      </p>
+    </div>
+  </header>
+
+  <section class="mx-auto max-w-3xl px-4 pt-8 sm:px-6 lg:px-8">
+    @if (createdCompany(); as company) {
+      <div
+        class="rounded-2xl border border-success/30 bg-success/5 p-6 sm:p-8"
+        role="status"
+        aria-live="polite"
+      >
+        <h2 class="text-xl font-semibold text-fg">
+          {{ 'account.companies.createdTitle' | transloco }}
+        </h2>
+        <p class="mt-2 text-sm text-fg-muted">
+          {{ 'account.companies.createdDescription' | transloco }}
+        </p>
+        <dl class="mt-6 grid gap-4 sm:grid-cols-2">
+          <div>
+            <dt class="text-sm text-fg-muted">{{ 'account.companies.fields.name' | transloco }}</dt>
+            <dd class="mt-1 break-words text-sm font-medium text-fg">{{ company.name }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm text-fg-muted">{{ 'account.companies.fields.nif' | transloco }}</dt>
+            <dd class="mt-1 break-words text-sm font-medium text-fg">{{ company.nif }}</dd>
+          </div>
+          @if (company.sector) {
+            <div>
+              <dt class="text-sm text-fg-muted">
+                {{ 'account.companies.fields.sector' | transloco }}
+              </dt>
+              <dd class="mt-1 break-words text-sm font-medium text-fg">{{ company.sector }}</dd>
+            </div>
+          }
+        </dl>
+        <p class="mt-6 rounded-xl border border-line bg-surface p-4 text-sm text-fg-muted">
+          {{ 'account.companies.managementPending' | transloco }}
+        </p>
+        <a
+          routerLink="/conta/perfil"
+          class="mt-6 inline-flex min-h-11 items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+        >
+          {{ 'account.companies.backToProfile' | transloco }}
+        </a>
+      </div>
+    } @else {
+      <form
+        class="rounded-2xl border border-line bg-surface p-6 sm:p-8"
+        [formGroup]="form"
+        (ngSubmit)="submitForm()"
+        novalidate
+      >
+        <p class="mb-6 text-sm text-fg-muted">
+          {{ 'account.companies.formDescription' | transloco }}
+        </p>
+
+        @if (formError(); as message) {
+          <p
+            class="mb-5 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
+            role="alert"
+          >
+            {{ message }}
+          </p>
+        }
+
+        <div class="space-y-5">
+          <div>
+            <label for="qd-company-name" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.companies.fields.name' | transloco }}
+            </label>
+            <input
+              id="qd-company-name"
+              type="text"
+              formControlName="name"
+              maxlength="200"
+              required
+              autocomplete="organization"
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.name.invalid && form.controls.name.touched"
+              [attr.aria-describedby]="
+                form.controls.name.invalid && form.controls.name.touched
+                  ? 'qd-company-name-error'
+                  : null
+              "
+            />
+            @if (form.controls.name.invalid && form.controls.name.touched) {
+              <p id="qd-company-name-error" class="mt-1 text-sm text-danger">
+                {{ 'account.companies.validation.name' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-company-nif" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.companies.fields.nif' | transloco }}
+            </label>
+            <input
+              id="qd-company-nif"
+              type="text"
+              formControlName="nif"
+              maxlength="20"
+              required
+              autocomplete="off"
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.nif.invalid && form.controls.nif.touched"
+              [attr.aria-describedby]="
+                form.controls.nif.invalid && form.controls.nif.touched
+                  ? 'qd-company-nif-error'
+                  : null
+              "
+            />
+            @if (form.controls.nif.invalid && form.controls.nif.touched) {
+              <p id="qd-company-nif-error" class="mt-1 text-sm text-danger">
+                {{ 'account.companies.validation.nif' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-company-sector" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'account.companies.fields.sector' | transloco }}
+            </label>
+            <input
+              id="qd-company-sector"
+              type="text"
+              formControlName="sector"
+              maxlength="100"
+              autocomplete="organization-title"
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.sector.invalid && form.controls.sector.touched"
+            />
+            @if (form.controls.sector.invalid && form.controls.sector.touched) {
+              <p class="mt-1 text-sm text-danger">
+                {{ 'account.companies.validation.sector' | transloco }}
+              </p>
+            }
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <button
+            type="submit"
+            class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            [disabled]="saving()"
+          >
+            {{ (saving() ? 'account.companies.saving' : 'account.companies.create') | transloco }}
+          </button>
+          <a
+            routerLink="/conta/perfil"
+            class="inline-flex min-h-11 items-center rounded-full border border-line px-5 py-2.5 text-sm font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          >
+            {{ 'account.companies.cancel' | transloco }}
+          </a>
+        </div>
+      </form>
+    }
+  </section>
+</main>

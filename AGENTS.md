@@ -124,3 +124,4 @@ Ver `docs/13-decisoes.md` §"Lacunas do back-end". Resumo: não existe `GET /me`
 | `docs/13-decisoes.md` | ADRs, perguntas em aberto, lacunas |
 | `docs/14-prompts-copilot.md` | Prompts prontos por fase |
 | `docs/15-estados-de-carregamento.md` | Inventário, critérios e medições dos estados de carregamento |
+| `docs/16-prompt-listagem-empresas-cliente.md` | Prompt para endpoint de empresas próprias e membros |
