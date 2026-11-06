@@ -76,7 +76,8 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 
 **Empresas** (`/api/v1/companies`, auth): `POST /` (qualquer utilizador autenticado; fica proprietário), `GET /` **admin**, `GET /:id`, `PATCH /:id` e `DELETE /:id` (proprietário ou admin; `DELETE` = soft delete). `nif` imutável (enviar → 422).
 
-- Utilizadores `/api/v1/companies/:companyId/users`: `POST` (owner/admin), `GET` (admin ou membro), `PATCH /:userId` (cargo), `DELETE /:userId`.
+- O back office usa `GET /api/v1/admin/companies` (admin) para obter todas as empresas com os utilizadores associados numa única resposta. A edição administrativa envia apenas `name` e/ou `sector` por `PATCH /api/v1/companies/:id`; `sector: null` remove o valor. `DELETE /api/v1/companies/:id` desactiva a empresa e devolve `204`; não existe operação de reactivação.
+- Utilizadores `/api/v1/companies/:companyId/users`: `POST` (owner/admin), `GET` (admin ou membro), `PATCH /:userId` (cargo), `DELETE /:userId`. A associação exige um `userId` UUID e a API não expõe pesquisa/listagem administrativa de utilizadores para apoiar essa operação.
 
 **Admin** (`/api/v1/admin`): `GET /companies` → empresas com `users[]`.
 

@@ -1,0 +1,246 @@
+<main class="mx-auto min-h-[60vh] max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-8">
+    <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+      {{ 'admin.companies.kicker' | transloco }}
+    </p>
+    <h1 class="text-3xl font-semibold tracking-tight text-fg">
+      {{ 'admin.companies.title' | transloco }}
+    </h1>
+    <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+      {{ 'admin.companies.description' | transloco }}
+    </p>
+  </header>
+
+  <section aria-labelledby="qd-admin-companies-heading">
+    <h2 id="qd-admin-companies-heading" class="mb-6 text-lg font-semibold text-fg">
+      {{ 'admin.companies.listTitle' | transloco }}
+    </h2>
+
+    @if (isLoading()) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+        {{ 'common.loading' | transloco }}
+      </p>
+    } @else if (hasLoadError()) {
+      <section
+        class="rounded-2xl border border-danger/40 bg-surface p-6"
+        aria-labelledby="qd-admin-companies-error"
+        role="alert"
+      >
+        <h3 id="qd-admin-companies-error" class="font-semibold text-fg">
+          {{ 'admin.companies.errorTitle' | transloco }}
+        </h3>
+        <p class="mt-2 text-sm text-fg-muted">
+          {{ 'admin.companies.errorDescription' | transloco }}
+        </p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="load()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </section>
+    } @else if (!companies().length) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted">
+        {{ 'admin.companies.empty' | transloco }}
+      </p>
+    } @else {
+      <ul class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        @for (company of companies(); track company.id) {
+          <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <h3 class="wrap-break-word font-semibold text-fg">{{ company.name }}</h3>
+                  <span
+                    class="rounded-full bg-surface-muted px-3 py-1 text-xs font-medium text-fg-muted"
+                  >
+                    {{ statusLabel(company.status) }}
+                  </span>
+                </div>
+                <p class="mt-2 break-all text-sm text-fg-muted">
+                  {{ 'admin.companies.fields.nif' | transloco }}: {{ company.nif }}
+                </p>
+                <p class="mt-1 text-sm text-fg-muted">
+                  {{ 'admin.companies.fields.sector' | transloco }}:
+                  {{ company.sector || ('admin.companies.notProvided' | transloco) }}
+                </p>
+              </div>
+
+              <div class="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-line px-3 py-2 text-xs font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+                  [disabled]="saving() || pendingDeactivationId() !== null"
+                  (click)="openEditForm(company)"
+                >
+                  {{ 'admin.companies.edit' | transloco }}
+                </button>
+                @if (company.status !== 'inactive') {
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full border border-danger/40 px-3 py-2 text-xs font-medium text-danger transition hover:bg-danger/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:opacity-60"
+                    [disabled]="saving() || pendingDeactivationId() !== null"
+                    (click)="requestDeactivation(company)"
+                  >
+                    {{ 'admin.companies.deactivate' | transloco }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <section
+              class="mt-5 border-t border-line pt-4"
+              [attr.aria-label]="'admin.companies.membersTitle' | transloco"
+            >
+              <h4 class="text-sm font-semibold text-fg">
+                {{ 'admin.companies.membersTitle' | transloco }} ({{ company.users.length }})
+              </h4>
+              @if (company.users.length) {
+                <ul class="mt-3 divide-y divide-line">
+                  @for (user of company.users; track user.id) {
+                    <li
+                      class="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div class="min-w-0">
+                        <p class="wrap-break-word text-sm font-medium text-fg">
+                          {{ user.fullName }}
+                        </p>
+                        <p class="break-all text-xs text-fg-muted">{{ user.email }}</p>
+                      </div>
+                      <p class="text-xs text-fg-muted">
+                        {{ user.companyRole || ('admin.companies.noRole' | transloco) }}
+                      </p>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="mt-2 text-sm text-fg-muted">
+                  {{ 'admin.companies.noMembers' | transloco }}
+                </p>
+              }
+            </section>
+
+            @if (confirmingDeactivationId() === company.id) {
+              <div
+                class="mt-5 rounded-xl border border-danger/30 bg-danger/5 p-4"
+                role="group"
+                [attr.aria-label]="'admin.companies.confirmTitle' | transloco"
+              >
+                <p class="text-sm text-fg">
+                  {{ 'admin.companies.confirmDescription' | transloco: { name: company.name } }}
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full bg-danger px-4 py-2 text-sm font-semibold text-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:opacity-60"
+                    [disabled]="pendingDeactivationId() !== null"
+                    (click)="confirmDeactivation(company)"
+                  >
+                    {{ 'admin.companies.confirmAction' | transloco }}
+                  </button>
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    [disabled]="pendingDeactivationId() !== null"
+                    (click)="cancelDeactivation()"
+                  >
+                    {{ 'common.close' | transloco }}
+                  </button>
+                </div>
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    }
+
+    @if (editingCompanyId()) {
+      <section
+        class="mt-8 rounded-2xl border border-line bg-surface p-5 sm:p-8"
+        aria-labelledby="qd-admin-company-form-heading"
+      >
+        <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 id="qd-admin-company-form-heading" class="text-lg font-semibold text-fg">
+              {{ 'admin.companies.editTitle' | transloco }}
+            </h2>
+            <p class="mt-1 text-sm text-fg-muted">
+              {{ 'admin.companies.formDescription' | transloco }}
+            </p>
+          </div>
+          <button
+            type="button"
+            class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [disabled]="saving()"
+            (click)="closeForm()"
+          >
+            {{ 'admin.companies.cancel' | transloco }}
+          </button>
+        </div>
+
+        @if (formError(); as message) {
+          <p
+            class="mb-5 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
+            role="alert"
+          >
+            {{ message }}
+          </p>
+        }
+
+        <form
+          class="grid grid-cols-1 gap-5 md:grid-cols-2"
+          [formGroup]="form"
+          (ngSubmit)="submitForm()"
+        >
+          <div>
+            <label for="qd-company-name" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.companies.fields.name' | transloco }}
+            </label>
+            <input
+              id="qd-company-name"
+              type="text"
+              formControlName="name"
+              maxlength="200"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            />
+            @if (form.controls.name.touched && form.controls.name.invalid) {
+              <p class="mt-2 text-xs text-danger">
+                {{ 'admin.companies.validation.name' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-company-sector" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.companies.fields.sector' | transloco }}
+            </label>
+            <input
+              id="qd-company-sector"
+              type="text"
+              formControlName="sector"
+              maxlength="100"
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+            />
+            @if (form.controls.sector.touched && form.controls.sector.invalid) {
+              <p class="mt-2 text-xs text-danger">
+                {{ 'admin.companies.validation.sector' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div class="md:col-span-2">
+            <button
+              type="submit"
+              class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+              [disabled]="saving()"
+            >
+              {{ (saving() ? 'admin.companies.saving' : 'admin.companies.save') | transloco }}
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+</main>

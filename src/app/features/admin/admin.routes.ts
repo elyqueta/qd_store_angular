@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const adminRoutes: Routes = [
   {
+    path: 'empresas',
+    loadComponent: () =>
+      import('./pages/admin-companies.page').then((module) => module.AdminCompaniesPage),
+  },
+  {
     path: 'tipos-entrega',
     loadComponent: () =>
       import('./pages/admin-delivery-types.page').then((module) => module.AdminDeliveryTypesPage),

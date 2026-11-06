@@ -43,7 +43,7 @@ Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões
 - [x] Categorias (admin)
 - [x] Produtos, imagens por URL e especificações (admin)
 - [x] Tipos de entrega (admin; reactivação depende de endpoint no back-end)
-- [ ] Empresas (admin)
+- [x] Empresas (admin: listagem com membros, edição de nome/sector e desactivação)
 
 ## Fase 5 — Endurecimento
 

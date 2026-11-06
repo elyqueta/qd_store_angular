@@ -142,6 +142,7 @@
       "categories": "Categorias",
       "products": "Produtos",
       "deliveryTypes": "Tipos de entrega",
+      "companies": "Empresas",
       "store": "Voltar à loja",
       "logout": "Terminar sessão"
     },
@@ -197,6 +198,53 @@
         "created": "Categoria criada.",
         "updated": "Categoria actualizada.",
         "deleted": "Categoria removida."
+      }
+    },
+    "companies": {
+      "seoTitle": "Empresas | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Consulta e gere as empresas registadas na QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de empresas",
+      "description": "Consulta os dados das empresas e os utilizadores associados.",
+      "listTitle": "Empresas registadas",
+      "empty": "Ainda não existem empresas registadas.",
+      "errorTitle": "Não foi possível carregar as empresas.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "edit": "Editar",
+      "deactivate": "Desactivar",
+      "editTitle": "Editar empresa",
+      "formDescription": "O NIF não pode ser alterado. O sector pode ficar vazio para ser removido.",
+      "membersTitle": "Utilizadores associados",
+      "noMembers": "Não existem utilizadores associados a esta empresa.",
+      "noRole": "Cargo não indicado",
+      "notProvided": "Não indicado",
+      "confirmTitle": "Confirmar desactivação da empresa",
+      "confirmDescription": "Tens a certeza de que pretendes desactivar “{{ name }}”? A empresa deixará de estar activa.",
+      "confirmAction": "Sim, desactivar",
+      "fields": {
+        "name": "Nome da empresa",
+        "nif": "NIF",
+        "sector": "Sector"
+      },
+      "status": {
+        "active": "Activa",
+        "inactive": "Inactiva",
+        "banned": "Suspensa"
+      },
+      "validation": {
+        "name": "Indica um nome com até 200 caracteres.",
+        "sector": "O sector não pode exceder 100 caracteres."
+      },
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "unavailable": "Esta empresa já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "updated": "Empresa actualizada.",
+        "deactivated": "Empresa desactivada.",
+        "noChanges": "Não existem alterações por guardar."
       }
     },
     "products": {

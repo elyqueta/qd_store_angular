@@ -1,3 +1,5 @@
+import { AdminCompany } from './admin-company.model';
+
 export interface AdminDeliveryType {
   id: string;
   name: string;
@@ -16,15 +18,7 @@ export interface AdminCompanyUser {
   companyRole: string | null;
 }
 
-export interface AdminCompanyWithUsers {
-  id: string;
-  ownerId: string;
-  name: string;
-  nif: string;
-  sector: string | null;
-  status: 'active' | 'inactive' | 'banned';
-  createdAt: string;
-  updatedAt: string;
+export interface AdminCompanyWithUsers extends AdminCompany {
   users: AdminCompanyUser[];
 }
 

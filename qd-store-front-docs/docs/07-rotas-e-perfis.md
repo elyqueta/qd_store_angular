@@ -6,7 +6,7 @@
 | ----------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------ |
 | Visitante               | sem sessão                                       | catálogo, detalhe, tipos de entrega, localizações, entrar/criar conta          |
 | Cliente                 | `role = customer`                                | tudo o anterior + moradas + criar empresa; gestão das empresas pendente (L-05) |
-| Admin                   | `role = admin`                                   | tudo + dashboard administrativo; restantes módulos do back office pendentes    |
+| Admin                   | `role = admin`                                   | tudo + dashboard e gestão administrativa de catálogo, entregas e empresas      |
 | Proprietário de empresa | `company.ownerId === user.id` (não vem no token) | editar/desativar a empresa, gerir utilizadores dela                            |
 | Membro de empresa       | existe em `user_company`                         | listar utilizadores da própria empresa                                         |
 
@@ -34,7 +34,7 @@ Slugs de rota em pt (URLs para o público angolano). Quando existir `en`, avalia
 
 Na Fase 3, `/conta/perfil` e `/conta/moradas` estão implementadas sob `authGuard` e renderização client-side. O perfil lê os dados da sessão; moradas consome os endpoints autenticados de endereços e o catálogo público de províncias/municípios. As rotas de empresas continuam pendentes, sem contornar a lacuna L-05.
 
-O dashboard `/admin` está implementado com `adminGuard`, layout próprio e renderização client-side. Apresenta contagens dos endpoints de produtos, categorias, tipos de entrega activos e empresas administrativas. As gestões CRUD de categorias (`/admin/categorias`) e produtos (`/admin/produtos`, `/admin/produtos/novo`, `/admin/produtos/:id`) também estão implementadas, incluindo imagens por URL e especificações. A gestão de tipos de entrega em `/admin/tipos-entrega` permite criar, editar e desactivar os tipos activos. A API não lista tipos inactivos nem permite reactivá-los; gestão administrativa de empresas continua pendente.
+O dashboard `/admin` está implementado com `adminGuard`, layout próprio e renderização client-side. Apresenta contagens dos endpoints de produtos, categorias, tipos de entrega activos e empresas administrativas. As gestões CRUD de categorias (`/admin/categorias`) e produtos (`/admin/produtos`, `/admin/produtos/novo`, `/admin/produtos/:id`) também estão implementadas, incluindo imagens por URL e especificações. A gestão de tipos de entrega em `/admin/tipos-entrega` permite criar, editar e desactivar os tipos activos. A API não lista tipos inactivos nem permite reactivá-los. A gestão administrativa de empresas em `/admin/empresas` lista empresas e membros, permite editar nome/sector e desactivar; não permite alterar NIF nem reactivar empresas.
 
 ## Regras de UI por perfil
 
