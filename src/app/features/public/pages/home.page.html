@@ -61,10 +61,10 @@
             class="rounded-2xl border border-line bg-surface p-4 text-center shadow-sm transition-transform hover:-translate-y-1 hover:border-brand"
           >
             <div
-              class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted text-xl"
+              class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted text-brand"
               aria-hidden="true"
             >
-              {{ category.icon || '📦' }}
+              <qd-icon [name]="categoryIconName(category.icon, category.slug)" [size]="22" />
             </div>
             <p class="font-medium text-fg">{{ category.label }}</p>
           </a>

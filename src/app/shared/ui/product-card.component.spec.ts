@@ -54,6 +54,6 @@ describe('ProductCardComponent', () => {
     await fixture.whenStable();
 
     expect(fixture.nativeElement.querySelector('img')).toBeNull();
-    expect(fixture.nativeElement.textContent).toContain('◇');
+    expect(fixture.nativeElement.querySelector('qd-icon svg')).not.toBeNull();
   });
 });

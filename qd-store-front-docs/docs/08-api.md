@@ -59,6 +59,16 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 - O back office usa `GET /api/v1/admin/companies` (admin) para obter todas as empresas com os utilizadores associados numa única resposta. A edição administrativa envia apenas `name` e/ou `sector` por `PATCH /api/v1/companies/:id`; `sector: null` remove o valor. `DELETE /api/v1/companies/:id` desactiva a empresa e devolve `204`; não existe operação de reactivação.
 - Utilizadores `/api/v1/companies/:companyId/users`: `POST` (owner/admin), `GET` (admin ou membro), `PATCH /:userId` (cargo), `DELETE /:userId`. A associação exige um `userId` UUID e a API não expõe pesquisa/listagem administrativa de utilizadores para apoiar essa operação.
 
+**Carrinho** (`/api/v1/cart`, autenticado): `GET /` devolve o carrinho do utilizador; `DELETE /` esvazia-o (`204`). `POST /items { productId, quantity? }` adiciona produto (quantidade 1–99, soma à quantidade existente); `PATCH /items/:itemId { quantity }` define a quantidade; `DELETE /items/:itemId` remove o item. A API pode responder `404`, `409` (produto indisponível) e `422`.
+
+**Wishlist** (`/api/v1/wishlist`, autenticado): `GET /` lista produtos guardados; `POST / { productId }` adiciona de forma idempotente; `DELETE /:productId` remove de forma idempotente (`204`).
+
+**Métodos de pagamento** (`/api/v1/payment-methods`): `GET /` e `GET /:id` são públicos e devolvem apenas métodos activos. `POST`, `PATCH /:id` e `DELETE /:id` são administrativos; `DELETE` desactiva e devolve `204`. Tipos: `multicaixa_express | multicaixa_reference | bank_transfer`.
+
+**Encomendas e pagamentos** (autenticados): `POST /api/v1/orders { deliveryTypeId, paymentMethodId, addressId, companyId?, notes? }` cria encomenda a partir do carrinho e esvazia-o atomicamente. `GET /api/v1/orders?page&limit&status` lista encomendas próprias; `GET /:id` obtém detalhe próprio; `POST /:id/cancel` cancela quando o estado permite. `POST /:orderId/payments` inicia uma tentativa simulada, com payload discriminado por `methodType` (Express exige `customerPhone`; referência e transferência não têm campos adicionais); `GET /:orderId/payments` lista tentativas próprias. Enums e respostas seguem `qd-store-api.json`; tratar explicitamente `400`, `404`, `409` e `422`, sem apresentar simulações como pagamentos reais confirmados.
+
+**Notificações** (autenticadas): `GET /api/v1/notifications?page&limit&unreadOnly`, `GET /unread-count`, `PATCH /read-all` e `PATCH /:id/read`. Não existe gestão de preferências de notificação.
+
 **Admin** (`/api/v1/admin`): `GET /companies` → empresas com `users[]`.
 
 **Saúde:** `GET /health`.

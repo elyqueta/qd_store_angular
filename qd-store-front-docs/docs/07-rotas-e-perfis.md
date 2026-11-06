@@ -19,11 +19,15 @@
 | `/`                                                       | public  | —          | Server       |
 | `/produtos`, `/produtos/:id`                              | public  | —          | Server       |
 | `/sobre`, `/contactos`, `/tipos-entrega`                  | public  | —          | Server       |
+| `/empresas`                                               | public  | —          | Server       |
+| `/carrinho`, `/favoritos`                                 | public  | auth       | Client       |
 | `/entrar`, `/criar-conta`                                 | public  | guest      | Client       |
 | `/conta/perfil`                                           | account | auth       | Client       |
 | `/conta/moradas`                                          | account | auth       | Client       |
 | `/conta/empresas`                                         | account | auth       | Client       |
 | `/conta/empresas/nova`                                    | account | auth       | Client       |
+| `/conta/encomendas`, `/conta/encomendas/:id`              | account | auth       | Client       |
+| `/conta/checkout`                                         | account | auth       | Client       |
 | `/admin` (dashboard)                                      | admin   | auth+admin | Client       |
 | `/admin/categorias`                                       | admin   | auth+admin | Client       |
 | `/admin/produtos`, `/admin/produtos/:id` (imagens, specs) | admin   | auth+admin | Client       |
@@ -38,6 +42,8 @@ Na Fase 3, `/conta/perfil`, `/conta/moradas` e `/conta/empresas` estão implemen
 O dashboard `/admin` está implementado com `adminGuard`, layout próprio e renderização client-side. Apresenta contagens dos endpoints de produtos, categorias, tipos de entrega activos e empresas administrativas. As gestões CRUD de categorias (`/admin/categorias`) e produtos (`/admin/produtos`, `/admin/produtos/novo`, `/admin/produtos/:id`) também estão implementadas, incluindo upload de imagens e especificações. A gestão de tipos de entrega em `/admin/tipos-entrega` permite criar, editar e desactivar os tipos activos. A API não lista tipos inactivos nem permite reactivá-los. A gestão administrativa de empresas em `/admin/empresas` lista empresas e membros, permite editar nome/sector e desactivar; não permite alterar NIF nem reactivar empresas. O catálogo público integra pesquisa e ordenação com os parâmetros suportados pela API.
 
 A página pública `/tipos-entrega` consulta `GET /api/v1/delivery-types`, apresenta as opções activas devolvidas pela API e inclui estados de carregamento, vazio, erro e repetição. A rota é renderizada no servidor e está ligada no rodapé público.
+
+Carrinho, favoritos e checkout usam as rotas autenticadas existentes da API; visitantes são encaminhados para autenticação antes de operações privadas. `/conta/perfil` mantém os dados pessoais da sessão em modo de leitura e replica a composição visual do perfil React, sem usar os pedidos/favoritos fictícios do protótipo. Histórico/detalhe de encomendas e notificações usam os endpoints próprios do utilizador. Não há endpoint de pedido de orçamento nem pesquisa de utilizadores para gerir membros. A UI antiga não contém back-office; por isso as páginas administrativas existentes não são reestilizadas por inferência.
 
 ## Regras de UI por perfil
 

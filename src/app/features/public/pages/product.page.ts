@@ -11,22 +11,30 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { EMPTY, catchError, switchMap } from 'rxjs';
+import { AuthStore } from '../../../core/auth/auth.store';
+import { ApiError } from '../../../core/http/api-error.model';
+import { ToastService } from '../../../core/notifications/toast.service';
 import { SeoService } from '../../../core/seo/seo.service';
+import { CommerceApiService } from '../../commerce/data-access/commerce-api.service';
 import { ProductApiService } from '../data-access/product-api.service';
 import { Product, ProductDetail } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
+import { IconComponent } from '../../../shared/ui/icon.component';
 
 @Component({
   selector: 'qd-product-page',
-  imports: [CurrencyPipe, RouterLink, ProductCardComponent, TranslocoPipe],
+  imports: [CurrencyPipe, RouterLink, ProductCardComponent, TranslocoPipe, IconComponent],
   templateUrl: './product.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductPage {
   private readonly destroyRef = inject(DestroyRef);
+  private readonly authStore = inject(AuthStore);
+  private readonly commerceApi = inject(CommerceApiService);
   private readonly productApi = inject(ProductApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly seo = inject(SeoService);
+  private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
 
   readonly product = signal<ProductDetail | null>(null);
@@ -43,6 +51,9 @@ export class ProductPage {
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly relatedError = signal<string | null>(null);
+  readonly isAuthenticated = this.authStore.isAuthenticated;
+  readonly cartBusy = signal(false);
+  readonly wishlistBusy = signal(false);
 
   constructor() {
     this.route.paramMap
@@ -116,5 +127,55 @@ export class ProductPage {
         },
         error: () => this.relatedError.set('public.errors.relatedProducts'),
       });
+  }
+
+  addToCart(): void {
+    const productId = this.product()?.id;
+    if (!productId || !this.isAuthenticated() || this.cartBusy()) {
+      return;
+    }
+
+    this.cartBusy.set(true);
+    this.commerceApi
+      .addCartItem(productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.cartBusy.set(false);
+          this.toast.success(this.transloco.translate('commerce.cart.added'));
+        },
+        error: (error: unknown) => {
+          this.cartBusy.set(false);
+          this.showError(error);
+        },
+      });
+  }
+
+  addToWishlist(): void {
+    const productId = this.product()?.id;
+    if (!productId || !this.isAuthenticated() || this.wishlistBusy()) {
+      return;
+    }
+
+    this.wishlistBusy.set(true);
+    this.commerceApi
+      .addWishlistItem(productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.wishlistBusy.set(false);
+          this.toast.success(this.transloco.translate('commerce.wishlist.added'));
+        },
+        error: (error: unknown) => {
+          this.wishlistBusy.set(false);
+          this.showError(error);
+        },
+      });
+  }
+
+  private showError(error: unknown): void {
+    this.toast.error(
+      error instanceof ApiError ? error.message : this.transloco.translate('common.error'),
+    );
   }
 }

@@ -5,7 +5,8 @@
   {{ 'a11y.skipToContent' | transloco }}
 </a>
 <qd-site-navbar />
-<div id="qd-main-content" tabindex="-1">
+<div id="qd-main-content" tabindex="-1" [class]="isHome() ? '' : 'pt-[70px]'">
   <router-outlet />
 </div>
 <qd-site-footer />
+<qd-whatsapp-button />

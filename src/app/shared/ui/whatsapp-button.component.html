@@ -1,0 +1,40 @@
+<div class="fixed bottom-6 right-6 z-30 flex flex-col items-end gap-3">
+  @if (expanded()) {
+    <section
+      class="w-72 rounded-2xl border border-line bg-surface p-5 shadow-2xl motion-safe:animate-[slideDown_200ms_ease-out]"
+      aria-labelledby="qd-whatsapp-title"
+    >
+      <h2 id="qd-whatsapp-title" class="flex items-center gap-2 text-base font-semibold text-fg">
+        {{ 'whatsapp.title' | transloco }}
+        <qd-icon name="circle-info" [size]="17" class="text-brand" />
+      </h2>
+      <p class="mt-2 text-sm leading-6 text-fg-muted">{{ 'whatsapp.description' | transloco }}</p>
+      <a
+        [href]="whatsappUrl"
+        target="_blank"
+        rel="noreferrer"
+        class="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-whatsapp px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-whatsapp-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-whatsapp"
+        (click)="expanded.set(false)"
+      >
+        <qd-icon name="whatsapp" [size]="18" />
+        {{ 'whatsapp.start' | transloco }}
+      </a>
+    </section>
+  }
+
+  <button
+    type="button"
+    class="flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-white shadow-xl transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-whatsapp motion-reduce:transform-none"
+    [class.bg-fg]="expanded()"
+    [attr.aria-label]="(expanded() ? 'whatsapp.close' : 'whatsapp.open') | transloco"
+    [attr.aria-expanded]="expanded()"
+    aria-controls="qd-whatsapp-title"
+    (click)="toggle()"
+  >
+    @if (expanded()) {
+      <qd-icon name="xmark" [size]="22" />
+    } @else {
+      <qd-icon name="whatsapp" [size]="26" />
+    }
+  </button>
+</div>

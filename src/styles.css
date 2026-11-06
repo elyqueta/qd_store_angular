@@ -13,6 +13,10 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+  --color-whatsapp: #25d366;
+  --color-whatsapp-hover: #1ebe5d;
   --font-sans: 'DM Sans', sans-serif;
   --font-display: 'Playfair Display', serif;
   --font-mono: 'DM Mono', monospace;
@@ -30,6 +34,9 @@
     --danger: #ff3b30;
     --success: #16a34a;
     --warning: #92400e;
+    --glass: rgba(255, 255, 255, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.45);
+    --nav-height: 70px;
   }
 
   .dark {
@@ -43,6 +50,8 @@
     --danger: #ff6961;
     --success: #4ade80;
     --warning: #fbbf24;
+    --glass: rgba(28, 28, 30, 0.72);
+    --glass-border: rgba(255, 255, 255, 0.12);
   }
 
   html {
@@ -72,6 +81,12 @@
       animation-iteration-count: 1 !important;
       scroll-behavior: auto !important;
       transition-duration: 0.01ms !important;
+    }
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    .bg-glass {
+      background-color: var(--surface);
     }
   }
 }

@@ -51,6 +51,7 @@
     "deliveryTypes": "Tipos de entrega",
     "about": "Sobre nós",
     "contact": "Contactos",
+    "business": "Empresas",
     "primary": "Navegação principal",
     "search": "Pesquisar produtos",
     "userMenu": "Abrir menu do utilizador",
@@ -59,15 +60,35 @@
     "profile": "Perfil",
     "addresses": "Moradas",
     "companies": "As minhas empresas",
+    "cart": "Carrinho",
+    "wishlist": "Favoritos",
+    "orders": "Encomendas",
+    "notifications": "Notificações",
     "admin": "Painel de administração",
     "logout": "Sair",
     "menu": "Abrir menu",
     "closeMenu": "Fechar menu",
     "mobile": "Navegação móvel",
-    "themeToggle": "Alternar tema"
+    "themeToggle": "Alternar tema",
+    "themeLabel": "Tema: {{ theme }}",
+    "theme": {
+      "dark": "escuro",
+      "light": "claro"
+    }
   },
   "footer": {
     "description": "Explora o catálogo da QD · ItSOLUTIONS e encontra produtos de tecnologia disponíveis.",
+    "storeTitle": "Loja",
+    "businessTitle": "Empresas",
+    "supportTitle": "Apoio",
+    "paymentTitle": "Pagamento",
+    "businessSolutions": "Soluções empresariais",
+    "businessQuote": "Pedir informações",
+    "myCompanies": "As minhas empresas",
+    "businessWhatsapp": "WhatsApp Empresas",
+    "account": "A minha conta",
+    "phone": "+244 923 000 000",
+    "categoriesError": "Não foi possível carregar as categorias.",
     "linksTitle": "Navegação",
     "contactTitle": "Contacto",
     "whatsapp": "WhatsApp",
@@ -178,6 +199,115 @@
       "createdTitle": "Empresa registada",
       "createdDescription": "A empresa foi associada à tua conta.",
       "backToCompanies": "Ver as minhas empresas"
+    }
+  },
+  "commerce": {
+    "kicker": "A tua conta",
+    "paymentMethods": {
+      "multicaixa_express": "Multicaixa Express",
+      "multicaixa_reference": "Referência Multicaixa",
+      "bank_transfer": "Transferência bancária"
+    },
+    "cart": {
+      "title": "O meu carrinho",
+      "loadError": "Não foi possível carregar o carrinho.",
+      "quantity": "Quantidade",
+      "decrease": "Diminuir quantidade",
+      "increase": "Aumentar quantidade",
+      "remove": "Remover",
+      "items": "{{ count }} artigo(s)",
+      "checkout": "Continuar para a entrega",
+      "emptyTitle": "O carrinho está vazio",
+      "emptyDescription": "Descobre os produtos disponíveis e adiciona os que pretendes comprar.",
+      "continueShopping": "Explorar produtos",
+      "added": "Produto adicionado ao carrinho."
+    },
+    "wishlist": {
+      "title": "Os meus favoritos",
+      "loadError": "Não foi possível carregar os favoritos.",
+      "addToCart": "Adicionar ao carrinho",
+      "addingToCart": "A adicionar…",
+      "addToFavorites": "Adicionar aos favoritos",
+      "added": "Produto guardado nos favoritos.",
+      "remove": "Remover",
+      "emptyTitle": "Ainda não guardaste favoritos",
+      "emptyDescription": "Guarda produtos para os encontrares facilmente mais tarde."
+    },
+    "checkout": {
+      "title": "Finalizar encomenda",
+      "backToCart": "Voltar ao carrinho",
+      "loadError": "Não foi possível preparar a finalização da encomenda.",
+      "emptyCart": "O carrinho está vazio.",
+      "addressTitle": "Morada de entrega",
+      "addressLabel": "Selecciona uma morada",
+      "noAddress": "Adiciona uma morada antes de finalizar a encomenda.",
+      "addAddress": "Gerir moradas",
+      "deliveryTitle": "Tipo de entrega",
+      "noDeliveryTypes": "Não existem tipos de entrega disponíveis.",
+      "paymentTitle": "Método de pagamento",
+      "noPaymentMethods": "Não existem métodos de pagamento disponíveis.",
+      "customerPhone": "Telefone associado ao Multicaixa Express",
+      "phoneInvalid": "Introduz um telefone válido com 9 a 20 caracteres.",
+      "notes": "Notas para a encomenda (opcional)",
+      "summaryTitle": "Resumo da encomenda",
+      "total": "Total",
+      "submit": "Criar encomenda e continuar",
+      "submitting": "A processar encomenda…",
+      "paymentNotice": "O estado do pagamento será apresentado no detalhe da encomenda. Não são recolhidos dados bancários nesta página.",
+      "invalidSelection": "Confirma os dados de entrega e pagamento antes de continuar.",
+      "orderCreated": "Encomenda criada. Consulta o estado do pagamento no detalhe."
+    },
+    "orders": {
+      "title": "As minhas encomendas",
+      "loadError": "Não foi possível carregar as encomendas.",
+      "itemsCount": "{{ count }} artigo(s)",
+      "pagination": "Paginação das encomendas",
+      "previous": "Anterior",
+      "next": "Seguinte",
+      "page": "Página {{ page }} de {{ total }}",
+      "emptyTitle": "Ainda não tens encomendas",
+      "emptyDescription": "As encomendas que fizeres serão apresentadas aqui.",
+      "back": "Voltar às encomendas",
+      "detailError": "Não foi possível carregar esta encomenda.",
+      "cancel": "Cancelar encomenda",
+      "cancelling": "A cancelar…",
+      "cancelled": "A encomenda foi cancelada.",
+      "itemsTitle": "Artigos",
+      "quantity": "Quantidade: {{ count }}",
+      "deliveryTitle": "Entrega",
+      "deliveryPrice": "Entrega",
+      "total": "Total",
+      "paymentTitle": "Pagamento",
+      "noPayment": "Ainda não existe uma tentativa de pagamento.",
+      "historyTitle": "Histórico da encomenda",
+      "status": {
+        "processing": "Em processamento",
+        "in_transit": "Em trânsito",
+        "delivered": "Entregue",
+        "cancelled": "Cancelada"
+      },
+      "paymentStatus": {
+        "pending": "Pendente",
+        "confirmed": "Confirmado",
+        "failed": "Falhou",
+        "refunded": "Reembolsado"
+      }
+    },
+    "notifications": {
+      "title": "As minhas notificações",
+      "loadError": "Não foi possível carregar as notificações.",
+      "markAllRead": "Marcar todas como lidas",
+      "markRead": "Marcar como lida",
+      "read": "Lida",
+      "pagination": "Paginação das notificações",
+      "emptyTitle": "Não tens notificações",
+      "emptyDescription": "As notificações importantes da tua conta serão apresentadas aqui.",
+      "type": {
+        "order": "Encomenda",
+        "promotion": "Promoção",
+        "newsletter": "Novidades",
+        "system": "Sistema"
+      }
     }
   },
   "admin": {
@@ -553,6 +683,40 @@
         "pickup": "Levantamento"
       }
     },
+    "business": {
+      "kicker": "Para empresas",
+      "title": "Soluções empresariais à medida da tua empresa",
+      "description": "Fala com a nossa equipa para conhecer as opções de produtos, entrega e apoio disponíveis para a tua empresa.",
+      "cta": "Pedir informações por WhatsApp",
+      "benefits": {
+        "invoice": {
+          "title": "Orçamentos com NIF",
+          "description": "Contacta a equipa para consultar as opções de orçamento e documentação fiscal."
+        },
+        "manager": {
+          "title": "Apoio empresarial",
+          "description": "Fala com a equipa para esclarecer as necessidades da tua organização."
+        },
+        "pricing": {
+          "title": "Condições comerciais",
+          "description": "Consulta as condições aplicáveis aos produtos e às quantidades pretendidas."
+        },
+        "support": {
+          "title": "Assistência técnica",
+          "description": "Contacta a equipa para obter informações sobre assistência e suporte."
+        },
+        "whatsapp": {
+          "title": "Apoio por WhatsApp",
+          "description": "Entra em contacto com a equipa através do WhatsApp."
+        },
+        "delivery": {
+          "title": "Entrega empresarial",
+          "description": "Consulta os tipos de entrega disponíveis para a tua encomenda."
+        }
+      },
+      "contactTitle": "Precisas de uma proposta para a tua empresa?",
+      "contactDescription": "Envia uma mensagem à equipa. O pedido será tratado na conversa; não existe um formulário de orçamento nesta página."
+    },
     "nav": {
       "viewCategory": "Ver todos os produtos desta categoria"
     },
@@ -569,5 +733,12 @@
       "relatedProducts": "Não foi possível carregar produtos relacionados.",
       "menuProducts": "Não foi possível carregar produtos desta categoria."
     }
+  },
+  "whatsapp": {
+    "title": "Fala connosco",
+    "description": "Respondemos em minutos via WhatsApp. Segunda–Sábado, 8h–20h.",
+    "start": "Iniciar conversa",
+    "open": "Abrir conversa no WhatsApp",
+    "close": "Fechar painel do WhatsApp"
   }
 }

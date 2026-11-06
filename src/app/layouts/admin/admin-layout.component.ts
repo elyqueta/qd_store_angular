@@ -6,10 +6,11 @@ import { AuthService } from '../../core/auth/auth.service';
 import { ApiError } from '../../core/http/api-error.model';
 import { ToastService } from '../../core/notifications/toast.service';
 import { ThemeService } from '../../core/theme/theme.service';
+import { IconComponent } from '../../shared/ui/icon.component';
 
 @Component({
   selector: 'qd-admin-layout',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, TranslocoPipe],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, TranslocoPipe, IconComponent],
   templateUrl: './admin-layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

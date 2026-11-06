@@ -1,0 +1,100 @@
+<main class="min-h-[60vh] bg-surface-muted px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-7xl">
+    <header class="mb-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+        {{ 'commerce.kicker' | transloco }}
+      </p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+        {{ 'commerce.wishlist.title' | transloco }}
+      </h1>
+    </header>
+
+    @if (loading()) {
+      <div
+        role="status"
+        class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+      >
+        {{ 'common.loading' | transloco }}
+      </div>
+    } @else if (error()) {
+      <div role="alert" class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center">
+        <p class="text-sm text-danger">{{ 'commerce.wishlist.loadError' | transloco }}</p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg"
+          (click)="load()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </div>
+    } @else if (items().length) {
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        @for (item of items(); track item.id) {
+          <article class="overflow-hidden rounded-2xl border border-line bg-surface">
+            <a [routerLink]="['/produtos', item.productId]" class="block">
+              @if (item.imageUrl) {
+                <img
+                  [src]="item.imageUrl"
+                  alt=""
+                  loading="lazy"
+                  class="aspect-4/3 w-full object-cover"
+                />
+              } @else {
+                <div
+                  class="flex aspect-4/3 items-center justify-center bg-surface-muted text-fg-muted"
+                  aria-hidden="true"
+                >
+                  <qd-icon name="box" [size]="44" />
+                </div>
+              }
+            </a>
+            <div class="space-y-4 p-5">
+              <div class="flex items-start justify-between gap-3">
+                <a
+                  [routerLink]="['/produtos', item.productId]"
+                  class="font-semibold text-fg hover:text-brand"
+                  >{{ item.name }}</a
+                >
+                <span class="shrink-0 text-sm font-semibold text-fg">{{
+                  item.price | currency: 'AOA' : 'symbol-narrow' : '1.0-0'
+                }}</span>
+              </div>
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  class="flex-1 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg disabled:opacity-50"
+                  [disabled]="busyProductIds().has(item.productId) || item.status !== 'active'"
+                  (click)="addToCart(item.productId)"
+                >
+                  {{ 'commerce.wishlist.addToCart' | transloco }}
+                </button>
+                <button
+                  type="button"
+                  class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg disabled:opacity-50"
+                  [disabled]="busyProductIds().has(item.productId)"
+                  (click)="remove(item.productId)"
+                >
+                  {{ 'commerce.wishlist.remove' | transloco }}
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <section class="rounded-2xl border border-line bg-surface px-6 py-14 text-center">
+        <h2 class="text-xl font-semibold text-fg">
+          {{ 'commerce.wishlist.emptyTitle' | transloco }}
+        </h2>
+        <p class="mt-2 text-sm text-fg-muted">
+          {{ 'commerce.wishlist.emptyDescription' | transloco }}
+        </p>
+        <a
+          routerLink="/produtos"
+          class="mt-6 inline-flex rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
+          >{{ 'commerce.cart.continueShopping' | transloco }}</a
+        >
+      </section>
+    }
+  </div>
+</main>

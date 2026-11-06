@@ -1,6 +1,6 @@
-<header class="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur-md">
+<header [class]="headerClasses()">
   <nav
-    class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8"
+    class="mx-auto flex h-[70px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
     [attr.aria-label]="'nav.primary' | transloco"
   >
     <a
@@ -8,21 +8,19 @@
       class="flex items-center gap-3"
       [attr.aria-label]="'nav.home' | transloco"
     >
-      <span
-        class="flex h-10 w-10 items-center justify-center rounded-full bg-brand text-sm font-semibold text-brand-fg"
-        >QD</span
-      >
-      <span class="text-lg font-semibold tracking-tight text-fg">QD · ItSOLUTIONS</span>
+      <img src="/favicon.webp" alt="" class="h-12 w-auto" />
     </a>
 
-    <div class="hidden items-center gap-6 lg:flex">
+    <div class="hidden items-center gap-6 min-[1130px]:flex">
       @for (item of navItems; track item.route) {
         <a
           [routerLink]="item.route"
           routerLinkActive="text-brand"
           ariaCurrentWhenActive="page"
           [routerLinkActiveOptions]="{ exact: item.route === '/' }"
-          class="text-sm font-medium text-fg-muted transition-colors hover:text-brand"
+          class="text-sm font-medium transition-colors hover:text-brand"
+          [class.text-surface/90]="overHero()"
+          [class.text-fg-muted]="!overHero()"
         >
           {{ item.labelKey | transloco }}
         </a>
@@ -33,7 +31,9 @@
           <button
             type="button"
             [id]="'qd-category-trigger-' + category.id"
-            class="inline-flex items-center gap-1 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
+            class="inline-flex items-center gap-1 text-sm font-medium transition-colors hover:text-brand"
+            [class.text-surface/90]="overHero()"
+            [class.text-fg-muted]="!overHero()"
             [attr.aria-expanded]="activeCategory()?.id === category.id"
             [attr.aria-controls]="
               activeCategory()?.id === category.id ? 'qd-category-menu-' + category.id : null
@@ -44,7 +44,7 @@
             (keydown.arrowup)="openCategoryMenuFromKeyboard($event, category, -1)"
           >
             {{ category.label }}
-            <span aria-hidden="true">⌄</span>
+            <qd-icon name="chevron-right" [size]="12" class="rotate-90" />
           </button>
           @if (activeCategory()?.id === category.id) {
             <div
@@ -73,10 +73,17 @@
                       <a
                         [routerLink]="['/produtos', product.id]"
                         role="menuitem"
-                        class="block rounded-xl px-3 py-2 text-sm text-fg transition-colors hover:bg-surface-muted hover:text-brand"
+                        class="flex items-center gap-3 rounded-xl px-3 py-2 text-sm text-fg transition-colors hover:bg-surface-muted hover:text-brand"
                         (click)="closeCategoryMenu()"
                       >
-                        {{ product.name }}
+                        @if (product.mainImage; as image) {
+                          <img [src]="image.url" alt="" class="h-12 w-12 rounded-lg object-cover" />
+                        } @else {
+                          <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-muted text-fg-muted" aria-hidden="true">
+                            <qd-icon name="box" [size]="20" />
+                          </span>
+                        }
+                        <span class="line-clamp-2">{{ product.name }}</span>
                       </a>
                     </li>
                   }
@@ -100,44 +107,66 @@
       @if (categoriesError()) {
         <span class="text-xs text-danger">{{ 'public.errors.categories' | transloco }}</span>
       }
+      <a
+        routerLink="/empresas"
+        routerLinkActive="text-brand"
+        ariaCurrentWhenActive="page"
+        class="text-sm font-medium transition-colors hover:text-brand"
+        [class.text-surface/90]="overHero()"
+        [class.text-fg-muted]="!overHero()"
+      >
+        {{ 'nav.business' | transloco }}
+      </a>
     </div>
 
     <div class="flex items-center gap-2 sm:gap-3">
       <a
         [routerLink]="'/produtos'"
-        class="hidden h-10 w-10 items-center justify-center rounded-full text-fg-muted transition-colors hover:text-brand min-[770px]:flex"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full transition-colors hover:text-brand"
+        [class.text-surface/90]="overHero()"
+        [class.text-fg-muted]="!overHero()"
         [attr.aria-label]="'nav.search' | transloco"
       >
-        <span aria-hidden="true">⌕</span>
+        <qd-icon name="magnifying-glass" [size]="20" />
       </a>
 
-      @if (isAuthenticated()) {
-        <div class="relative">
-          <button
-            id="qd-user-menu-trigger"
-            type="button"
-            (click)="toggleUserMenu()"
-            (keydown.arrowdown)="openUserMenuFromKeyboard($event, 1)"
-            (keydown.arrowup)="openUserMenuFromKeyboard($event, -1)"
-            class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-fg text-sm font-semibold text-surface transition-colors hover:bg-brand hover:text-brand-fg"
-            [attr.aria-label]="'nav.userMenu' | transloco"
-            [attr.aria-expanded]="userMenuOpen()"
-            [attr.aria-controls]="userMenuOpen() ? 'qd-user-menu' : null"
-            aria-haspopup="menu"
-          >
+      <div class="relative">
+        <button
+          id="qd-user-menu-trigger"
+          type="button"
+          (click)="toggleUserMenu()"
+          (keydown.arrowdown)="openUserMenuFromKeyboard($event, 1)"
+          (keydown.arrowup)="openUserMenuFromKeyboard($event, -1)"
+          class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-fg text-sm font-semibold text-surface transition-colors hover:bg-brand hover:text-brand-fg"
+          [class.bg-surface]="overHero()"
+          [class.text-fg]="overHero()"
+          [attr.aria-label]="'nav.userMenu' | transloco"
+          [attr.aria-expanded]="userMenuOpen()"
+          [attr.aria-controls]="userMenuOpen() ? 'qd-user-menu' : null"
+          aria-haspopup="menu"
+        >
+          @if (isAuthenticated()) {
             {{ userInitials() }}
-          </button>
-          @if (userMenuOpen()) {
-            <div
-              id="qd-user-menu"
-              role="menu"
-              aria-labelledby="qd-user-menu-trigger"
-              class="absolute right-0 top-full z-50 mt-3 min-w-52 rounded-2xl border border-line bg-surface p-2 shadow-xl"
-              (keydown.arrowdown)="focusMenuItem($event, 'qd-user-menu', 1)"
-              (keydown.arrowup)="focusMenuItem($event, 'qd-user-menu', -1)"
-              (keydown.home)="focusMenuBoundary($event, 'qd-user-menu', 'first')"
-              (keydown.end)="focusMenuBoundary($event, 'qd-user-menu', 'last')"
-            >
+          } @else {
+            <qd-icon name="user" [size]="18" />
+          }
+        </button>
+        @if (userMenuOpen()) {
+          <div
+            id="qd-user-menu"
+            role="menu"
+            aria-labelledby="qd-user-menu-trigger"
+            class="absolute right-0 top-full z-50 mt-3 min-w-64 rounded-2xl border border-glass-border bg-glass p-3 shadow-xl backdrop-blur-xl backdrop-saturate-150 supports-[not(backdrop-filter:blur(1px))]:bg-surface motion-safe:animate-[slideDown_250ms_ease-out]"
+            (keydown.arrowdown)="focusMenuItem($event, 'qd-user-menu', 1)"
+            (keydown.arrowup)="focusMenuItem($event, 'qd-user-menu', -1)"
+            (keydown.home)="focusMenuBoundary($event, 'qd-user-menu', 'first')"
+            (keydown.end)="focusMenuBoundary($event, 'qd-user-menu', 'last')"
+          >
+            @if (isAuthenticated()) {
+              <div class="mb-2 border-b border-line px-3 pb-3">
+                <p class="font-semibold text-fg">{{ user()?.fullName }}</p>
+                <p class="mt-1 break-all text-sm text-fg-muted">{{ user()?.email }}</p>
+              </div>
               @for (item of userMenuItems(); track item.labelKey) {
                 @switch (item.kind) {
                   @case ('link') {
@@ -151,66 +180,87 @@
                     </a>
                   }
                   @case ('action') {
-                    <button
-                      type="button"
-                      role="menuitem"
-                      (click)="handleUserMenuAction(item.action)"
-                      class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-fg transition-colors hover:bg-surface-muted"
-                    >
-                      @if (item.action === 'theme') {
-                        @if (themeService.effective() === 'dark') {
-                          <span aria-hidden="true">☀️</span>
-                        } @else {
-                          <span aria-hidden="true">🌙</span>
-                        }
-                      }
-                      {{ item.labelKey | transloco }}
-                    </button>
+                    @if (item.action === 'theme') {
+                      <button
+                        type="button"
+                        role="menuitem"
+                        (click)="handleUserMenuAction(item.action)"
+                        class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-fg transition-colors hover:bg-surface-muted"
+                      >
+                        <qd-icon
+                          [name]="themeService.effective() === 'dark' ? 'sun' : 'moon'"
+                          [size]="18"
+                        />
+                        {{
+                          'nav.themeLabel'
+                            | transloco
+                              : { theme: ('nav.theme.' + themeService.effective() | transloco) }
+                        }}
+                      </button>
+                    } @else {
+                      <button
+                        type="button"
+                        role="menuitem"
+                        (click)="handleUserMenuAction(item.action)"
+                        class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-fg transition-colors hover:bg-surface-muted"
+                      >
+                        <qd-icon name="right-from-bracket" [size]="18" />
+                        {{ item.labelKey | transloco }}
+                      </button>
+                    }
                   }
                 }
               }
-            </div>
-          }
-        </div>
-      } @else {
-        <button
-          type="button"
-          (click)="toggleTheme()"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line bg-surface text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand"
-          [attr.aria-label]="'nav.themeToggle' | transloco"
-        >
-          @if (themeService.effective() === 'dark') {
-            <span aria-hidden="true">☀️</span>
-          } @else {
-            <span aria-hidden="true">🌙</span>
-          }
-        </button>
-        <div class="hidden items-center gap-2 sm:flex">
-          <a
-            class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand"
-            [routerLink]="'/entrar'"
-          >
-            {{ 'nav.login' | transloco }}
-          </a>
-          <a
-            class="rounded-full bg-brand px-4 py-2 text-sm font-medium text-brand-fg transition-colors hover:opacity-90"
-            [routerLink]="'/criar-conta'"
-          >
-            {{ 'nav.register' | transloco }}
-          </a>
-        </div>
-      }
+            } @else {
+              <a
+                [routerLink]="'/entrar'"
+                role="menuitem"
+                (click)="userMenuOpen.set(false)"
+                class="block rounded-xl bg-brand px-3 py-2 text-center text-sm font-semibold text-brand-fg hover:opacity-90"
+              >
+                {{ 'nav.login' | transloco }}
+              </a>
+              <a
+                [routerLink]="'/criar-conta'"
+                role="menuitem"
+                (click)="userMenuOpen.set(false)"
+                class="mt-2 block rounded-xl px-3 py-2 text-center text-sm font-medium text-fg transition-colors hover:bg-surface-muted"
+              >
+                {{ 'nav.register' | transloco }}
+              </a>
+              <div class="my-2 border-t border-line"></div>
+              <button
+                type="button"
+                role="menuitem"
+                (click)="handleUserMenuAction('theme')"
+                class="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-fg transition-colors hover:bg-surface-muted"
+              >
+                <qd-icon
+                  [name]="themeService.effective() === 'dark' ? 'sun' : 'moon'"
+                  [size]="18"
+                />
+                {{
+                  'nav.themeLabel'
+                    | transloco: { theme: ('nav.theme.' + themeService.effective() | transloco) }
+                }}
+              </button>
+            }
+          </div>
+        }
+      </div>
 
       <button
         type="button"
         id="qd-mobile-menu-trigger"
-        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-lg text-fg lg:hidden"
+        class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-lg text-fg min-[1130px]:hidden"
+        [class.border-surface/40]="overHero()"
+        [class.text-surface]="overHero()"
         (click)="mobileOpen.set(!mobileOpen())"
         [attr.aria-label]="(mobileOpen() ? 'nav.closeMenu' : 'nav.menu') | transloco"
         [attr.aria-expanded]="mobileOpen()"
         aria-controls="qd-mobile-navigation"
       >
-        <span aria-hidden="true">{{ mobileOpen() ? '×' : '☰' }}</span>
+        <qd-icon [name]="mobileOpen() ? 'xmark' : 'bars'" [size]="20" />
       </button>
     </div>
   </nav>
@@ -218,7 +268,7 @@
   @if (mobileOpen()) {
     <nav
       id="qd-mobile-navigation"
-      class="border-t border-line bg-surface lg:hidden"
+      class="border-t border-line bg-surface min-[1130px]:hidden"
       [attr.aria-label]="'nav.mobile' | transloco"
     >
       <div class="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4">
@@ -248,6 +298,15 @@
         @if (categoriesError()) {
           <p class="px-3 py-2 text-sm text-danger">{{ 'public.errors.categories' | transloco }}</p>
         }
+        <a
+          routerLink="/empresas"
+          routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
+          class="rounded-xl px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-brand"
+          (click)="mobileOpen.set(false)"
+        >
+          {{ 'nav.business' | transloco }}
+        </a>
 
         @if (isAuthenticated()) {
           @for (item of userMenuItems(); track item.labelKey) {

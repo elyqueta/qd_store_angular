@@ -1,0 +1,112 @@
+<main class="min-h-[60vh] bg-surface-muted px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-4xl">
+    <header class="mb-8 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+          {{ 'commerce.kicker' | transloco }}
+        </p>
+        <h1 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+          {{ 'commerce.notifications.title' | transloco }}
+        </h1>
+      </div>
+      @if (hasUnread()) {
+        <button
+          type="button"
+          class="rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-fg hover:border-brand disabled:opacity-50"
+          [disabled]="saving()"
+          (click)="markAllRead()"
+        >
+          {{ 'commerce.notifications.markAllRead' | transloco }}
+        </button>
+      }
+    </header>
+
+    @if (loading()) {
+      <div
+        role="status"
+        class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+      >
+        {{ 'common.loading' | transloco }}
+      </div>
+    } @else if (error()) {
+      <div role="alert" class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center">
+        <p class="text-sm text-danger">{{ 'commerce.notifications.loadError' | transloco }}</p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg"
+          (click)="load()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </div>
+    } @else if (result(); as notifications) {
+      @if (notifications.items.length) {
+        <ul class="divide-y divide-line rounded-2xl border border-line bg-surface">
+          @for (notification of notifications.items; track notification.id) {
+            <li
+              class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between"
+              [class.bg-brand/5]="!notification.isRead"
+            >
+              <div>
+                <p class="text-sm text-fg">{{ notification.message }}</p>
+                <p class="mt-2 text-xs text-fg-muted">
+                  {{ 'commerce.notifications.type.' + notification.type | transloco }} ·
+                  {{ notification.createdAt | date: 'medium' }}
+                </p>
+              </div>
+              @if (!notification.isRead) {
+                <button
+                  type="button"
+                  class="shrink-0 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand disabled:opacity-50"
+                  [disabled]="saving()"
+                  (click)="markRead(notification)"
+                >
+                  {{ 'commerce.notifications.markRead' | transloco }}
+                </button>
+              } @else {
+                <span class="shrink-0 text-xs text-fg-muted">{{
+                  'commerce.notifications.read' | transloco
+                }}</span>
+              }
+            </li>
+          }
+        </ul>
+        @if (notifications.totalPages > 1) {
+          <nav
+            class="mt-6 flex items-center justify-between"
+            [attr.aria-label]="'commerce.notifications.pagination' | transloco"
+          >
+            <button
+              type="button"
+              class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-fg disabled:opacity-50"
+              [disabled]="page() <= 1"
+              (click)="changePage(page() - 1)"
+            >
+              {{ 'commerce.orders.previous' | transloco }}
+            </button>
+            <span class="text-sm text-fg-muted">{{
+              'commerce.orders.page' | transloco: { page: page(), total: notifications.totalPages }
+            }}</span>
+            <button
+              type="button"
+              class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-fg disabled:opacity-50"
+              [disabled]="page() >= notifications.totalPages"
+              (click)="changePage(page() + 1)"
+            >
+              {{ 'commerce.orders.next' | transloco }}
+            </button>
+          </nav>
+        }
+      } @else {
+        <section class="rounded-2xl border border-line bg-surface px-6 py-14 text-center">
+          <h2 class="text-xl font-semibold text-fg">
+            {{ 'commerce.notifications.emptyTitle' | transloco }}
+          </h2>
+          <p class="mt-2 text-sm text-fg-muted">
+            {{ 'commerce.notifications.emptyDescription' | transloco }}
+          </p>
+        </section>
+      }
+    }
+  </div>
+</main>

@@ -7,10 +7,11 @@ import { SeoService } from '../../../core/seo/seo.service';
 import { ProductApiService } from '../data-access/product-api.service';
 import { Product, ProductCategory } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
+import { categoryIconName, IconComponent } from '../../../shared/ui/icon.component';
 
 @Component({
   selector: 'qd-home-page',
-  imports: [ProductCardComponent, RouterLink, TranslocoPipe],
+  imports: [ProductCardComponent, RouterLink, TranslocoPipe, IconComponent],
   templateUrl: './home.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,6 +27,7 @@ export class HomePage {
   readonly categoriesError = signal(false);
 
   readonly featuredProducts = computed(() => this.products().slice(0, 4));
+  readonly categoryIconName = categoryIconName;
 
   constructor() {
     this.seo.setPage({

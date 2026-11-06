@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { TranslocoPipe } from '@jsverse/transloco';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStore } from '../../../core/auth/auth.store';
+import { IconComponent } from '../../../shared/ui/icon.component';
 
 @Component({
   selector: 'qd-profile-page',
-  imports: [TranslocoPipe],
+  imports: [TranslocoPipe, RouterLink, RouterLinkActive, IconComponent],
   templateUrl: './profile.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

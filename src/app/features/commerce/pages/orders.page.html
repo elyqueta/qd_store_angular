@@ -1,0 +1,99 @@
+<main class="min-h-[60vh] bg-surface-muted px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <header class="mb-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+        {{ 'commerce.kicker' | transloco }}
+      </p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+        {{ 'commerce.orders.title' | transloco }}
+      </h1>
+    </header>
+
+    @if (loading()) {
+      <div
+        role="status"
+        class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+      >
+        {{ 'common.loading' | transloco }}
+      </div>
+    } @else if (error()) {
+      <div role="alert" class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center">
+        <p class="text-sm text-danger">{{ 'commerce.orders.loadError' | transloco }}</p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg"
+          (click)="load()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </div>
+    } @else if (result(); as orders) {
+      @if (orders.items.length) {
+        <div class="space-y-3">
+          @for (order of orders.items; track order.id) {
+            <a
+              [routerLink]="['/conta/encomendas', order.id]"
+              class="flex flex-col gap-3 rounded-2xl border border-line bg-surface p-5 transition-colors hover:border-brand sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <p class="font-semibold text-fg">{{ order.reference }}</p>
+                <p class="mt-1 text-sm text-fg-muted">
+                  {{ order.createdAt | date: 'mediumDate' }} ·
+                  {{ 'commerce.orders.itemsCount' | transloco: { count: order.itemsCount } }}
+                </p>
+              </div>
+              <div class="flex items-center justify-between gap-5 sm:justify-end">
+                <span class="rounded-full bg-surface-muted px-3 py-1 text-xs font-medium text-fg">{{
+                  statusLabel(order.status)
+                }}</span>
+                <span class="font-semibold text-fg">{{
+                  order.total | currency: 'AOA' : 'symbol-narrow' : '1.0-0'
+                }}</span>
+              </div>
+            </a>
+          }
+        </div>
+        @if (orders.totalPages > 1) {
+          <nav
+            class="mt-6 flex items-center justify-between"
+            [attr.aria-label]="'commerce.orders.pagination' | transloco"
+          >
+            <button
+              type="button"
+              class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-fg disabled:opacity-50"
+              [disabled]="page() <= 1"
+              (click)="changePage(page() - 1)"
+            >
+              {{ 'commerce.orders.previous' | transloco }}
+            </button>
+            <span class="text-sm text-fg-muted">{{
+              'commerce.orders.page' | transloco: { page: page(), total: orders.totalPages }
+            }}</span>
+            <button
+              type="button"
+              class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-fg disabled:opacity-50"
+              [disabled]="page() >= orders.totalPages"
+              (click)="changePage(page() + 1)"
+            >
+              {{ 'commerce.orders.next' | transloco }}
+            </button>
+          </nav>
+        }
+      } @else {
+        <section class="rounded-2xl border border-line bg-surface px-6 py-14 text-center">
+          <h2 class="text-xl font-semibold text-fg">
+            {{ 'commerce.orders.emptyTitle' | transloco }}
+          </h2>
+          <p class="mt-2 text-sm text-fg-muted">
+            {{ 'commerce.orders.emptyDescription' | transloco }}
+          </p>
+          <a
+            routerLink="/produtos"
+            class="mt-6 inline-flex rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
+            >{{ 'commerce.cart.continueShopping' | transloco }}</a
+          >
+        </section>
+      }
+    }
+  </div>
+</main>

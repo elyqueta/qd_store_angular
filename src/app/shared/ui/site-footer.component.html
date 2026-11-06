@@ -1,48 +1,69 @@
 <footer class="border-t border-line bg-surface">
-  <div class="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:px-8">
+  <div
+    class="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:px-6 sm:grid-cols-2 lg:grid-cols-4 lg:px-8"
+  >
     <div>
-      <p class="text-lg font-semibold tracking-tight text-fg">QD · ItSOLUTIONS</p>
-      <p class="mt-4 max-w-sm text-sm leading-6 text-fg-muted">
-        {{ 'footer.description' | transloco }}
-      </p>
-    </div>
-
-    <div>
-      <h2 class="text-sm font-semibold uppercase tracking-[0.18em] text-fg-muted">
-        {{ 'footer.linksTitle' | transloco }}
+      <h2 class="text-xs font-semibold uppercase tracking-[0.16em] text-fg-muted">
+        {{ 'footer.storeTitle' | transloco }}
       </h2>
       <ul class="mt-4 space-y-3 text-sm text-fg-muted">
         <li>
-          <a class="transition-colors hover:text-brand" [routerLink]="'/'">{{
-            'nav.home' | transloco
-          }}</a>
-        </li>
-        <li>
-          <a class="transition-colors hover:text-brand" [routerLink]="'/produtos'">{{
+          <a class="transition-colors hover:text-brand" routerLink="/produtos">{{
             'nav.catalog' | transloco
           }}</a>
         </li>
+        @for (category of categories(); track category.id) {
+          <li>
+            <a
+              class="transition-colors hover:text-brand"
+              routerLink="/produtos"
+              [queryParams]="{ categoria: category.slug }"
+            >
+              {{ category.label }}
+            </a>
+          </li>
+        }
+        @if (categoriesError()) {
+          <li class="text-sm text-danger">{{ 'footer.categoriesError' | transloco }}</li>
+        }
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-xs font-semibold uppercase tracking-[0.16em] text-fg-muted">
+        {{ 'footer.businessTitle' | transloco }}
+      </h2>
+      <ul class="mt-4 space-y-3 text-sm text-fg-muted">
         <li>
-          <a class="transition-colors hover:text-brand" [routerLink]="'/tipos-entrega'">{{
-            'nav.deliveryTypes' | transloco
+          <a class="transition-colors hover:text-brand" routerLink="/empresas">{{
+            'footer.businessSolutions' | transloco
           }}</a>
         </li>
         <li>
-          <a class="transition-colors hover:text-brand" [routerLink]="'/sobre'">{{
-            'nav.about' | transloco
+          <a class="transition-colors hover:text-brand" routerLink="/empresas">{{
+            'footer.businessQuote' | transloco
           }}</a>
         </li>
         <li>
-          <a class="transition-colors hover:text-brand" [routerLink]="'/contactos'">{{
-            'nav.contact' | transloco
+          <a class="transition-colors hover:text-brand" routerLink="/conta/empresas">{{
+            'footer.myCompanies' | transloco
           }}</a>
+        </li>
+        <li>
+          <a
+            href="https://wa.me/244923000000?text=Ol%C3%A1%2C%20quero%20informa%C3%A7%C3%B5es%20para%20empresas"
+            target="_blank"
+            rel="noreferrer"
+            class="transition-colors hover:text-brand"
+            >{{ 'footer.businessWhatsapp' | transloco }}</a
+          >
         </li>
       </ul>
     </div>
 
     <div>
-      <h2 class="text-sm font-semibold uppercase tracking-[0.18em] text-fg-muted">
-        {{ 'footer.contactTitle' | transloco }}
+      <h2 class="text-xs font-semibold uppercase tracking-[0.16em] text-fg-muted">
+        {{ 'footer.supportTitle' | transloco }}
       </h2>
       <ul class="mt-4 space-y-3 text-sm text-fg-muted">
         <li>
@@ -51,9 +72,37 @@
             target="_blank"
             rel="noreferrer"
             class="transition-colors hover:text-brand"
+            >{{ 'footer.whatsapp' | transloco }}</a
           >
-            {{ 'footer.whatsapp' | transloco }} · +244 923 000 000
-          </a>
+        </li>
+        <li>
+          <span>{{ 'footer.phone' | transloco }}</span>
+        </li>
+        <li>
+          <a class="transition-colors hover:text-brand" routerLink="/tipos-entrega">{{
+            'nav.deliveryTypes' | transloco
+          }}</a>
+        </li>
+        <li>
+          <a class="transition-colors hover:text-brand" routerLink="/contactos">{{
+            'nav.contact' | transloco
+          }}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="text-xs font-semibold uppercase tracking-[0.16em] text-fg-muted">
+        {{ 'footer.paymentTitle' | transloco }}
+      </h2>
+      <ul class="mt-4 space-y-3 text-sm text-fg-muted">
+        <li>{{ 'commerce.paymentMethods.multicaixa_express' | transloco }}</li>
+        <li>{{ 'commerce.paymentMethods.multicaixa_reference' | transloco }}</li>
+        <li>{{ 'commerce.paymentMethods.bank_transfer' | transloco }}</li>
+        <li class="border-t border-line pt-3">
+          <a class="transition-colors hover:text-brand" routerLink="/conta/perfil">{{
+            'footer.account' | transloco
+          }}</a>
         </li>
       </ul>
     </div>
@@ -61,10 +110,16 @@
 
   <div class="border-t border-line">
     <div
-      class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 text-xs text-fg-muted sm:px-6 lg:px-8"
+      class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-5 text-xs text-fg-muted sm:flex-row sm:px-6 lg:px-8"
     >
       <span>{{ 'footer.copyright' | transloco: { year: currentYear } }}</span>
-      <span>{{ 'footer.rights' | transloco }}</span>
+      <a
+        routerLink="/"
+        [attr.aria-label]="'nav.home' | transloco"
+        class="opacity-80 transition-opacity hover:opacity-100"
+      >
+        <img src="/favicon.webp" alt="" class="h-10 w-auto object-contain" />
+      </a>
     </div>
   </div>
 </footer>

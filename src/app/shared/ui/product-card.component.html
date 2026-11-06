@@ -15,13 +15,13 @@
           class="flex h-full items-center justify-center bg-linear-to-br from-surface-muted to-surface"
           aria-hidden="true"
         >
-          <span class="text-6xl text-fg-muted/40">◇</span>
+          <qd-icon name="box" [size]="44" class="text-fg-muted/40" />
         </div>
       }
 
       @if (discountPercent() !== null) {
         <span
-          class="absolute left-3 top-3 rounded-full bg-danger px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-fg"
+          class="absolute left-3 top-3 rounded-full bg-danger px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-brand-fg"
         >
           -{{ discountPercent() }}%
         </span>
@@ -29,7 +29,7 @@
 
       @if (product().badge && !discountPercent()) {
         <span
-          class="absolute left-3 top-3 rounded-full bg-brand px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-brand-fg"
+          class="absolute left-3 top-3 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-brand-fg"
         >
           {{ product().badge }}
         </span>
@@ -37,7 +37,7 @@
     </div>
 
     <div class="space-y-3 p-4">
-      <p class="text-[11px] font-medium uppercase tracking-[0.18em] text-fg-muted">
+      <p class="text-xs font-medium uppercase tracking-[0.18em] text-fg-muted">
         {{ product().categoryName || ('public.product.categoryFallback' | transloco) }}
       </p>
 
@@ -69,4 +69,25 @@
       }
     </div>
   </a>
+  @if (isAuthenticated()) {
+    <div class="flex gap-2 px-4 pb-4">
+      <button
+        type="button"
+        class="flex-1 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-opacity hover:opacity-90 disabled:opacity-50"
+        [disabled]="busy() || product().status !== 'active'"
+        (click)="addToCart()"
+      >
+        {{ 'commerce.wishlist.addToCart' | transloco }}
+      </button>
+      <button
+        type="button"
+        class="flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg transition-colors hover:border-brand hover:text-brand disabled:opacity-50"
+        [disabled]="busy()"
+        [attr.aria-label]="'commerce.wishlist.addToFavorites' | transloco"
+        (click)="addToWishlist()"
+      >
+        <qd-icon name="heart" [size]="18" />
+      </button>
+    </div>
+  }
 </article>

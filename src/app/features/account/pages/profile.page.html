@@ -38,6 +38,68 @@
             {{ 'account.profile.accountTypeValue.' + profile.accountType | transloco }}
           </p>
         </div>
+        <nav
+          class="mt-6 border-t border-line pt-4"
+          [attr.aria-label]="'account.profile.navigation' | transloco"
+        >
+          <a
+            routerLink="/conta/perfil"
+            routerLinkActive="bg-brand/10 text-brand"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+          >
+            <qd-icon name="user" [size]="18" />
+            {{ 'account.profile.title' | transloco }}
+          </a>
+          <a
+            routerLink="/conta/moradas"
+            routerLinkActive="bg-brand/10 text-brand"
+            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+          >
+            <qd-icon name="location-dot" [size]="18" />
+            {{ 'nav.addresses' | transloco }}
+          </a>
+          <a
+            routerLink="/conta/empresas"
+            routerLinkActive="bg-brand/10 text-brand"
+            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+          >
+            <qd-icon name="building" [size]="18" />
+            {{ 'nav.companies' | transloco }}
+          </a>
+          <a
+            routerLink="/conta/carrinho"
+            routerLinkActive="bg-brand/10 text-brand"
+            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+          >
+            <qd-icon name="cart-shopping" [size]="18" />
+            {{ 'nav.cart' | transloco }}
+          </a>
+          <a
+            routerLink="/conta/favoritos"
+            routerLinkActive="bg-brand/10 text-brand"
+            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+          >
+            <qd-icon name="heart" [size]="18" />
+            {{ 'nav.wishlist' | transloco }}
+          </a>
+          <a
+            routerLink="/conta/encomendas"
+            routerLinkActive="bg-brand/10 text-brand"
+            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+          >
+            <qd-icon name="box" [size]="18" />
+            {{ 'nav.orders' | transloco }}
+          </a>
+          <a
+            routerLink="/conta/notificacoes"
+            routerLinkActive="bg-brand/10 text-brand"
+            class="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+          >
+            <qd-icon name="bell" [size]="18" />
+            {{ 'nav.notifications' | transloco }}
+          </a>
+        </nav>
       </aside>
 
       <section

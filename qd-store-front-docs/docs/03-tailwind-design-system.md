@@ -100,6 +100,6 @@ Cores, fontes, raios e sombras **não se inventam**: extraem-se do front antigo 
 - Os tokens de aviso claros preservam o tom `amber-800` usado no legado; a sua aplicação a novas telas deve usar o token semântico (`text-warning`).
 
 ## UI kit mínimo (Fase 0)
-`button` (variants/sizes), `input`, `select`, `textarea`, `checkbox`, `form-field` (label+erro), `card`, `badge`, `modal`, `confirm-dialog`, `dropdown` (menu), `toast`, `spinner`, `skeleton`, `pagination`, `empty-state`, `price` (Kz), `icon` (SVG inline; sem biblioteca de ícones).
+`button` (variants/sizes), `input`, `select`, `textarea`, `checkbox`, `form-field` (label+erro), `card`, `badge`, `modal`, `confirm-dialog`, `dropdown` (menu), `toast`, `spinner`, `skeleton`, `pagination`, `empty-state`, `price` (Kz), `icon` (SVG inline; sem biblioteca de runtime). Pela decisão D-013, os SVGs aprovados do Font Awesome Free são incluídos no mapa tipado do componente `qd-icon`; não adicionar CSS/webfont nem dependência.
 
 Cada componente: inputs tipados, `aria-*`, foco visível, suporte a `dark:`, documentado com um exemplo de uso no topo do `.ts`.

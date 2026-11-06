@@ -11,8 +11,8 @@ A v1 cobre **apenas o que o back-end já implementa**. Tudo o resto fica regista
 
 ## 2. Regras inegociáveis
 
-1. **Só Angular + Tailwind CSS.** Sem Angular Material, CDK, PrimeNG, Bootstrap, Font Awesome, etc. Componentes de UI (dropdown, modal, toast, tabs…) são escritos à mão em `shared/ui`, com acessibilidade.
-2. **Bibliotecas permitidas:** `@angular/*`, `rxjs`, `tailwindcss` (+ plugin PostCSS oficial) e `@jsverse/transloco` (decisão D-004). Qualquer outra exige aprovação explícita (ver §4).
+1. **Só Angular + Tailwind CSS.** Sem Angular Material, CDK, PrimeNG, Bootstrap ou bibliotecas de UI. Excepção D-013: usar apenas os SVGs inline aprovados do Font Awesome Free através do componente `qd-icon`, sem CSS, webfont ou dependência de runtime. Componentes de UI (dropdown, modal, toast, tabs…) são escritos à mão em `shared/ui`, com acessibilidade.
+2. **Bibliotecas permitidas:** `@angular/*`, `rxjs`, `tailwindcss` (+ plugin PostCSS oficial) e `@jsverse/transloco` (decisão D-004). SVGs inline do Font Awesome Free são a excepção sem dependência de runtime aprovada em D-013. Qualquer outra biblioteca exige aprovação explícita (ver §4).
 3. **Ficheiros separados:** cada componente tem `.ts` + `.html` (`templateUrl`). **Proibido** `template:` inline, `styles:`, `styleUrl(s)` e ficheiros `.css/.scss` por componente.
 4. **CSS global único:** `src/styles.css`. Só contém `@import "tailwindcss"`, `@theme` (tokens), `@custom-variant dark`, `@layer base` mínimo. Nada de classes CSS próprias; usar utilitários Tailwind no HTML.
 5. **TypeScript estrito:** sem `any`, sem `as` desnecessário, `strict` + `strictTemplates` ativos.

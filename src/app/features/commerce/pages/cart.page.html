@@ -1,0 +1,132 @@
+<main class="min-h-[60vh] bg-surface-muted px-4 py-10 sm:px-6 lg:px-8">
+  <div class="mx-auto max-w-5xl">
+    <header class="mb-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+        {{ 'commerce.kicker' | transloco }}
+      </p>
+      <h1 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+        {{ 'commerce.cart.title' | transloco }}
+      </h1>
+    </header>
+
+    @if (loading()) {
+      <div
+        class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+        role="status"
+      >
+        {{ 'common.loading' | transloco }}
+      </div>
+    } @else if (loadError()) {
+      <div class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center" role="alert">
+        <p class="text-sm text-danger">{{ 'commerce.cart.loadError' | transloco }}</p>
+        <button
+          class="mt-4 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg"
+          type="button"
+          (click)="loadCart()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </div>
+    } @else if (cart(); as currentCart) {
+      @if (currentCart.items.length) {
+        <div class="space-y-4">
+          @for (item of currentCart.items; track item.id) {
+            <article
+              class="flex flex-col gap-4 rounded-2xl border border-line bg-surface p-4 sm:flex-row sm:items-center"
+            >
+              <div class="flex min-w-0 flex-1 items-center gap-4">
+                @if (item.imageUrl) {
+                  <img class="h-20 w-20 rounded-xl object-cover" [src]="item.imageUrl" alt="" />
+                } @else {
+                  <div
+                    class="flex h-20 w-20 items-center justify-center rounded-xl bg-surface-muted text-fg-muted"
+                    aria-hidden="true"
+                  >
+                    <qd-icon name="box" [size]="28" />
+                  </div>
+                }
+                <div class="min-w-0">
+                  <a
+                    [routerLink]="['/produtos', item.productId]"
+                    class="font-semibold text-fg hover:text-brand"
+                  >
+                    {{ item.productName }}
+                  </a>
+                  <p class="mt-1 text-sm text-fg-muted">
+                    {{ item.unitPrice | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-center justify-between gap-5 sm:justify-end">
+                <div
+                  class="flex items-center gap-2"
+                  [attr.aria-label]="'commerce.cart.quantity' | transloco"
+                >
+                  <button
+                    type="button"
+                    class="h-9 w-9 rounded-full border border-line text-fg disabled:opacity-50"
+                    [disabled]="busyItems().has(item.id) || item.quantity <= 1"
+                    [attr.aria-label]="'commerce.cart.decrease' | transloco"
+                    (click)="changeQuantity(item.id, item.quantity - 1)"
+                  >
+                    −
+                  </button>
+                  <span class="min-w-6 text-center text-sm font-medium text-fg">{{
+                    item.quantity
+                  }}</span>
+                  <button
+                    type="button"
+                    class="h-9 w-9 rounded-full border border-line text-fg disabled:opacity-50"
+                    [disabled]="busyItems().has(item.id) || item.quantity >= 99"
+                    [attr.aria-label]="'commerce.cart.increase' | transloco"
+                    (click)="changeQuantity(item.id, item.quantity + 1)"
+                  >
+                    +
+                  </button>
+                </div>
+                <p class="w-28 text-right font-semibold text-fg">
+                  {{ item.subtotal | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
+                </p>
+                <button
+                  type="button"
+                  class="text-sm font-medium text-danger hover:underline disabled:opacity-50"
+                  [disabled]="busyItems().has(item.id)"
+                  (click)="removeItem(item.id)"
+                >
+                  {{ 'commerce.cart.remove' | transloco }}
+                </button>
+              </div>
+            </article>
+          }
+        </div>
+        <section class="ml-auto mt-6 max-w-sm rounded-2xl border border-line bg-surface p-6">
+          <div class="flex justify-between text-sm text-fg-muted">
+            <span>{{ 'commerce.cart.items' | transloco: { count: currentCart.itemsCount } }}</span>
+            <span>{{ currentCart.total | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}</span>
+          </div>
+          <a
+            routerLink="/conta/checkout"
+            class="mt-5 inline-flex w-full justify-center rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg hover:opacity-90"
+          >
+            {{ 'commerce.cart.checkout' | transloco }}
+          </a>
+        </section>
+      } @else {
+        <section class="rounded-2xl border border-line bg-surface px-6 py-14 text-center">
+          <h2 class="text-xl font-semibold text-fg">
+            {{ 'commerce.cart.emptyTitle' | transloco }}
+          </h2>
+          <p class="mt-2 text-sm text-fg-muted">
+            {{ 'commerce.cart.emptyDescription' | transloco }}
+          </p>
+          <a
+            routerLink="/produtos"
+            class="mt-6 inline-flex rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
+          >
+            {{ 'commerce.cart.continueShopping' | transloco }}
+          </a>
+        </section>
+      }
+    }
+  </div>
+</main>

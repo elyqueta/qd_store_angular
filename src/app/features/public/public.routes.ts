@@ -19,6 +19,10 @@ export const publicRoutes: Routes = [
     loadComponent: () => import('./pages/about.page').then((module) => module.AboutPage),
   },
   {
+    path: 'empresas',
+    loadComponent: () => import('./pages/business.page').then((module) => module.BusinessPage),
+  },
+  {
     path: 'contactos',
     loadComponent: () => import('./pages/contact.page').then((module) => module.ContactPage),
   },

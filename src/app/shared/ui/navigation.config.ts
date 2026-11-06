@@ -13,9 +13,6 @@ export type UserMenuItem =
 
 export const NAV_ITEMS: readonly NavigationItem[] = [
   { labelKey: 'nav.home', route: '/' },
-  { labelKey: 'nav.catalog', route: '/produtos' },
-  { labelKey: 'nav.about', route: '/sobre' },
-  { labelKey: 'nav.contact', route: '/contactos' },
 ];
 
 export const USER_MENU_ITEMS: readonly UserMenuItem[] = [
@@ -23,6 +20,10 @@ export const USER_MENU_ITEMS: readonly UserMenuItem[] = [
   { kind: 'link', labelKey: 'nav.profile', route: '/conta/perfil' },
   { kind: 'link', labelKey: 'nav.addresses', route: '/conta/moradas' },
   { kind: 'link', labelKey: 'nav.companies', route: '/conta/empresas' },
+  { kind: 'link', labelKey: 'nav.cart', route: '/conta/carrinho' },
+  { kind: 'link', labelKey: 'nav.wishlist', route: '/conta/favoritos' },
+  { kind: 'link', labelKey: 'nav.orders', route: '/conta/encomendas' },
+  { kind: 'link', labelKey: 'nav.notifications', route: '/conta/notificacoes' },
   { kind: 'action', action: 'theme', labelKey: 'nav.themeToggle' },
   { kind: 'action', action: 'logout', labelKey: 'nav.logout' },
 ];

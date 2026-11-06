@@ -1,0 +1,61 @@
+<main class="bg-surface-muted">
+  <section class="bg-fg text-surface">
+    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <p class="text-sm font-semibold uppercase tracking-[0.18em] text-brand">
+        {{ 'public.business.kicker' | transloco }}
+      </p>
+      <h1 class="mt-4 max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
+        {{ 'public.business.title' | transloco }}
+      </h1>
+      <p class="mt-5 max-w-2xl text-base leading-7 text-surface/75">
+        {{ 'public.business.description' | transloco }}
+      </p>
+      <a
+        [href]="whatsappUrl"
+        target="_blank"
+        rel="noreferrer"
+        class="mt-8 inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-fg transition-opacity hover:opacity-90"
+      >
+        <qd-icon name="whatsapp" [size]="18" />
+        {{ 'public.business.cta' | transloco }}
+      </a>
+    </div>
+  </section>
+
+  <section
+    class="mx-auto grid max-w-6xl gap-5 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8"
+  >
+    @for (benefit of benefits; track benefit.titleKey) {
+      <article class="rounded-2xl border border-line bg-surface p-6">
+        <div
+          class="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand"
+          aria-hidden="true"
+        >
+          <qd-icon [name]="benefit.icon" [size]="20" />
+        </div>
+        <h2 class="text-base font-semibold text-fg">{{ benefit.titleKey | transloco }}</h2>
+        <p class="mt-2 text-sm leading-6 text-fg-muted">{{ benefit.descriptionKey | transloco }}</p>
+      </article>
+    }
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+    <div class="rounded-3xl border border-line bg-surface p-8 text-center sm:p-10">
+      <h2 class="text-2xl font-semibold tracking-tight text-fg">
+        {{ 'public.business.contactTitle' | transloco }}
+      </h2>
+      <p class="mx-auto mt-3 max-w-2xl text-sm leading-6 text-fg-muted">
+        {{ 'public.business.contactDescription' | transloco }}
+      </p>
+      <a
+        [href]="whatsappUrl"
+        target="_blank"
+        rel="noreferrer"
+        class="mt-6 inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-fg hover:opacity-90"
+      >
+        <qd-icon name="whatsapp" [size]="18" />
+        {{ 'public.business.cta' | transloco }}
+      </a>
+    </div>
+  </section>
+</main>

@@ -12,9 +12,9 @@ Antes de tocar numa tela, abrir o ficheiro React correspondente, extrair valores
 
 | ID proposto | Tema | Conflito | Recomendação |
 |---|---|---|---|
-| D-013 | Font Awesome | `AGENTS.md` §2 proíbe Font Awesome | Aprovar **Font Awesome Free** como excepção. Usar **SVG inline** (componente `qd-icon` com um mapa de ícones) em vez do CSS/webfont. Sem dependência de runtime, sem FOUC, compatível com SSR, tree-shakeable. |
-| D-014 | Efeito glass (glassmorphism) | Nenhum | Aprovar tokens `glass` em `styles.css` (ver §3). |
-| D-015 | Âmbito de Carrinho/Favoritos/Pagamentos | `AGENTS.md` §9: sem endpoints | Manter adiado, mas **não esconder em silêncio**: ver §8. |
+| D-013 | Font Awesome | `AGENTS.md` §2 proíbe Font Awesome | **Aprovado por Elizandro (2026-11-06):** usar apenas SVG inline (componente `qd-icon` com mapa de ícones), sem CSS/webfont ou dependência de runtime. |
+| D-014 | Efeito glass (glassmorphism) | Nenhum | **Aprovado por Elizandro (2026-11-06):** tokens `glass` em `styles.css` (ver §3), restritos aos locais listados e com fallback opaco. |
+| D-015 | Âmbito de Carrinho/Favoritos/Pagamentos | O contrato antigo em `08` estava incompleto | **Aprovado por Elizandro (2026-11-06):** integrar carrinho, favoritos, encomendas e pagamentos, agora descritos em `08`; não criar endpoints nem simular operações. |
 
 O Copilot deve perguntar estas decisões em escolha múltipla (2–4 opções, recomendação marcada) e registá-las em `13-decisoes.md`.
 
@@ -122,23 +122,27 @@ Dependem do back-end (`20-…`). Até existir endpoint:
 
 | Item | Estado | Acção |
 |---|---|---|
-| Botão flutuante WhatsApp | Em falta | Recriar `WhatsAppButton` do React: botão verde `#25D366` (ou token), mini-painel com texto e horário, esconde-se quando há overlays abertos. Número e mensagem iguais aos do React/footer. Ícone `whatsapp` (brands). |
-| Favoritos | Adiado (sem API) | Deixar os pontos de entrada **fora** da UI até haver endpoint. Documentar em roadmap. |
-| Carrinho / Checkout / Pagamentos | Adiado (sem API) | Idem. Não deixar botões mortos. |
-| Footer | Divergente | Replicar `Footer.jsx`: colunas Loja, Empresas, Apoio, Pagamento, logótipo; links apenas para rotas existentes. |
+| Botão flutuante WhatsApp | Implementado, falta revisão de overlay | Botão e painel acessível com texto/horário, número e mensagem do React; confirmar que fica oculto sobre overlays e comparar capturas. |
+| Favoritos | Integrado | API real para listar, adicionar/remover e adicionar ao carrinho; sem mock. |
+| Carrinho / Checkout / Pagamentos | Integrado | API real para gerir artigos, criar encomenda e registar tentativa de pagamento; detalhe e cancelamento disponíveis. |
+| Footer | Parcialmente alinhado | Quatro colunas Loja/Empresas/Apoio/Pagamento, categorias vindas da API e logótipo; falta revisão visual lado a lado. |
 | Página 404 | Verificar | Usar o mesmo estilo (código grande, botão). |
-| Página de empresas pública (`/empresas`) | Em falta | Ver §9. |
+| Página de empresas pública (`/empresas`) | Implementada | Página informativa com CTA WhatsApp; sem simular o formulário de orçamento que não tem endpoint. Gestão de membros continua bloqueada pela falta de pesquisa de utilizadores. |
 
 ## 9. Área empresarial (B2B)
 
-No React existe uma página `/empresas` (benefícios, pedido de orçamento) e um checkout empresarial com descontos por volume. No Angular só existe a gestão autenticada em `/conta/empresas`.
+No React existe uma página `/empresas` (benefícios, pedido de orçamento) e um checkout empresarial com descontos por volume. O Angular tem agora a página informativa `/empresas` e mantém a gestão autenticada em `/conta/empresas`.
 
 Alvo:
 1. Página pública `/empresas` com o hero escuro, grelha de benefícios (orçamentos com NIF, gestor de conta, preços especiais, assistência técnica, suporte WhatsApp, entrega corporativa) e CTA.
 2. Formulário "Pedir orçamento": depende de endpoint no back-end (`20-…`). Até lá, mostrar o CTA que abre WhatsApp com mensagem pré-preenchida, sem simular envio.
 3. Gestão de empresas na conta: manter `/conta/empresas` e `/conta/empresas/nova`; acrescentar gestão de membros (associar/remover utilizador, alterar cargo) para proprietários, usando os endpoints `/companies/:companyId/users` que já existem. Atenção: associar exige `userId` (UUID); não existe pesquisa de utilizadores. Propor no back-end um endpoint de pesquisa por e-mail para proprietários (ver `20-…`).
 4. Badge/destaque "Conta empresarial" nos sítios onde o React o usava (BuyModal, checkout), quando aplicável.
-5. Reintroduzir o link **Empresas** na navbar (D-010 removeu-o; reverter com nova decisão, pois a página passa a existir).
+5. Link **Empresas** reintroduzido na navbar segundo D-018.
+
+## 9.1 Perfil da conta
+
+A tela React `src/pages/ProfilePage.jsx` é a referência visual. Reproduzir o painel, navegação por separadores e iconografia SVG sem copiar os dados fictícios ou operações não suportadas. Os dados pessoais continuam apenas de leitura a partir da sessão; encomendas, favoritos e notificações devem usar os endpoints próprios documentados em `08`. A referência não prova que exista edição de perfil, notificações configuráveis, alteração de palavra-passe ou métodos guardados no perfil.
 
 ## 10. Back-office: seguir o estilo do protótipo React
 
@@ -148,7 +152,7 @@ Passos obrigatórios:
 1. Localizar no repositório React o protótipo do back-office (pesquisar por `admin`, `backoffice`, `dashboard`, `painel`, `tabela`). **Se não existir** nas pastas conhecidas (`src/pages`, `src/components`), **parar e perguntar ao Elizandro o caminho/branch**. Não presumir.
 2. Inventariar para o back-office, como foi feito em `migracao/inventario.md`: layout (sidebar/topbar), larguras, cores, tipografia, tabelas, cartões de métricas, formulários, botões, estados vazios, ícones.
 3. Aprovar o inventário com o Elizandro antes de reescrever.
-4. Reescrever `admin-layout` e as páginas administrativas com esse estilo (tema claro/escuro incluído).
+4. Reescrever `admin-layout` e as páginas administrativas com esse estilo (tema claro/escuro incluído) apenas se o protótipo existir. **Elizandro confirmou em 2026-11-06 que a UI antiga não tem back-office:** manter as páginas Angular existentes, sem inventar uma referência visual.
 5. Acrescentar o módulo de **Utilizadores** (§11).
 
 ## 11. Back-office: gestão de utilizadores
@@ -165,14 +169,14 @@ Até haver API: registar L-10 e preparar a rota/UI com estado "indisponível" tr
 
 ## 12. Checklist de aceitação desta paridade
 
-- [ ] D-013, D-014, D-015 decididas e registadas
-- [ ] Zero ocorrências de `text-\[` e de emoji na interface
-- [ ] Navbar com um único menu de utilizador glass; tema dentro do menu
-- [ ] Logótipo oficial em navbar, footer, preloader e favicon
+- [x] D-013, D-014, D-015 decididas e registadas
+- [x] Zero classes `text-[Npx]` e sem emojis renderizados na interface (os emojis legados da API são mapeados para SVG)
+- [x] Navbar com um único menu de utilizador glass; tema dentro do menu
+- [ ] Logótipo oficial em navbar, footer, favicon e preloader (falta o preloader)
 - [ ] Preloader reposto (só no primeiro carregamento)
 - [ ] Home com todas as secções do React
-- [ ] Botão flutuante WhatsApp e footer iguais ao React
-- [ ] Página `/empresas` e gestão de membros
-- [ ] Back-office no estilo do protótipo (inventário aprovado)
+- [ ] Botão flutuante WhatsApp e footer revistos em captura lado a lado
+- [ ] Página `/empresas` e gestão de membros (página pronta; gestão depende de pesquisa de utilizadores)
+- [x] Back-office mantido sem reestilização porque não existe protótipo React (D-017)
 - [ ] Capturas lado a lado, claro/escuro, mobile/desktop
 - [ ] `ng build` e `ng test` sem falhas; docs actualizados

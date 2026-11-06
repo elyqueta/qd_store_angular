@@ -25,7 +25,7 @@
               class="flex aspect-4/3 items-center justify-center bg-surface-muted"
               aria-hidden="true"
             >
-              <span class="text-6xl text-fg-muted">◇</span>
+              <qd-icon name="box" [size]="44" class="text-fg-muted" />
             </div>
           }
         </div>
@@ -77,6 +77,30 @@
         </p>
 
         <div class="flex flex-wrap gap-3">
+          @if (isAuthenticated()) {
+            <button
+              type="button"
+              class="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg disabled:opacity-50"
+              [disabled]="cartBusy() || product.status !== 'active'"
+              (click)="addToCart()"
+            >
+              {{
+                cartBusy()
+                  ? ('commerce.wishlist.addingToCart' | transloco)
+                  : ('commerce.wishlist.addToCart' | transloco)
+              }}
+            </button>
+            <button
+              type="button"
+              class="inline-flex items-center gap-2 rounded-full border border-line px-5 py-3 text-sm font-medium text-fg hover:border-brand hover:text-brand disabled:opacity-50"
+              [disabled]="wishlistBusy()"
+              [attr.aria-label]="'commerce.wishlist.addToFavorites' | transloco"
+              (click)="addToWishlist()"
+            >
+              <qd-icon name="heart" [size]="18" />
+              {{ 'commerce.wishlist.addToFavorites' | transloco }}
+            </button>
+          }
           <a
             [routerLink]="'/produtos'"
             class="rounded-full border border-line px-5 py-3 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand"

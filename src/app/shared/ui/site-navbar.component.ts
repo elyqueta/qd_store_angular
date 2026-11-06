@@ -10,7 +10,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../core/auth/auth.service';
 import { AuthStore } from '../../core/auth/auth.store';
@@ -20,11 +20,12 @@ import { ThemeService } from '../../core/theme/theme.service';
 import { ProductApiService } from '../../features/public/data-access/product-api.service';
 import { Product, ProductCategory } from '../../features/public/models/product.model';
 import { NAV_ITEMS, USER_MENU_ITEMS, UserMenuAction } from './navigation.config';
-import { finalize, Subscription } from 'rxjs';
+import { filter, finalize, Subscription } from 'rxjs';
+import { IconComponent } from './icon.component';
 
 @Component({
   selector: 'qd-site-navbar',
-  imports: [RouterLink, RouterLinkActive, TranslocoPipe],
+  imports: [RouterLink, RouterLinkActive, TranslocoPipe, IconComponent],
   templateUrl: './site-navbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -35,6 +36,7 @@ export class SiteNavbarComponent {
   private readonly authService = inject(AuthService);
   private readonly authStore = inject(AuthStore);
   private readonly productApi = inject(ProductApiService);
+  private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
   readonly themeService = inject(ThemeService);
@@ -47,6 +49,17 @@ export class SiteNavbarComponent {
   });
   readonly mobileOpen = signal(false);
   readonly userMenuOpen = signal(false);
+  readonly scrolled = signal(false);
+  readonly homeHero = signal(this.router.url === '/');
+  readonly overHero = computed(() => this.homeHero() && !this.scrolled());
+  readonly headerClasses = computed(() =>
+    [
+      'fixed left-0 top-0 z-40 w-full transition-colors duration-300',
+      this.overHero()
+        ? 'border-b border-transparent bg-transparent'
+        : 'border-b border-line bg-glass backdrop-blur-xl backdrop-saturate-150 supports-[not(backdrop-filter:blur(1px))]:bg-surface',
+    ].join(' '),
+  );
   readonly categories = signal<ProductCategory[]>([]);
   readonly categoriesError = signal(false);
   readonly activeCategory = signal<ProductCategory | null>(null);
@@ -70,6 +83,16 @@ export class SiteNavbarComponent {
   readonly navItems = NAV_ITEMS;
 
   constructor() {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((event) => {
+        this.homeHero.set(event.urlAfterRedirects === '/');
+        this.scrolled.set(false);
+      });
+
     this.productApi
       .listCategories()
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -77,6 +100,11 @@ export class SiteNavbarComponent {
         next: (categories) => this.categories.set(categories.slice(0, 6)),
         error: () => this.categoriesError.set(true),
       });
+  }
+
+  @HostListener('window:scroll')
+  updateScrollState(): void {
+    this.scrolled.set((this.document.defaultView?.scrollY ?? 0) > 10);
   }
 
   toggleTheme(): void {
