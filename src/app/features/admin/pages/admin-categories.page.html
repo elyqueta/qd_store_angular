@@ -1,0 +1,251 @@
+<main class="mx-auto min-h-[60vh] max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-8">
+    <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+      {{ 'admin.categories.kicker' | transloco }}
+    </p>
+    <h1 class="text-3xl font-semibold tracking-tight text-fg">
+      {{ 'admin.categories.title' | transloco }}
+    </h1>
+    <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+      {{ 'admin.categories.description' | transloco }}
+    </p>
+  </header>
+
+  <section aria-labelledby="qd-admin-categories-heading">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <h2 id="qd-admin-categories-heading" class="text-lg font-semibold text-fg">
+        {{ 'admin.categories.listTitle' | transloco }}
+      </h2>
+      @if (!isFormOpen()) {
+        <button
+          type="button"
+          class="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="openCreateForm()"
+        >
+          {{ 'admin.categories.add' | transloco }}
+        </button>
+      }
+    </div>
+
+    @if (isLoading()) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+        {{ 'common.loading' | transloco }}
+      </p>
+    } @else if (hasLoadError()) {
+      <section
+        class="rounded-2xl border border-danger/40 bg-surface p-6"
+        aria-labelledby="qd-admin-categories-load-error"
+        role="alert"
+      >
+        <h3 id="qd-admin-categories-load-error" class="font-semibold text-fg">
+          {{ 'admin.categories.errorTitle' | transloco }}
+        </h3>
+        <p class="mt-2 text-sm text-fg-muted">
+          {{ 'admin.categories.errorDescription' | transloco }}
+        </p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="loadCategories()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </section>
+    } @else if (!categories().length) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted">
+        {{ 'admin.categories.empty' | transloco }}
+      </p>
+    } @else {
+      <ul class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        @for (category of categories(); track category.id) {
+          <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+            <div class="flex items-start justify-between gap-4">
+              <div class="flex min-w-0 items-start gap-3">
+                @if (category.icon) {
+                  <span
+                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-muted text-xl"
+                    aria-hidden="true"
+                  >
+                    {{ category.icon }}
+                  </span>
+                }
+                <div class="min-w-0">
+                  <h3 class="break-words font-semibold text-fg">{{ category.label }}</h3>
+                  <p class="mt-1 break-all text-xs text-fg-muted">{{ category.slug }}</p>
+                </div>
+              </div>
+              <div class="flex shrink-0 gap-2">
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-line px-3 py-2 text-xs font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+                  [disabled]="saving() || pendingDeletionId() !== null"
+                  (click)="openEditForm(category)"
+                >
+                  {{ 'admin.categories.edit' | transloco }}
+                </button>
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-danger/40 px-3 py-2 text-xs font-medium text-danger transition hover:bg-danger/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:opacity-60"
+                  [disabled]="saving() || pendingDeletionId() !== null"
+                  (click)="requestDelete(category)"
+                >
+                  {{ 'admin.categories.delete' | transloco }}
+                </button>
+              </div>
+            </div>
+
+            @if (confirmingDeletionId() === category.id) {
+              <div
+                class="mt-5 rounded-xl border border-danger/30 bg-danger/5 p-4"
+                role="group"
+                [attr.aria-label]="'admin.categories.confirmDeleteTitle' | transloco"
+              >
+                <p class="text-sm text-fg">
+                  {{ 'admin.categories.confirmDelete' | transloco: { label: category.label } }}
+                </p>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full bg-danger px-4 py-2 text-sm font-semibold text-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger disabled:opacity-60"
+                    [disabled]="pendingDeletionId() !== null"
+                    (click)="confirmDelete(category)"
+                  >
+                    {{ 'admin.categories.confirmDeleteAction' | transloco }}
+                  </button>
+                  <button
+                    type="button"
+                    class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                    [disabled]="pendingDeletionId() !== null"
+                    (click)="cancelDelete()"
+                  >
+                    {{ 'common.close' | transloco }}
+                  </button>
+                </div>
+              </div>
+            }
+          </li>
+        }
+      </ul>
+    }
+
+    @if (isFormOpen()) {
+      <section
+        class="mt-8 rounded-2xl border border-line bg-surface p-5 sm:p-8"
+        aria-labelledby="qd-admin-category-form-heading"
+      >
+        <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 id="qd-admin-category-form-heading" class="text-lg font-semibold text-fg">
+              {{
+                (editingCategoryId()
+                  ? 'admin.categories.editTitle'
+                  : 'admin.categories.createTitle'
+                ) | transloco
+              }}
+            </h2>
+            <p class="mt-1 text-sm text-fg-muted">
+              {{ 'admin.categories.formDescription' | transloco }}
+            </p>
+          </div>
+          <button
+            type="button"
+            class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [disabled]="saving()"
+            (click)="closeForm()"
+          >
+            {{ 'admin.categories.cancel' | transloco }}
+          </button>
+        </div>
+
+        @if (formError(); as message) {
+          <p
+            class="mb-5 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
+            role="alert"
+          >
+            {{ message }}
+          </p>
+        }
+
+        <form
+          class="grid grid-cols-1 gap-5 md:grid-cols-2"
+          [formGroup]="form"
+          (ngSubmit)="submitForm()"
+        >
+          <div>
+            <label for="qd-category-label" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.categories.fields.label' | transloco }}
+            </label>
+            <input
+              id="qd-category-label"
+              type="text"
+              formControlName="label"
+              maxlength="100"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-muted focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.label.invalid && form.controls.label.touched"
+              [attr.aria-describedby]="
+                form.controls.label.invalid && form.controls.label.touched
+                  ? 'qd-category-label-error'
+                  : null
+              "
+            />
+            @if (form.controls.label.invalid && form.controls.label.touched) {
+              <p id="qd-category-label-error" class="mt-1 text-sm text-danger">
+                {{ 'admin.categories.validation.label' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-category-icon" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.categories.fields.icon' | transloco }}
+            </label>
+            <input
+              id="qd-category-icon"
+              type="text"
+              formControlName="icon"
+              maxlength="10"
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-muted focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.icon.invalid && form.controls.icon.touched"
+              [attr.aria-describedby]="
+                form.controls.icon.invalid && form.controls.icon.touched
+                  ? 'qd-category-icon-error'
+                  : null
+              "
+            />
+            @if (form.controls.icon.invalid && form.controls.icon.touched) {
+              <p id="qd-category-icon-error" class="mt-1 text-sm text-danger">
+                {{ 'admin.categories.validation.icon' | transloco }}
+              </p>
+            }
+          </div>
+
+          <div class="flex flex-wrap gap-3 md:col-span-2">
+            <button
+              type="submit"
+              class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-wait disabled:opacity-60"
+              [disabled]="saving()"
+            >
+              {{
+                (saving()
+                  ? 'admin.categories.saving'
+                  : editingCategoryId()
+                    ? 'admin.categories.save'
+                    : 'admin.categories.create'
+                ) | transloco
+              }}
+            </button>
+            <button
+              type="button"
+              class="min-h-11 rounded-full border border-line px-5 py-2.5 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+              [disabled]="saving()"
+              (click)="closeForm()"
+            >
+              {{ 'admin.categories.cancel' | transloco }}
+            </button>
+          </div>
+        </form>
+      </section>
+    }
+  </section>
+</main>

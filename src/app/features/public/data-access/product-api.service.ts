@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, forkJoin, map, shareReplay } from 'rxjs';
+import { Observable, map, shareReplay } from 'rxjs';
 import { API_URL } from '../../../core/config/api-url.token';
 import {
   ApiCollectionResponse,
@@ -8,9 +8,7 @@ import {
   Product,
   ProductCategory,
   ProductDetail,
-  ProductImage,
   ProductListPage,
-  ProductSpecification,
 } from '../models/product.model';
 
 interface ListProductsParams {
@@ -18,6 +16,11 @@ interface ListProductsParams {
   limit?: number;
   categoryId?: string;
   status?: 'active' | 'inactive' | 'out_of_stock';
+  search?: string;
+  sort?: 'createdAt_desc' | 'createdAt_asc' | 'name_asc' | 'name_desc' | 'price_asc' | 'price_desc';
+  priceMin?: number;
+  priceMax?: number;
+  availableOnly?: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +38,10 @@ export class ProductApiService {
       );
 
     return this.categoriesRequest;
+  }
+
+  invalidateCategories(): void {
+    this.categoriesRequest = null;
   }
 
   listProducts(params: ListProductsParams = {}): Observable<ProductListPage> {
@@ -56,6 +63,26 @@ export class ProductApiService {
       requestParams = requestParams.set('status', params.status);
     }
 
+    if (params.search) {
+      requestParams = requestParams.set('search', params.search);
+    }
+
+    if (params.sort) {
+      requestParams = requestParams.set('sort', params.sort);
+    }
+
+    if (params.priceMin !== undefined) {
+      requestParams = requestParams.set('priceMin', String(params.priceMin));
+    }
+
+    if (params.priceMax !== undefined) {
+      requestParams = requestParams.set('priceMax', String(params.priceMax));
+    }
+
+    if (params.availableOnly !== undefined) {
+      requestParams = requestParams.set('availableOnly', String(params.availableOnly));
+    }
+
     return this.http
       .get<ApiCollectionResponse<Product>>(`${this.apiUrl}/api/v1/products`, {
         params: requestParams,
@@ -72,22 +99,10 @@ export class ProductApiService {
   }
 
   getProductById(productId: string): Observable<ProductDetail> {
-    return forkJoin({
-      product: this.http.get<ApiSingleResponse<Product>>(
-        `${this.apiUrl}/api/v1/products/${productId}`,
-      ),
-      images: this.http.get<ApiSingleResponse<ProductImage[]>>(
-        `${this.apiUrl}/api/v1/products/${productId}/images`,
-      ),
-      specifications: this.http.get<ApiSingleResponse<ProductSpecification[]>>(
-        `${this.apiUrl}/api/v1/products/${productId}/specifications`,
-      ),
-    }).pipe(
-      map(({ product, images, specifications }) => ({
-        ...product.data,
-        images: images.data,
-        specifications: specifications.data,
-      })),
-    );
+    return this.http
+      .get<ApiSingleResponse<ProductDetail>>(`${this.apiUrl}/api/v1/products/${productId}`, {
+        params: new HttpParams().set('include', 'images,specifications'),
+      })
+      .pipe(map((response) => response.data));
   }
 }

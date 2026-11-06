@@ -40,7 +40,9 @@ Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões
 ## Fase 4 — Back office
 
 - [x] Dashboard simples (contagens fornecidas pela API)
-- [ ] Categorias · Produtos (+ imagens + especificações) · Tipos de entrega · Empresas (admin)
+- [x] Categorias (admin)
+- [x] Produtos, imagens por URL e especificações (admin)
+- [ ] Tipos de entrega · Empresas (admin)
 
 ## Fase 5 — Endurecimento
 

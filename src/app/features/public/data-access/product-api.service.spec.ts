@@ -95,15 +95,46 @@ describe('ProductApiService', () => {
     });
   });
 
-  it('combines product, image, and specification endpoints for detail pages', async () => {
-    const responsePromise = firstValueFrom(api.getProductById('product-1'));
-    const productRequest = httpTesting.expectOne(`${apiRoot}/products/product-1`);
-    const imagesRequest = httpTesting.expectOne(`${apiRoot}/products/product-1/images`);
-    const specificationsRequest = httpTesting.expectOne(
-      `${apiRoot}/products/product-1/specifications`,
+  it('sends the extended search, sorting, and price filter contract', async () => {
+    const responsePromise = firstValueFrom(
+      api.listProducts({
+        page: 1,
+        limit: 20,
+        search: 'portátil',
+        sort: 'price_asc',
+        priceMin: 100000,
+        priceMax: 500000,
+        availableOnly: true,
+      }),
+    );
+    const request = httpTesting.expectOne(
+      (candidate) =>
+        candidate.url === `${apiRoot}/products` &&
+        candidate.params.get('search') === 'portátil' &&
+        candidate.params.get('sort') === 'price_asc' &&
+        candidate.params.get('priceMin') === '100000' &&
+        candidate.params.get('priceMax') === '500000' &&
+        candidate.params.get('availableOnly') === 'true',
     );
 
-    productRequest.flush({
+    request.flush({
+      status: 'success',
+      data: [],
+      pagination: { page: 1, limit: 20, total: 0, totalPages: 0 },
+    });
+
+    await expect(responsePromise).resolves.toMatchObject({ items: [], total: 0 });
+  });
+
+  it('loads product details, images, and specifications in one request', async () => {
+    const responsePromise = firstValueFrom(api.getProductById('product-1'));
+    const request = httpTesting.expectOne(
+      (candidate) =>
+        candidate.url === `${apiRoot}/products/product-1` &&
+        candidate.params.get('include') === 'images,specifications',
+    );
+
+    request.flush({
       status: 'success',
       data: {
         id: 'product-1',
@@ -127,34 +158,28 @@ describe('ProductApiService', () => {
         },
         createdAt: '2026-01-01T00:00:00.000Z',
         updatedAt: '2026-01-01T00:00:00.000Z',
+        images: [
+          {
+            id: 'image-1',
+            productId: 'product-1',
+            url: 'https://example.test/product-1.webp',
+            displayOrder: 0,
+            width: 1200,
+            height: 900,
+            format: 'webp',
+            sizeBytes: 12000,
+          },
+        ],
+        specifications: [
+          {
+            id: 'spec-1',
+            productId: 'product-1',
+            specKey: 'Memória',
+            specValue: '16 GB',
+            displayOrder: 0,
+          },
+        ],
       },
-    });
-    imagesRequest.flush({
-      status: 'success',
-      data: [
-        {
-          id: 'image-1',
-          productId: 'product-1',
-          url: 'https://example.test/product-1.webp',
-          displayOrder: 0,
-          width: 1200,
-          height: 900,
-          format: 'webp',
-          sizeBytes: 12000,
-        },
-      ],
-    });
-    specificationsRequest.flush({
-      status: 'success',
-      data: [
-        {
-          id: 'spec-1',
-          productId: 'product-1',
-          specKey: 'Memória',
-          specValue: '16 GB',
-          displayOrder: 0,
-        },
-      ],
     });
 
     await expect(responsePromise).resolves.toMatchObject({

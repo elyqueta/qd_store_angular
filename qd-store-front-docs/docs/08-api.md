@@ -1,6 +1,6 @@
 # 08 · Contrato da API (estado atual)
 
-Base URL: token de injecção `API_URL` (ambiente local actual: `http://localhost:1914` para Docker Compose; serviço local directo: `http://localhost:3000`); os endpoints de domínio usam o prefixo `${API_URL}/api/v1`. O cliente HTTP usa `withFetch()` para compatibilidade com SSR. Em produção, `API_URL` permanece deliberadamente por configurar: a aplicação falha explicitamente ao injectar o token até existir um destino aprovado. A configuração pode ser substituída no servidor se a API usar uma URL interna.
+Base URL: token de injecção `API_URL` (ambiente local actual: `http://localhost:1914` para Docker Compose; serviço local directo: `http://localhost:3000`; produção: `https://qd-store-back-end.onrender.com`); os endpoints de domínio usam o prefixo `${API_URL}/api/v1`. O cliente HTTP usa `withFetch()` para compatibilidade com SSR. A URL de produção é incluída no build Angular através de `environment.production.ts`; não é um segredo nem uma variável runtime do Vercel. A configuração pode ser substituída no servidor se a API usar uma URL interna.
 
 Documentação interactiva do back-end: `/api-docs`, spec em `/openapi.json` (fora de produção). **Adicionar `http://localhost:4200` ao `CORS_ORIGIN` do back-end** em desenvolvimento.
 
@@ -36,9 +36,12 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 
 **Auth** (`/api/v1/auth`): `POST /register` (cria conta pessoal e devolve `User`), `POST /login` e `POST /refresh` (devolvem `AuthResult`), `POST /logout` (204). Login envia `{ email, password }`; registo envia `{ fullName, email, password, phone, accountType: 'personal', nif? }`; refresh/logout enviam `{ refreshToken }`.
 
-**Categorias** (`/api/v1/categories`): `GET /` e `GET /:id` públicos; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se tiver produtos).
+**Categorias** (`/api/v1/categories`): `GET /` e `GET /:id` públicos; `POST { label, icon? }`, `PATCH /:id { label?, icon? }` e `DELETE /:id` admin (409 se tiver produtos). `label` tem entre 1 e 100 caracteres; `icon` é opcional e pode ser `null` num PATCH para o remover (máximo de 10 caracteres).
 
-**Produtos** (`/api/v1/products`): `GET /?page&limit(≤100)&categoryId&status` público (inclui `categoryName` e `mainImage`); `GET /:id` também inclui `mainImage`; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado).
+**Produtos** (`/api/v1/products`): `GET /?page&limit(≤100)&categoryId&status&search&sort&priceMin&priceMax&availableOnly&excludeId` público (inclui `categoryName` e `mainImage`); `GET /:id?include=images,specifications` público; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado por carrinhos ou pedidos).
+
+- `name` é obrigatório (máximo 200); `description` opcional (máximo 5000); `price` positivo; `originalPrice` opcional e, quando informado, deve ser superior a `price`; `badge` opcional (máximo 50). O PATCH é parcial e aceita `null` para limpar `description`, `originalPrice` e `badge`. O contrato actual não permite alterar directamente o estado do produto.
+- O detalhe do produto pede `include=images,specifications` para receber os dados relacionados numa única chamada, em vez de fazer três leituras separadas.
 
 - `mainImage` é a imagem associada com menor `displayOrder`, ou `null` quando o produto ainda não tem imagens. Durante a transição, o front também tolera respostas antigas sem esta propriedade.
 - `POST /` pode receber `mainImage` opcional para criar a imagem principal na mesma operação; continua compatível criar primeiro o produto e depois usar `POST /:productId/images`.
@@ -62,8 +65,8 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 }
 ```
 
-- Imagens `/api/v1/products/:productId/images`: `GET` público; `POST`, `PATCH /:id`, `DELETE /:id` admin. Só URL (sem upload).
-- Especificações `/api/v1/products/:productId/specifications`: idem; `displayOrder` obrigatório.
+- Imagens `/api/v1/products/:productId/images`: `GET` público; `POST { url, displayOrder?, width?, height?, format?, sizeBytes? }`, `PATCH /:id` parcial, `DELETE /:id` admin. Só URL (sem upload); `displayOrder` é inteiro ≥ 0.
+- Especificações `/api/v1/products/:productId/specifications`: `GET` público; `POST { specKey, specValue, displayOrder }`, `PATCH /:id` parcial e `DELETE /:id` admin. Chave e valor têm até 255 caracteres; `displayOrder` inteiro ≥ 0 e obrigatório na criação.
 
 **Tipos de entrega** (`/api/v1/delivery-types`): `GET /` (só ativos) e `GET /:id` públicos; `POST`, `PATCH`, `DELETE` (=desactivar) admin.
 
