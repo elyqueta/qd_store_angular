@@ -22,6 +22,7 @@ import { Product, ProductDetail } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
 import { IconComponent } from '../../../shared/ui/icon.component';
 import { ProductPurchaseDialogComponent } from '../../../shared/ui/product-purchase-dialog.component';
+import { PurchaseSelection } from '../../../shared/ui/product-purchase-dialog.component';
 
 @Component({
   selector: 'qd-product-page',
@@ -212,17 +213,17 @@ export class ProductPage {
     this.buyTrigger?.nativeElement.focus();
   }
 
-  continuePurchase(): void {
+  continuePurchase(selection: PurchaseSelection): void {
     if (!this.isAuthenticated()) {
       this.closeBuyModal();
       void this.router.navigateByUrl('/entrar');
       return;
     }
 
-    this.addToCart();
+    this.addToCart(selection);
   }
 
-  addToCart(): void {
+  addToCart(selection: PurchaseSelection = {}): void {
     const productId = this.product()?.id;
     if (!productId || !this.isAuthenticated() || this.cartBusy()) {
       return;
@@ -237,7 +238,9 @@ export class ProductPage {
           this.cartBusy.set(false);
           this.closeBuyModal();
           this.toast.success(this.transloco.translate('commerce.cart.added'));
-          void this.router.navigateByUrl('/conta/carrinho');
+          void this.router.navigate(['/conta/checkout'], {
+            queryParams: selection.companyId ? { companyId: selection.companyId } : {},
+          });
         },
         error: (error: unknown) => {
           this.cartBusy.set(false);

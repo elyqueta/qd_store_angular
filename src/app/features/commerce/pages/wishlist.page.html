@@ -18,9 +18,7 @@
     <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2" role="status" aria-label="A carregar">
       @for (skeleton of [1, 2, 3, 4]; track skeleton) {
         <div class="overflow-hidden rounded-[15px] border border-line bg-surface">
-          <div
-            class="aspect-video animate-pulse bg-surface-muted motion-reduce:animate-none"
-          ></div>
+          <div class="aspect-video animate-pulse bg-surface-muted motion-reduce:animate-none"></div>
           <div class="space-y-3 p-3">
             <div
               class="h-5 w-4/5 animate-pulse rounded bg-surface-muted motion-reduce:animate-none"
@@ -36,16 +34,14 @@
       }
     </div>
   } @else if (error()) {
-    <div role="alert" class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center">
-      <p class="text-sm text-danger">{{ 'commerce.wishlist.loadError' | transloco }}</p>
-      <button
-        type="button"
-        class="mt-4 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg"
-        (click)="load()"
-      >
-        {{ 'common.retry' | transloco }}
-      </button>
-    </div>
+    <qd-feedback-state
+      kind="error"
+      icon="circle-exclamation"
+      [title]="'common.error' | transloco"
+      [message]="'commerce.wishlist.loadError' | transloco"
+      [actionLabel]="'common.retry' | transloco"
+      (action)="load()"
+    />
   } @else if (items().length) {
     <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
       @for (item of items(); track item.id) {
@@ -132,19 +128,14 @@
       }
     </div>
   } @else {
-    <section class="rounded-2xl border border-line bg-surface-muted px-6 py-14 text-center">
-      <h3 class="text-xl font-semibold text-fg">
-        {{ 'commerce.wishlist.emptyTitle' | transloco }}
-      </h3>
-      <p class="mt-2 text-sm text-fg-muted">
-        {{ 'commerce.wishlist.emptyDescription' | transloco }}
-      </p>
-      <a
-        routerLink="/produtos"
-        class="mt-6 inline-flex rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
-        >{{ 'commerce.cart.continueShopping' | transloco }}</a
-      >
-    </section>
+    <qd-feedback-state
+      kind="empty"
+      icon="heart"
+      [title]="'commerce.wishlist.emptyTitle' | transloco"
+      [message]="'commerce.wishlist.emptyDescription' | transloco"
+      [actionLabel]="'commerce.cart.continueShopping' | transloco"
+      (action)="router.navigate(['/produtos'])"
+    />
   }
 </section>
 
@@ -158,6 +149,6 @@
     [cartBusy]="busyProductIds().has(item.productId)"
     [canPurchase]="item.status === 'active'"
     (closed)="closeBuyModal()"
-    (purchaseRequested)="continuePurchase()"
+    (purchaseSelected)="continuePurchase($event)"
   />
 }

@@ -93,19 +93,14 @@
           </nav>
         }
       } @else {
-        <section class="rounded-2xl border border-line bg-surface px-6 py-14 text-center">
-          <h2 class="text-xl font-semibold text-fg">
-            {{ 'commerce.orders.emptyTitle' | transloco }}
-          </h2>
-          <p class="mt-2 text-sm text-fg-muted">
-            {{ 'commerce.orders.emptyDescription' | transloco }}
-          </p>
-          <a
-            routerLink="/produtos"
-            class="mt-6 inline-flex rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
-            >{{ 'commerce.cart.continueShopping' | transloco }}</a
-          >
-        </section>
+        <qd-feedback-state
+          kind="empty"
+          icon="box"
+          [title]="'commerce.orders.emptyTitle' | transloco"
+          [message]="'commerce.orders.emptyDescription' | transloco"
+          [actionLabel]="'commerce.cart.continueShopping' | transloco"
+          (action)="router.navigate(['/produtos'])"
+        />
       }
     }
   </div>

@@ -2,8 +2,11 @@
   "common": {
     "close": "Fechar",
     "error": "Ocorreu um erro.",
+    "errorTitle": "Não foi possível concluir",
     "loading": "A carregar…",
-    "retry": "Tentar novamente"
+    "retry": "Tentar novamente",
+    "success": "Concluído",
+    "warning": "Atenção"
   },
   "a11y": {
     "skipToContent": "Saltar para o conteúdo principal"

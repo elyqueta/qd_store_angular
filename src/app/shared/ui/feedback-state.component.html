@@ -1,0 +1,29 @@
+<div
+  class="flex min-h-48 flex-col items-center justify-center rounded-2xl border border-line bg-surface p-6 text-center"
+  [class.border-danger/30]="kind() === 'error'"
+  [class.border-success/30]="kind() === 'success'"
+  [attr.role]="kind() === 'error' ? 'alert' : 'status'"
+  aria-live="polite"
+>
+  <span
+    class="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted text-fg-muted"
+    [class.bg-danger/10]="kind() === 'error'"
+    [class.text-danger]="kind() === 'error'"
+    [class.bg-success/10]="kind() === 'success'"
+    [class.text-success]="kind() === 'success'"
+    aria-hidden="true"
+  >
+    <qd-icon [name]="icon()" [size]="22" />
+  </span>
+  <h2 class="text-base font-semibold text-fg">{{ title() }}</h2>
+  <p class="mt-1 max-w-md text-sm text-fg-muted">{{ message() }}</p>
+  @if (actionLabel(); as label) {
+    <button
+      type="button"
+      class="mt-5 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition-colors hover:bg-brand/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      (click)="action.emit()"
+    >
+      {{ label }}
+    </button>
+  }
+</div>

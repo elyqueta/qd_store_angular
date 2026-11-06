@@ -3,20 +3,36 @@ import {
   Component,
   ElementRef,
   HostListener,
+  inject,
   input,
   output,
+  signal,
   ViewChild,
 } from '@angular/core';
-import { TranslocoPipe } from '@jsverse/transloco';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
+import { finalize } from 'rxjs';
+import { CompanyApiService } from '../../features/account/data-access/company-api.service';
+import { CompanyWithUsers } from '../../features/account/models/company.model';
+import { ApiError } from '../../core/http/api-error.model';
+import { ToastService } from '../../core/notifications/toast.service';
 import { IconComponent } from './icon.component';
+
+export interface PurchaseSelection {
+  companyId?: string;
+}
 
 @Component({
   selector: 'qd-product-purchase-dialog',
-  imports: [TranslocoPipe, IconComponent],
+  imports: [ReactiveFormsModule, TranslocoPipe, IconComponent],
   templateUrl: './product-purchase-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductPurchaseDialogComponent {
+  private readonly companyApi = inject(CompanyApiService);
+  private readonly formBuilder = inject(FormBuilder).nonNullable;
+  private readonly toast = inject(ToastService);
+  private readonly transloco = inject(TranslocoService);
   private dialog?: ElementRef<HTMLElement>;
 
   @ViewChild('dialog')
@@ -35,14 +51,96 @@ export class ProductPurchaseDialogComponent {
   readonly cartBusy = input(false);
   readonly canPurchase = input(true);
   readonly closed = output<void>();
-  readonly purchaseRequested = output<void>();
+  readonly purchaseSelected = output<PurchaseSelection>();
+  readonly purchaseStep = signal<'method' | 'account' | 'company-list' | 'company-create'>(
+    'method',
+  );
+  readonly accountType = signal<'personal' | 'business'>('personal');
+  readonly companies = signal<CompanyWithUsers[]>([]);
+  readonly companyLoading = signal(false);
+  readonly companyError = signal(false);
+  readonly companyForm = this.formBuilder.group({
+    name: ['', [Validators.required, Validators.maxLength(200)]],
+    nif: ['', [Validators.required, Validators.maxLength(20)]],
+    role: ['', [Validators.required, Validators.maxLength(100)]],
+  });
 
   requestClose(): void {
+    this.purchaseStep.set('method');
     this.closed.emit();
   }
 
   requestPurchase(): void {
-    this.purchaseRequested.emit();
+    this.purchaseStep.set('account');
+  }
+
+  chooseAccount(type: 'personal' | 'business'): void {
+    this.accountType.set(type);
+  }
+
+  continueAccount(): void {
+    if (this.accountType() === 'personal') {
+      this.purchaseSelected.emit({});
+      return;
+    }
+    this.purchaseStep.set('company-list');
+    this.companyLoading.set(true);
+    this.companyError.set(false);
+    this.companyApi
+      .listMine()
+      .pipe(finalize(() => this.companyLoading.set(false)))
+      .subscribe({
+        next: (companies) => {
+          this.companies.set(companies);
+          if (companies.length === 1) {
+            this.purchaseSelected.emit({ companyId: companies[0].id });
+          }
+        },
+        error: (error: unknown) => {
+          this.companyError.set(true);
+          this.toast.error(
+            error instanceof ApiError
+              ? error.message
+              : this.transloco.translate('commerce.checkout.companyLoadError'),
+          );
+        },
+      });
+  }
+
+  chooseCompany(companyId: string): void {
+    this.purchaseSelected.emit({ companyId });
+  }
+
+  openCompanyForm(): void {
+    this.companyForm.reset();
+    this.purchaseStep.set('company-create');
+  }
+
+  createCompany(): void {
+    if (this.companyForm.invalid || this.companyLoading()) {
+      this.companyForm.markAllAsTouched();
+      return;
+    }
+
+    const values = this.companyForm.getRawValue();
+    this.companyLoading.set(true);
+    this.companyApi
+      .createCompany({ name: values.name.trim(), nif: values.nif.trim() })
+      .pipe(finalize(() => this.companyLoading.set(false)))
+      .subscribe({
+        next: (company) => this.purchaseSelected.emit({ companyId: company.id }),
+        error: (error: unknown) => {
+          this.toast.error(
+            error instanceof ApiError
+              ? error.message
+              : this.transloco.translate('commerce.checkout.companyCreateError'),
+          );
+        },
+      });
+  }
+
+  goBack(): void {
+    this.purchaseStep.set('account');
   }
 
   handleKeydown(event: KeyboardEvent): void {

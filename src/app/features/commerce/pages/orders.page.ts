@@ -8,22 +8,24 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { ApiError } from '../../../core/http/api-error.model';
 import { ToastService } from '../../../core/notifications/toast.service';
 import { CommerceApiService } from '../data-access/commerce-api.service';
 import { OrderStatus, PageResult, OrderSummary } from '../models/commerce.model';
+import { FeedbackStateComponent } from '../../../shared/ui/feedback-state.component';
 
 @Component({
   selector: 'qd-orders-page',
-  imports: [CurrencyPipe, DatePipe, RouterLink, TranslocoPipe],
+  imports: [CurrencyPipe, DatePipe, RouterLink, TranslocoPipe, FeedbackStateComponent],
   templateUrl: './orders.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrdersPage implements OnInit {
   private readonly api = inject(CommerceApiService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
 

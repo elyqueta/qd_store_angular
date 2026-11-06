@@ -8,23 +8,25 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { ApiError } from '../../../core/http/api-error.model';
 import { ToastService } from '../../../core/notifications/toast.service';
 import { CommerceApiService } from '../data-access/commerce-api.service';
 import { Cart } from '../models/commerce.model';
 import { IconComponent } from '../../../shared/ui/icon.component';
+import { FeedbackStateComponent } from '../../../shared/ui/feedback-state.component';
 
 @Component({
   selector: 'qd-cart-page',
-  imports: [CurrencyPipe, RouterLink, TranslocoPipe, IconComponent],
+  imports: [CurrencyPipe, RouterLink, TranslocoPipe, IconComponent, FeedbackStateComponent],
   templateUrl: './cart.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CartPage implements OnInit {
   private readonly api = inject(CommerceApiService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
 

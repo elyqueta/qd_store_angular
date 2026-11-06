@@ -270,7 +270,7 @@
       [cartBusy]="cartBusy()"
       [canPurchase]="product.status === 'active'"
       (closed)="closeBuyModal()"
-      (purchaseRequested)="continuePurchase()"
+      (purchaseSelected)="continuePurchase($event)"
     />
   }
 </main>

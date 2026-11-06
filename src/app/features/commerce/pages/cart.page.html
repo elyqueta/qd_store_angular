@@ -31,16 +31,14 @@
         }
       </div>
     } @else if (loadError()) {
-      <div class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center" role="alert">
-        <p class="text-sm text-danger">{{ 'commerce.cart.loadError' | transloco }}</p>
-        <button
-          class="mt-4 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg"
-          type="button"
-          (click)="loadCart()"
-        >
-          {{ 'common.retry' | transloco }}
-        </button>
-      </div>
+      <qd-feedback-state
+        kind="error"
+        icon="circle-exclamation"
+        [title]="'common.error' | transloco"
+        [message]="'commerce.cart.loadError' | transloco"
+        [actionLabel]="'common.retry' | transloco"
+        (action)="loadCart()"
+      />
     } @else if (cart(); as currentCart) {
       @if (currentCart.items.length) {
         <div class="space-y-4">
@@ -126,20 +124,14 @@
           </a>
         </section>
       } @else {
-        <section class="rounded-2xl border border-line bg-surface px-6 py-14 text-center">
-          <h2 class="text-xl font-semibold text-fg">
-            {{ 'commerce.cart.emptyTitle' | transloco }}
-          </h2>
-          <p class="mt-2 text-sm text-fg-muted">
-            {{ 'commerce.cart.emptyDescription' | transloco }}
-          </p>
-          <a
-            routerLink="/produtos"
-            class="mt-6 inline-flex rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
-          >
-            {{ 'commerce.cart.continueShopping' | transloco }}
-          </a>
-        </section>
+        <qd-feedback-state
+          kind="empty"
+          icon="cart-shopping"
+          [title]="'commerce.cart.emptyTitle' | transloco"
+          [message]="'commerce.cart.emptyDescription' | transloco"
+          [actionLabel]="'commerce.cart.continueShopping' | transloco"
+          (action)="router.navigate(['/produtos'])"
+        />
       }
     }
   </div>

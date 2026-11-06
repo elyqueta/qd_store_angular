@@ -17,6 +17,8 @@ import { CommerceApiService } from '../data-access/commerce-api.service';
 import { WishlistItem } from '../models/commerce.model';
 import { IconComponent } from '../../../shared/ui/icon.component';
 import { ProductPurchaseDialogComponent } from '../../../shared/ui/product-purchase-dialog.component';
+import { PurchaseSelection } from '../../../shared/ui/product-purchase-dialog.component';
+import { FeedbackStateComponent } from '../../../shared/ui/feedback-state.component';
 
 @Component({
   selector: 'qd-wishlist-page',
@@ -26,6 +28,7 @@ import { ProductPurchaseDialogComponent } from '../../../shared/ui/product-purch
     TranslocoPipe,
     IconComponent,
     ProductPurchaseDialogComponent,
+    FeedbackStateComponent,
   ],
   templateUrl: './wishlist.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -138,16 +141,16 @@ export class WishlistPage implements OnInit {
     this.buyTrigger = undefined;
   }
 
-  continuePurchase(): void {
+  continuePurchase(selection: PurchaseSelection): void {
     const item = this.selectedItem();
     if (!item || item.status !== 'active' || this.busyProductIds().has(item.productId)) {
       return;
     }
 
-    this.addToCart(item.productId);
+    this.addToCart(item.productId, selection);
   }
 
-  private addToCart(productId: string): void {
+  private addToCart(productId: string, selection: PurchaseSelection = {}): void {
     this.busyProductIds.update((ids) => new Set(ids).add(productId));
     this.api
       .addCartItem(productId)
@@ -161,7 +164,9 @@ export class WishlistPage implements OnInit {
           });
           this.closeBuyModal();
           this.toast.success(this.transloco.translate('commerce.cart.added'));
-          void this.router.navigateByUrl('/conta/carrinho');
+          void this.router.navigate(['/conta/checkout'], {
+            queryParams: selection.companyId ? { companyId: selection.companyId } : {},
+          });
         },
         error: (error: unknown) => {
           this.busyProductIds.update((ids) => {
