@@ -1,0 +1,111 @@
+{
+  "commerce": {
+    "kicker": "A tua conta",
+    "paymentMethods": {
+      "multicaixa_express": "Multicaixa Express",
+      "multicaixa_reference": "Referência Multicaixa",
+      "bank_transfer": "Transferência bancária"
+    },
+    "cart": {
+      "title": "O meu carrinho",
+      "loadError": "Não foi possível carregar o carrinho.",
+      "quantity": "Quantidade",
+      "decrease": "Diminuir quantidade",
+      "increase": "Aumentar quantidade",
+      "remove": "Remover",
+      "items": "{{ count }} artigo(s)",
+      "checkout": "Continuar para a entrega",
+      "emptyTitle": "O carrinho está vazio",
+      "emptyDescription": "Descobre os produtos disponíveis e adiciona os que pretendes comprar.",
+      "continueShopping": "Explorar produtos",
+      "added": "Produto adicionado ao carrinho."
+    },
+    "wishlist": {
+      "title": "Os meus favoritos",
+      "loadError": "Não foi possível carregar os favoritos.",
+      "addToCart": "Adicionar ao carrinho",
+      "addingToCart": "A adicionar…",
+      "addToFavorites": "Adicionar aos favoritos",
+      "added": "Produto guardado nos favoritos.",
+      "remove": "Remover",
+      "emptyTitle": "Ainda não guardaste favoritos",
+      "emptyDescription": "Guarda produtos para os encontrares facilmente mais tarde."
+    },
+    "checkout": {
+      "title": "Finalizar encomenda",
+      "backToCart": "Voltar ao carrinho",
+      "loadError": "Não foi possível preparar a finalização da encomenda.",
+      "emptyCart": "O carrinho está vazio.",
+      "addressTitle": "Morada de entrega",
+      "addressLabel": "Selecciona uma morada",
+      "noAddress": "Adiciona uma morada antes de finalizar a encomenda.",
+      "addAddress": "Gerir moradas",
+      "deliveryTitle": "Tipo de entrega",
+      "noDeliveryTypes": "Não existem tipos de entrega disponíveis.",
+      "paymentTitle": "Método de pagamento",
+      "noPaymentMethods": "Não existem métodos de pagamento disponíveis.",
+      "customerPhone": "Telefone associado ao Multicaixa Express",
+      "phoneInvalid": "Introduz um telefone válido com 9 a 20 caracteres.",
+      "notes": "Notas para a encomenda (opcional)",
+      "summaryTitle": "Resumo da encomenda",
+      "total": "Total",
+      "submit": "Criar encomenda e continuar",
+      "submitting": "A processar encomenda…",
+      "paymentNotice": "O estado do pagamento será apresentado no detalhe da encomenda. Não são recolhidos dados bancários nesta página.",
+      "invalidSelection": "Confirma os dados de entrega e pagamento antes de continuar.",
+      "orderCreated": "Encomenda criada. Consulta o estado do pagamento no detalhe."
+    },
+    "orders": {
+      "title": "As minhas encomendas",
+      "loadError": "Não foi possível carregar as encomendas.",
+      "itemsCount": "{{ count }} artigo(s)",
+      "pagination": "Paginação das encomendas",
+      "previous": "Anterior",
+      "next": "Seguinte",
+      "page": "Página {{ page }} de {{ total }}",
+      "emptyTitle": "Ainda não tens encomendas",
+      "emptyDescription": "As encomendas que fizeres serão apresentadas aqui.",
+      "back": "Voltar às encomendas",
+      "detailError": "Não foi possível carregar esta encomenda.",
+      "cancel": "Cancelar encomenda",
+      "cancelling": "A cancelar…",
+      "cancelled": "A encomenda foi cancelada.",
+      "itemsTitle": "Artigos",
+      "quantity": "Quantidade: {{ count }}",
+      "deliveryTitle": "Entrega",
+      "deliveryPrice": "Entrega",
+      "total": "Total",
+      "paymentTitle": "Pagamento",
+      "noPayment": "Ainda não existe uma tentativa de pagamento.",
+      "historyTitle": "Histórico da encomenda",
+      "status": {
+        "processing": "Em processamento",
+        "in_transit": "Em trânsito",
+        "delivered": "Entregue",
+        "cancelled": "Cancelada"
+      },
+      "paymentStatus": {
+        "pending": "Pendente",
+        "confirmed": "Confirmado",
+        "failed": "Falhou",
+        "refunded": "Reembolsado"
+      }
+    },
+    "notifications": {
+      "title": "As minhas notificações",
+      "loadError": "Não foi possível carregar as notificações.",
+      "markAllRead": "Marcar todas como lidas",
+      "markRead": "Marcar como lida",
+      "read": "Lida",
+      "pagination": "Paginação das notificações",
+      "emptyTitle": "Não tens notificações",
+      "emptyDescription": "As notificações importantes da tua conta serão apresentadas aqui.",
+      "type": {
+        "order": "Encomenda",
+        "promotion": "Promoção",
+        "newsletter": "Novidades",
+        "system": "Sistema"
+      }
+    }
+  }
+}

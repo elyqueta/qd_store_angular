@@ -18,7 +18,7 @@ describe('CatalogPage', () => {
       }),
     );
     const listProducts = vi.fn(() =>
-      of({ items: [], page: 1, limit: 12, total: 0, totalPages: 0 }),
+      of({ items: [], page: 2, limit: 12, total: 15, totalPages: 2 }),
     );
 
     await TestBed.configureTestingModule({
@@ -54,6 +54,7 @@ describe('CatalogPage', () => {
     const fixture = TestBed.createComponent(CatalogPage);
     fixture.detectChanges();
 
+    expect(fixture.nativeElement.textContent).toContain('15 produtos');
     expect(listProducts).toHaveBeenLastCalledWith({
       page: 2,
       categoryId: 'category-1',
@@ -88,6 +89,21 @@ describe('CatalogPage', () => {
       [],
       expect.objectContaining({
         queryParams: { ordem: 'price_desc', pagina: 1 },
+        queryParamsHandling: 'merge',
+      }),
+    );
+
+    fixture.componentInstance.clearFilters();
+    expect(navigate).toHaveBeenLastCalledWith(
+      [],
+      expect.objectContaining({
+        queryParams: {
+          categoria: null,
+          estado: null,
+          pesquisa: null,
+          ordem: null,
+          pagina: 1,
+        },
         queryParamsHandling: 'merge',
       }),
     );

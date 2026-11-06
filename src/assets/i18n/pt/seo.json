@@ -1,0 +1,39 @@
+{
+  "seo": {
+    "home": {
+      "title": "QD · ItSOLUTIONS | Tecnologia em Angola",
+      "description": "Explora o catálogo da QD · ItSOLUTIONS e conhece os produtos de tecnologia disponíveis em Angola."
+    },
+    "catalog": {
+      "title": "Catálogo de tecnologia | QD · ItSOLUTIONS",
+      "description": "Consulta os produtos de tecnologia disponíveis no catálogo da QD · ItSOLUTIONS.",
+      "categoryTitle": "{{ category }} | Catálogo QD · ItSOLUTIONS",
+      "categoryDescription": "Consulta os produtos disponíveis na categoria {{ category }} da QD · ItSOLUTIONS.",
+      "pageTitle": "{{ title }} · Página {{ page }}"
+    },
+    "product": {
+      "title": "{{ name }} | QD · ItSOLUTIONS",
+      "description": "{{ name }} disponível no catálogo da QD · ItSOLUTIONS.",
+      "loadingTitle": "Produto | QD · ItSOLUTIONS",
+      "loadingDescription": "Detalhes de produto no catálogo da QD · ItSOLUTIONS.",
+      "notFoundTitle": "Produto indisponível | QD · ItSOLUTIONS",
+      "notFoundDescription": "Não foi possível encontrar este produto no catálogo."
+    },
+    "about": {
+      "title": "Sobre nós | QD · ItSOLUTIONS",
+      "description": "Conhece a QD · ItSOLUTIONS e consulta o nosso catálogo de tecnologia em Angola."
+    },
+    "contact": {
+      "title": "Contactos | QD · ItSOLUTIONS",
+      "description": "Contacta a equipa da QD · ItSOLUTIONS através do WhatsApp."
+    },
+    "deliveryTypes": {
+      "title": "Tipos de entrega | QD · ItSOLUTIONS",
+      "description": "Consulta as opções de entrega disponíveis na QD · ItSOLUTIONS."
+    },
+    "notFound": {
+      "title": "Página não encontrada | QD · ItSOLUTIONS",
+      "description": "A página que procuras não existe ou foi movida."
+    }
+  }
+}

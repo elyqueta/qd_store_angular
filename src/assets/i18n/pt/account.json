@@ -1,0 +1,108 @@
+{
+  "account": {
+    "addresses": {
+      "kicker": "Conta",
+      "title": "As minhas moradas",
+      "description": "Gere as moradas associadas à tua conta.",
+      "savedTitle": "Moradas guardadas",
+      "add": "Adicionar morada",
+      "empty": "Ainda não tens moradas guardadas.",
+      "defaultLabel": "Morada",
+      "defaultBadge": "Padrão",
+      "reference": "Referência",
+      "makeDefault": "Definir como padrão",
+      "edit": "Editar",
+      "delete": "Remover",
+      "confirmDeleteTitle": "Confirmar remoção da morada",
+      "confirmDelete": "Tens a certeza de que pretendes remover esta morada?",
+      "confirmDeleteAction": "Sim, remover",
+      "createTitle": "Adicionar morada",
+      "editTitle": "Editar morada",
+      "formDescription": "Os campos assinalados são necessários para guardar a morada.",
+      "loadingLocations": "A carregar províncias e municípios…",
+      "selectProvince": "Selecciona uma província",
+      "selectMunicipality": "Selecciona um município",
+      "fields": {
+        "label": "Nome da morada (opcional)",
+        "province": "Província",
+        "municipality": "Município",
+        "neighborhood": "Bairro",
+        "address": "Endereço",
+        "reference": "Ponto de referência (opcional)"
+      },
+      "validation": {
+        "label": "O nome da morada não pode exceder 100 caracteres.",
+        "province": "Selecciona uma província válida.",
+        "municipality": "Selecciona um município válido para a província.",
+        "neighborhood": "Indica um bairro válido (máximo de 100 caracteres).",
+        "address": "Indica um endereço válido (máximo de 500 caracteres)."
+      },
+      "create": "Guardar morada",
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "addressUnavailable": "Esta morada já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "created": "Morada adicionada.",
+        "updated": "Morada actualizada.",
+        "defaultUpdated": "Morada padrão actualizada.",
+        "deleted": "Morada removida."
+      }
+    },
+    "profile": {
+      "kicker": "Conta",
+      "title": "O meu perfil",
+      "description": "Consulta os dados pessoais associados à tua sessão.",
+      "personalData": "Dados pessoais",
+      "fullName": "Nome completo",
+      "email": "E-mail",
+      "phone": "Telefone",
+      "nif": "NIF",
+      "accountType": "Tipo de conta",
+      "accountTypeValue": {
+        "personal": "Pessoal",
+        "business": "Empresarial"
+      },
+      "notProvided": "Não indicado",
+      "unavailable": "Não foi possível apresentar os dados da sessão."
+    },
+    "companies": {
+      "kicker": "Conta empresarial",
+      "listTitle": "As minhas empresas",
+      "listDescription": "Consulta as empresas associadas à tua conta e os utilizadores associados a cada uma.",
+      "add": "Registar empresa",
+      "empty": "Ainda não tens empresas associadas à tua conta.",
+      "membersTitle": "Membros associados",
+      "noMembers": "Não existem membros associados a esta empresa.",
+      "noRole": "Cargo não indicado",
+      "notProvided": "Não indicado",
+      "status": {
+        "active": "Activa",
+        "inactive": "Inactiva",
+        "banned": "Suspensa"
+      },
+      "title": "Registar empresa",
+      "description": "Regista uma empresa associada à tua conta.",
+      "formDescription": "O NIF é obrigatório e não poderá ser alterado depois do registo. O sector é opcional.",
+      "fields": {
+        "name": "Nome da empresa",
+        "nif": "NIF",
+        "sector": "Sector (opcional)"
+      },
+      "validation": {
+        "name": "Indica um nome com até 200 caracteres.",
+        "nif": "Indica um NIF com até 20 caracteres.",
+        "sector": "O sector não pode exceder 100 caracteres."
+      },
+      "create": "Registar empresa",
+      "saving": "A registar…",
+      "cancel": "Cancelar",
+      "backToProfile": "Voltar ao perfil",
+      "createdTitle": "Empresa registada",
+      "createdDescription": "A empresa foi associada à tua conta.",
+      "backToCompanies": "Ver as minhas empresas"
+    }
+  }
+}

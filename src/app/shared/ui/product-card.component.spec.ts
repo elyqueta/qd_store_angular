@@ -47,6 +47,25 @@ describe('ProductCardComponent', () => {
     expect(fixture.nativeElement.querySelector('a')?.textContent).toContain(product.name);
   });
 
+  it('uses a uniform card layout and a 4:3 image frame', async () => {
+    const fixture = TestBed.createComponent(ProductCardComponent);
+    fixture.componentRef.setInput('product', product);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    const card = fixture.nativeElement.querySelector('article') as HTMLElement | null;
+    const imageFrame = fixture.nativeElement.querySelector(
+      'article > a > div',
+    ) as HTMLElement | null;
+    const details = fixture.nativeElement.querySelector(
+      'article > a > div:nth-child(2)',
+    ) as HTMLElement | null;
+    expect(card?.className).toContain('h-full');
+    expect(card?.className).toContain('flex-col');
+    expect(imageFrame?.className).toContain('aspect-[4/3]');
+    expect(details?.className).toContain('min-h-36');
+  });
+
   it('keeps the neutral placeholder when the product has no main image', async () => {
     const fixture = TestBed.createComponent(ProductCardComponent);
     fixture.componentRef.setInput('product', { ...product, mainImage: null });

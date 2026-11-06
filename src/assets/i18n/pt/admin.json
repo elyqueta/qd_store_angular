@@ -1,0 +1,263 @@
+{
+  "admin": {
+    "layout": {
+      "title": "QD · ItSOLUTIONS",
+      "navigation": "Navegação administrativa",
+      "dashboard": "Painel",
+      "categories": "Categorias",
+      "products": "Produtos",
+      "deliveryTypes": "Tipos de entrega",
+      "companies": "Empresas",
+      "store": "Voltar à loja",
+      "logout": "Terminar sessão"
+    },
+    "dashboard": {
+      "seoTitle": "Painel de administração | QD · ItSOLUTIONS",
+      "seoDescription": "Resumo da área administrativa da QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Painel de administração",
+      "description": "Consulta um resumo dos recursos disponíveis na plataforma.",
+      "summaryTitle": "Resumo da plataforma",
+      "products": "Produtos",
+      "categories": "Categorias",
+      "deliveryTypes": "Tipos de entrega activos",
+      "companies": "Empresas",
+      "errorTitle": "Não foi possível carregar o painel.",
+      "errorDescription": "Verifica a ligação e tenta carregar os dados novamente."
+    },
+    "categories": {
+      "seoTitle": "Categorias | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Gere as categorias do catálogo da QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de categorias",
+      "description": "Cria, actualiza e remove as categorias do catálogo.",
+      "listTitle": "Categorias do catálogo",
+      "add": "Adicionar categoria",
+      "empty": "Ainda não existem categorias.",
+      "errorTitle": "Não foi possível carregar as categorias.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "edit": "Editar",
+      "delete": "Remover",
+      "confirmDeleteTitle": "Confirmar remoção da categoria",
+      "confirmDelete": "Tens a certeza de que pretendes remover a categoria “{{ label }}”?",
+      "confirmDeleteAction": "Sim, remover",
+      "createTitle": "Adicionar categoria",
+      "editTitle": "Editar categoria",
+      "formDescription": "A etiqueta é obrigatória. O ícone é opcional e pode ter até 10 caracteres.",
+      "fields": {
+        "label": "Nome da categoria",
+        "icon": "Ícone (opcional)"
+      },
+      "validation": {
+        "label": "Indica um nome com até 100 caracteres.",
+        "icon": "O ícone não pode exceder 10 caracteres."
+      },
+      "create": "Criar categoria",
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "unavailable": "Esta categoria já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "created": "Categoria criada.",
+        "updated": "Categoria actualizada.",
+        "deleted": "Categoria removida."
+      }
+    },
+    "companies": {
+      "seoTitle": "Empresas | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Consulta e gere as empresas registadas na QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de empresas",
+      "description": "Consulta os dados das empresas e os utilizadores associados.",
+      "listTitle": "Empresas registadas",
+      "empty": "Ainda não existem empresas registadas.",
+      "errorTitle": "Não foi possível carregar as empresas.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "edit": "Editar",
+      "deactivate": "Desactivar",
+      "editTitle": "Editar empresa",
+      "formDescription": "O NIF não pode ser alterado. O sector pode ficar vazio para ser removido.",
+      "membersTitle": "Utilizadores associados",
+      "noMembers": "Não existem utilizadores associados a esta empresa.",
+      "noRole": "Cargo não indicado",
+      "notProvided": "Não indicado",
+      "confirmTitle": "Confirmar desactivação da empresa",
+      "confirmDescription": "Tens a certeza de que pretendes desactivar “{{ name }}”? A empresa deixará de estar activa.",
+      "confirmAction": "Sim, desactivar",
+      "fields": {
+        "name": "Nome da empresa",
+        "nif": "NIF",
+        "sector": "Sector"
+      },
+      "status": {
+        "active": "Activa",
+        "inactive": "Inactiva",
+        "banned": "Suspensa"
+      },
+      "validation": {
+        "name": "Indica um nome com até 200 caracteres.",
+        "sector": "O sector não pode exceder 100 caracteres."
+      },
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "unavailable": "Esta empresa já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "updated": "Empresa actualizada.",
+        "deactivated": "Empresa desactivada.",
+        "noChanges": "Não existem alterações por guardar."
+      }
+    },
+    "products": {
+      "seoTitle": "Produtos | Administração | QD · ItSOLUTIONS",
+      "createSeoTitle": "Novo produto | Administração | QD · ItSOLUTIONS",
+      "editSeoTitle": "Editar produto | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Gere os produtos do catálogo da QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de produtos",
+      "description": "Pesquisa, filtra e gere os produtos do catálogo.",
+      "listTitle": "Produtos",
+      "add": "Adicionar produto",
+      "search": "Pesquisar por nome ou descrição",
+      "statusFilter": "Estado",
+      "allStatuses": "Todos os estados",
+      "applyFilters": "Aplicar filtros",
+      "errorTitle": "Não foi possível carregar os produtos.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "empty": "Não existem produtos para os filtros seleccionados.",
+      "noImage": "Sem imagem",
+      "edit": "Editar",
+      "delete": "Remover",
+      "confirmDeleteTitle": "Confirmar remoção do produto",
+      "confirmDelete": "Tens a certeza de que pretendes remover “{{ name }}”? A API pode recusar a operação se o produto estiver associado a carrinhos ou pedidos.",
+      "confirmDeleteAction": "Sim, remover",
+      "pagination": "Paginação dos produtos",
+      "pageIndicator": "Página {{ page }} de {{ total }}",
+      "previousPage": "Anterior",
+      "nextPage": "Seguinte",
+      "deleted": "Produto removido.",
+      "backToList": "Voltar à lista de produtos",
+      "createTitle": "Adicionar produto",
+      "editTitle": "Editar produto",
+      "formDescription": "Preenche os dados do produto. Podes carregar uma imagem durante a criação e gerir imagens e especificações depois.",
+      "productData": "Dados do produto",
+      "fields": {
+        "name": "Nome",
+        "category": "Categoria",
+        "price": "Preço (Kz)",
+        "originalPrice": "Preço anterior (Kz, opcional)",
+        "badge": "Etiqueta (opcional)",
+        "description": "Descrição (opcional)",
+        "imageFile": "Ficheiro de imagem",
+        "displayOrder": "Ordem",
+        "specKey": "Característica",
+        "specValue": "Valor"
+      },
+      "selectCategory": "Selecciona uma categoria",
+      "originalPriceHelp": "Deixa vazio ou a zero se o produto não estiver em promoção.",
+      "currentStatus": "Estado actual:",
+      "statusNotEditable": "O contrato actual da API não permite alterar directamente o estado do produto.",
+      "validation": {
+        "name": "Indica um nome com até 200 caracteres.",
+        "category": "Selecciona uma categoria.",
+        "price": "O preço deve ser superior a zero.",
+        "originalPrice": "O preço anterior não pode ser negativo.",
+        "priceConsistency": "O preço anterior deve ser superior ao preço actual.",
+        "badge": "A etiqueta não pode exceder 50 caracteres.",
+        "description": "A descrição não pode exceder 5000 caracteres.",
+        "imageFile": "Selecciona uma imagem JPEG, PNG, WebP ou AVIF com até 8 MB.",
+        "displayOrder": "A ordem deve ser um número inteiro igual ou superior a zero.",
+        "specKey": "A característica é obrigatória e não pode exceder 255 caracteres.",
+        "specValue": "O valor é obrigatório e não pode exceder 255 caracteres."
+      },
+      "saving": "A guardar…",
+      "create": "Criar produto",
+      "save": "Guardar alterações",
+      "cancel": "Cancelar",
+      "imagesTitle": "Imagens",
+      "imagesDescription": "Carrega ficheiros de imagem para o produto. A API guarda-os e devolve os respectivos endereços.",
+      "imageUploadHelp": "JPEG, PNG, WebP ou AVIF; tamanho máximo de 8 MB. Não é necessário introduzir um URL.",
+      "addImage": "Adicionar imagem",
+      "imageOrder": "Ordem: {{ order }}",
+      "noImages": "Este produto ainda não tem imagens.",
+      "confirmDeleteImage": "Tens a certeza de que pretendes remover esta imagem?",
+      "specificationsTitle": "Especificações",
+      "specificationsDescription": "Gere as características técnicas apresentadas no detalhe do produto.",
+      "addSpecification": "Adicionar especificação",
+      "noSpecifications": "Este produto ainda não tem especificações.",
+      "specificationOrder": "Ordem: {{ order }}",
+      "confirmDeleteSpecification": "Tens a certeza de que pretendes remover esta especificação?",
+      "errors": {
+        "unavailable": "Este produto já não está disponível. Actualiza a página e tenta novamente.",
+        "imageUnavailable": "Esta imagem já não está disponível. Actualiza a página e tenta novamente.",
+        "specificationUnavailable": "Esta especificação já não está disponível. Actualiza a página e tenta novamente."
+      },
+      "messages": {
+        "created": "Produto criado. Já podes gerir as imagens e especificações.",
+        "updated": "Produto actualizado.",
+        "deleted": "Produto removido.",
+        "noChanges": "Não existem alterações por guardar.",
+        "imageCreated": "Imagem adicionada.",
+        "imageUpdated": "Imagem actualizada.",
+        "imageDeleted": "Imagem removida.",
+        "specificationCreated": "Especificação adicionada.",
+        "specificationUpdated": "Especificação actualizada.",
+        "specificationDeleted": "Especificação removida."
+      }
+    },
+    "deliveryTypes": {
+      "seoTitle": "Tipos de entrega | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Gere os tipos de entrega da QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de tipos de entrega",
+      "description": "Cria e actualiza opções de entrega e desactiva as que já não são utilizadas.",
+      "listTitle": "Tipos activos",
+      "add": "Adicionar tipo de entrega",
+      "empty": "Não existem tipos de entrega activos.",
+      "errorTitle": "Não foi possível carregar os tipos de entrega.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "edit": "Editar",
+      "deactivate": "Desactivar",
+      "confirmTitle": "Confirmar desactivação",
+      "confirmDescription": "Pretendes desactivar “{{ name }}”? Deixará de aparecer nas opções públicas.",
+      "confirmAction": "Sim, desactivar",
+      "createTitle": "Adicionar tipo de entrega",
+      "editTitle": "Editar tipo de entrega",
+      "formDescription": "Os campos name, type e price são obrigatórios. O preço pode ser zero.",
+      "fields": {
+        "name": "Nome",
+        "type": "Modalidade",
+        "price": "Preço (Kz)",
+        "description": "Descrição (opcional)"
+      },
+      "types": {
+        "standard": "Padrão",
+        "express": "Expresso",
+        "corporate": "Empresarial",
+        "pickup": "Levantamento"
+      },
+      "validation": {
+        "name": "Indica um nome com até 100 caracteres.",
+        "price": "O preço deve ser igual ou superior a zero.",
+        "description": "A descrição não pode exceder 200 caracteres."
+      },
+      "create": "Criar tipo",
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "unavailable": "Este tipo de entrega já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "created": "Tipo de entrega criado.",
+        "updated": "Tipo de entrega actualizado.",
+        "deactivated": "Tipo de entrega desactivado.",
+        "noChanges": "Não existem alterações por guardar."
+      }
+    }
+  }
+}

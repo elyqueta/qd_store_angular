@@ -10,11 +10,11 @@ Antes de tocar numa tela, abrir o ficheiro React correspondente, extrair valores
 
 ## 1. Decisões que exigem aprovação antes de implementar
 
-| ID proposto | Tema | Conflito | Recomendação |
-|---|---|---|---|
-| D-013 | Font Awesome | `AGENTS.md` §2 proíbe Font Awesome | **Aprovado por Elizandro (2026-11-06):** usar apenas SVG inline (componente `qd-icon` com mapa de ícones), sem CSS/webfont ou dependência de runtime. |
-| D-014 | Efeito glass (glassmorphism) | Nenhum | **Aprovado por Elizandro (2026-11-06):** tokens `glass` em `styles.css` (ver §3), restritos aos locais listados e com fallback opaco. |
-| D-015 | Âmbito de Carrinho/Favoritos/Pagamentos | O contrato antigo em `08` estava incompleto | **Aprovado por Elizandro (2026-11-06):** integrar carrinho, favoritos, encomendas e pagamentos, agora descritos em `08`; não criar endpoints nem simular operações. |
+| ID proposto | Tema                                    | Conflito                                    | Recomendação                                                                                                                                                        |
+| ----------- | --------------------------------------- | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-013       | Font Awesome                            | `AGENTS.md` §2 proíbe Font Awesome          | **Aprovado por Elizandro (2026-11-06):** usar apenas SVG inline (componente `qd-icon` com mapa de ícones), sem CSS/webfont ou dependência de runtime.               |
+| D-014       | Efeito glass (glassmorphism)            | Nenhum                                      | **Aprovado por Elizandro (2026-11-06):** tokens `glass` em `styles.css` (ver §3), restritos aos locais listados e com fallback opaco.                               |
+| D-015       | Âmbito de Carrinho/Favoritos/Pagamentos | O contrato antigo em `08` estava incompleto | **Aprovado por Elizandro (2026-11-06):** integrar carrinho, favoritos, encomendas e pagamentos, agora descritos em `08`; não criar endpoints nem simular operações. |
 
 O Copilot deve perguntar estas decisões em escolha múltipla (2–4 opções, recomendação marcada) e registá-las em `13-decisoes.md`.
 
@@ -55,6 +55,7 @@ Tokens a acrescentar em `src/styles.css` (valores a **confirmar** contra o React
 Receita de utilitários Tailwind: `bg-glass backdrop-blur-xl backdrop-saturate-150 border border-glass-border shadow-xl rounded-2xl`.
 
 Regras:
+
 - O texto sobre vidro tem de manter contraste ≥ 4,5:1 nos dois temas (medir sobre o fundo real, não sobre branco).
 - Fallback sem `backdrop-filter`: fundo `bg-surface` opaco (`@supports not (backdrop-filter: blur(1px))`).
 - Não pôr vidro sobre vidro.
@@ -64,6 +65,7 @@ Regras:
 Estado actual: demasiados links e controlos soltos (tema, entrar, criar conta).
 
 Alvo:
+
 1. **Esquerda:** logótipo oficial `favicon.webp` (não o círculo "QD" + texto).
 2. **Centro (desktop ≥ 1130 px):** links como no React: Início, Smartphones, Laptops, Desktops, Som, Gaming, Extra, Empresas, com mega-menu de produtos por categoria (a navbar Angular actual só mostra Início/Catálogo/Sobre/Contactos + categorias; reavaliar com o inventário `migracao/inventario.md` e o `Navbar.jsx`).
 3. **Direita:** apenas **dois** controlos:
@@ -103,6 +105,7 @@ O React tem (ver `HomePage.jsx`, `Hero.jsx`): Hero em ecrã inteiro com slides a
 O Angular actual só tem hero editorial neutro, categorias e 4 produtos.
 
 Alvo:
+
 1. **Hero em ecrã inteiro** com slides, título/subtítulo/CTA e imagem de fundo, **gerido por destaques** (ver §7.1) em vez de dados hardcoded. Manter o estilo (`tesla-section`, overlay em gradiente, pontos de navegação).
 2. **Secções em ecrã inteiro** (estilo Tesla) para produtos/serviços em destaque, também geridas por destaques.
 3. **Blocos por categoria** (Desktops, Gaming e Som, Extra) com cartões de produto e link "Ver todos".
@@ -114,26 +117,29 @@ Alvo:
 ### 7.1 Destaques (configuração)
 
 Dependem do back-end (`20-…`). Até existir endpoint:
+
 - Registar como lacuna L-09 em `13-decisoes.md`.
 - Não ler produtos "por posição" para fingir destaque (já proibido por D-008).
 - Implementar a UI contra um serviço `HighlightApiService` com interface estável e estado vazio tratado, para ligar assim que o endpoint existir.
 
 ## 8. Itens ainda por concluir (estado honesto)
 
-| Item | Estado | Acção |
-|---|---|---|
-| Botão flutuante WhatsApp | Implementado, falta revisão de overlay | Botão e painel acessível com texto/horário, número e mensagem do React; confirmar que fica oculto sobre overlays e comparar capturas. |
-| Favoritos | Integrado | API real para listar, adicionar/remover e adicionar ao carrinho; sem mock. |
-| Carrinho / Checkout / Pagamentos | Integrado | API real para gerir artigos, criar encomenda e registar tentativa de pagamento; detalhe e cancelamento disponíveis. |
-| Footer | Parcialmente alinhado | Quatro colunas Loja/Empresas/Apoio/Pagamento, categorias vindas da API e logótipo; falta revisão visual lado a lado. |
-| Página 404 | Verificar | Usar o mesmo estilo (código grande, botão). |
-| Página de empresas pública (`/empresas`) | Implementada | Página informativa com CTA WhatsApp; sem simular o formulário de orçamento que não tem endpoint. Gestão de membros continua bloqueada pela falta de pesquisa de utilizadores. |
+| Item                                     | Estado                                 | Acção                                                                                                                                                                              |
+| ---------------------------------------- | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Catálogo e cartões                       | Reaproximados da referência React      | Cabeçalho em faixa própria, grelha responsiva 1/2/3/4, cartões 4:3 de altura uniforme, acções com hover/foco e estados de carregamento em transição; validar capturas lado a lado. |
+| Botão flutuante WhatsApp                 | Implementado, falta revisão de overlay | Botão e painel acessível com texto/horário, número e mensagem do React; confirmar que fica oculto sobre overlays e comparar capturas.                                              |
+| Favoritos                                | Integrado                              | API real para listar, adicionar/remover e adicionar ao carrinho; sem mock.                                                                                                         |
+| Carrinho / Checkout / Pagamentos         | Integrado                              | API real para gerir artigos, criar encomenda e registar tentativa de pagamento; detalhe e cancelamento disponíveis.                                                                |
+| Footer                                   | Parcialmente alinhado                  | Quatro colunas Loja/Empresas/Apoio/Pagamento, categorias vindas da API e logótipo; falta revisão visual lado a lado.                                                               |
+| Página 404                               | Verificar                              | Usar o mesmo estilo (código grande, botão).                                                                                                                                        |
+| Página de empresas pública (`/empresas`) | Implementada                           | Página informativa com CTA WhatsApp; sem simular o formulário de orçamento que não tem endpoint. Gestão de membros continua bloqueada pela falta de pesquisa de utilizadores.      |
 
 ## 9. Área empresarial (B2B)
 
 No React existe uma página `/empresas` (benefícios, pedido de orçamento) e um checkout empresarial com descontos por volume. O Angular tem agora a página informativa `/empresas` e mantém a gestão autenticada em `/conta/empresas`.
 
 Alvo:
+
 1. Página pública `/empresas` com o hero escuro, grelha de benefícios (orçamentos com NIF, gestor de conta, preços especiais, assistência técnica, suporte WhatsApp, entrega corporativa) e CTA.
 2. Formulário "Pedir orçamento": depende de endpoint no back-end (`20-…`). Até lá, mostrar o CTA que abre WhatsApp com mensagem pré-preenchida, sem simular envio.
 3. Gestão de empresas na conta: manter `/conta/empresas` e `/conta/empresas/nova`; acrescentar gestão de membros (associar/remover utilizador, alterar cargo) para proprietários, usando os endpoints `/companies/:companyId/users` que já existem. Atenção: associar exige `userId` (UUID); não existe pesquisa de utilizadores. Propor no back-end um endpoint de pesquisa por e-mail para proprietários (ver `20-…`).
@@ -149,6 +155,7 @@ A tela React `src/pages/ProfilePage.jsx` é a referência visual. Reproduzir o p
 Problema relatado: o Angular "inventou" um estilo em vez de seguir o do protótipo.
 
 Passos obrigatórios:
+
 1. Localizar no repositório React o protótipo do back-office (pesquisar por `admin`, `backoffice`, `dashboard`, `painel`, `tabela`). **Se não existir** nas pastas conhecidas (`src/pages`, `src/components`), **parar e perguntar ao Elizandro o caminho/branch**. Não presumir.
 2. Inventariar para o back-office, como foi feito em `migracao/inventario.md`: layout (sidebar/topbar), larguras, cores, tipografia, tabelas, cartões de métricas, formulários, botões, estados vazios, ícones.
 3. Aprovar o inventário com o Elizandro antes de reescrever.
@@ -160,6 +167,7 @@ Passos obrigatórios:
 Nova secção `/admin/utilizadores` (guard `auth+admin`, render client).
 
 Funcionalidades alvo (todas dependem de endpoints novos, ver `20-…`):
+
 - Lista paginada com pesquisa por nome/e-mail, filtros por `role`, `status`, `accountType`.
 - Detalhe: dados, empresas associadas, estado, datas.
 - Acções: alterar `status` (activar/desactivar/banir), alterar `role` (com confirmação em cartão, ver `19-…`), terminar sessões.
@@ -172,11 +180,14 @@ Até haver API: registar L-10 e preparar a rota/UI com estado "indisponível" tr
 - [x] D-013, D-014, D-015 decididas e registadas
 - [x] Zero classes `text-[Npx]` e sem emojis renderizados na interface (os emojis legados da API são mapeados para SVG)
 - [x] Navbar com um único menu de utilizador glass; tema dentro do menu
+- [x] Catálogo e cartões aproximados à estrutura React, mantendo a API e os filtros de estado existentes
+- [x] Detalhe de produto aproximado à composição React, mantendo dados reais e operações da API
+- [x] Traduções pt-PT separadas por domínio e agregadas no loader Transloco
 - [ ] Logótipo oficial em navbar, footer, favicon e preloader (falta o preloader)
 - [ ] Preloader reposto (só no primeiro carregamento)
 - [ ] Home com todas as secções do React
 - [ ] Botão flutuante WhatsApp e footer revistos em captura lado a lado
 - [ ] Página `/empresas` e gestão de membros (página pronta; gestão depende de pesquisa de utilizadores)
 - [x] Back-office mantido sem reestilização porque não existe protótipo React (D-017)
-- [ ] Capturas lado a lado, claro/escuro, mobile/desktop
+- [ ] Capturas lado a lado, claro/escuro, mobile/desktop (incluindo catálogo e detalhe actualizados)
 - [ ] `ng build` e `ng test` sem falhas; docs actualizados

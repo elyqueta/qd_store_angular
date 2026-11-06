@@ -1,4 +1,11 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
@@ -7,10 +14,11 @@ import { SeoService } from '../../../core/seo/seo.service';
 import { ProductApiService, ProductSort } from '../data-access/product-api.service';
 import { Product, ProductCategory, ProductStatus } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
+import { IconComponent } from '../../../shared/ui/icon.component';
 
 @Component({
   selector: 'qd-catalog-page',
-  imports: [ProductCardComponent, RouterLink, TranslocoPipe],
+  imports: [ProductCardComponent, RouterLink, TranslocoPipe, IconComponent],
   templateUrl: './catalog.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,10 +38,22 @@ export class CatalogPage {
   readonly selectedSearch = signal('');
   readonly selectedSort = signal<ProductSort | ''>('');
   readonly currentPage = signal(1);
+  readonly total = signal(0);
   readonly totalPages = signal(1);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
   readonly categoriesError = signal(false);
+  readonly skeletonCards = [1, 2, 3, 4, 5, 6, 7, 8];
+  readonly selectedCategoryLabel = computed(
+    () => this.categories().find((item) => item.slug === this.selectedCategory())?.label ?? null,
+  );
+  readonly hasActiveFilters = computed(
+    () =>
+      this.selectedCategory() !== null ||
+      this.selectedStatus() !== 'active' ||
+      this.selectedSearch().length > 0 ||
+      this.selectedSort().length > 0,
+  );
   readonly statusOptions: ReadonlyArray<{ value: ProductStatus; label: string }> = [
     { value: 'active', label: 'public.catalog.status.active' },
     { value: 'out_of_stock', label: 'public.catalog.status.outOfStock' },
@@ -98,6 +118,7 @@ export class CatalogPage {
 
     if (this.selectedCategory() && !category) {
       this.products.set([]);
+      this.total.set(0);
       this.totalPages.set(1);
       this.loading.set(false);
       return;
@@ -121,9 +142,15 @@ export class CatalogPage {
       .subscribe({
         next: (page) => {
           this.products.set(page.items);
+          this.total.set(page.total);
           this.totalPages.set(Math.max(page.totalPages, 1));
         },
-        error: () => this.error.set('public.errors.catalog'),
+        error: () => {
+          this.products.set([]);
+          this.total.set(0);
+          this.totalPages.set(1);
+          this.error.set('public.errors.catalog');
+        },
       });
   }
 
@@ -140,6 +167,25 @@ export class CatalogPage {
     if (input instanceof HTMLInputElement) {
       this.searchInput.set(input.value);
     }
+  }
+
+  clearSearch(): void {
+    this.searchInput.set('');
+  }
+
+  clearFilters(): void {
+    this.searchInput.set('');
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        categoria: null,
+        estado: null,
+        pesquisa: null,
+        ordem: null,
+        pagina: 1,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   submitSearch(event?: Event): void {

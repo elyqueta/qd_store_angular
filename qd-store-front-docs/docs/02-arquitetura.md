@@ -20,7 +20,7 @@ src/
   main.ts / main.server.ts / server.ts
   styles.css                      # único CSS (Tailwind)
   environments/                   # apiUrl por ambiente
-  assets/i18n/pt.json (en.json no futuro)
+  assets/i18n/pt/               # traduções divididas por domínio
   app/
     app.ts / app.html / app.config.ts / app.config.server.ts
     app.routes.ts / app.routes.server.ts

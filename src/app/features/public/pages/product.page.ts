@@ -10,7 +10,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { EMPTY, catchError, switchMap } from 'rxjs';
+import { EMPTY, catchError, map, switchMap } from 'rxjs';
 import { AuthStore } from '../../../core/auth/auth.store';
 import { ApiError } from '../../../core/http/api-error.model';
 import { ToastService } from '../../../core/notifications/toast.service';
@@ -38,15 +38,29 @@ export class ProductPage {
   private readonly transloco = inject(TranslocoService);
 
   readonly product = signal<ProductDetail | null>(null);
-  readonly additionalImages = computed(() => {
+  readonly galleryImages = computed(() => {
     const product = this.product();
     if (!product) {
       return [];
     }
 
-    const mainImageId = product.mainImage?.id;
-    return product.images.filter((image) => image.id !== mainImageId).slice(0, 3);
+    const images = [...product.images].sort(
+      (first, second) => first.displayOrder - second.displayOrder,
+    );
+    if (!product.mainImage || images.some((image) => image.id === product.mainImage?.id)) {
+      return images;
+    }
+
+    return [product.mainImage, ...images];
   });
+  readonly activeImageId = signal<string | null>(null);
+  readonly activeImage = computed(
+    () =>
+      this.galleryImages().find((image) => image.id === this.activeImageId()) ??
+      this.product()?.mainImage ??
+      this.galleryImages()[0] ??
+      null,
+  );
   readonly relatedProducts = signal<Product[]>([]);
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
@@ -54,6 +68,16 @@ export class ProductPage {
   readonly isAuthenticated = this.authStore.isAuthenticated;
   readonly cartBusy = signal(false);
   readonly wishlistBusy = signal(false);
+  readonly isWishlisted = signal(false);
+  readonly shareCompleted = signal(false);
+  readonly discountPercent = computed(() => {
+    const product = this.product();
+    if (!product?.originalPrice || product.originalPrice <= product.price) {
+      return null;
+    }
+
+    return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+  });
 
   constructor() {
     this.route.paramMap
@@ -69,6 +93,8 @@ export class ProductPage {
           this.loading.set(true);
           this.error.set(null);
           this.product.set(null);
+          this.activeImageId.set(null);
+          this.isWishlisted.set(false);
           this.relatedError.set(null);
           this.relatedProducts.set([]);
           this.seo.setPage({
@@ -96,6 +122,7 @@ export class ProductPage {
       .subscribe({
         next: (product) => {
           this.product.set(product);
+          this.activeImageId.set(product.mainImage?.id ?? product.images[0]?.id ?? null);
           this.seo.setPage(
             {
               title: this.transloco.translate('seo.product.title', { name: product.name }),
@@ -107,6 +134,7 @@ export class ProductPage {
             },
             product,
           );
+          this.loadWishlistState(product.id);
           this.loadRelatedProducts(product);
           this.loading.set(false);
         },
@@ -127,6 +155,12 @@ export class ProductPage {
         },
         error: () => this.relatedError.set('public.errors.relatedProducts'),
       });
+  }
+
+  selectImage(imageId: string): void {
+    if (this.galleryImages().some((image) => image.id === imageId)) {
+      this.activeImageId.set(imageId);
+    }
   }
 
   addToCart(): void {
@@ -151,25 +185,79 @@ export class ProductPage {
       });
   }
 
-  addToWishlist(): void {
+  toggleWishlist(): void {
     const productId = this.product()?.id;
     if (!productId || !this.isAuthenticated() || this.wishlistBusy()) {
       return;
     }
 
     this.wishlistBusy.set(true);
+    const request = this.isWishlisted()
+      ? this.commerceApi.removeWishlistItem(productId)
+      : this.commerceApi.addWishlistItem(productId).pipe(map(() => undefined));
+    request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.wishlistBusy.set(false);
+        this.isWishlisted.update((isWishlisted) => !isWishlisted);
+        this.toast.success(
+          this.transloco.translate(
+            this.isWishlisted()
+              ? 'public.product.addedToFavorites'
+              : 'public.product.removedFromFavorites',
+          ),
+        );
+      },
+      error: (error: unknown) => {
+        this.wishlistBusy.set(false);
+        this.showError(error);
+      },
+    });
+  }
+
+  async shareProduct(): Promise<void> {
+    const product = this.product();
+    if (!product) {
+      return;
+    }
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: product.name, url: window.location.href });
+        return;
+      }
+
+      if (!navigator.clipboard?.writeText) {
+        throw new Error('Clipboard API is unavailable.');
+      }
+
+      await navigator.clipboard.writeText(window.location.href);
+      this.shareCompleted.set(true);
+      this.toast.success(this.transloco.translate('public.product.linkCopied'));
+      window.setTimeout(() => this.shareCompleted.set(false), 2000);
+    } catch (error: unknown) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return;
+      }
+
+      this.toast.error(this.transloco.translate('public.product.shareError'));
+    }
+  }
+
+  private loadWishlistState(productId: string): void {
+    if (!this.isAuthenticated()) {
+      return;
+    }
+
     this.commerceApi
-      .addWishlistItem(productId)
+      .getWishlist()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
-          this.wishlistBusy.set(false);
-          this.toast.success(this.transloco.translate('commerce.wishlist.added'));
+        next: (items) => {
+          if (this.product()?.id === productId) {
+            this.isWishlisted.set(items.some((item) => item.productId === productId));
+          }
         },
-        error: (error: unknown) => {
-          this.wishlistBusy.set(false);
-          this.showError(error);
-        },
+        error: (error: unknown) => this.showError(error),
       });
   }
 

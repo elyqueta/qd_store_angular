@@ -1,0 +1,71 @@
+{
+  "common": {
+    "close": "Fechar",
+    "error": "Ocorreu um erro.",
+    "loading": "A carregar…",
+    "retry": "Tentar novamente"
+  },
+  "a11y": {
+    "skipToContent": "Saltar para o conteúdo principal"
+  },
+  "notifications": {
+    "regionLabel": "Notificações"
+  },
+  "nav": {
+    "home": "Início",
+    "catalog": "Catálogo",
+    "deliveryTypes": "Tipos de entrega",
+    "about": "Sobre nós",
+    "contact": "Contactos",
+    "business": "Empresas",
+    "primary": "Navegação principal",
+    "search": "Pesquisar produtos",
+    "userMenu": "Abrir menu do utilizador",
+    "login": "Entrar",
+    "register": "Criar conta",
+    "profile": "Perfil",
+    "addresses": "Moradas",
+    "companies": "As minhas empresas",
+    "cart": "Carrinho",
+    "wishlist": "Favoritos",
+    "orders": "Encomendas",
+    "notifications": "Notificações",
+    "admin": "Painel de administração",
+    "logout": "Sair",
+    "menu": "Abrir menu",
+    "closeMenu": "Fechar menu",
+    "mobile": "Navegação móvel",
+    "themeToggle": "Alternar tema",
+    "themeLabel": "Tema: {{ theme }}",
+    "theme": {
+      "dark": "escuro",
+      "light": "claro"
+    }
+  },
+  "footer": {
+    "description": "Explora o catálogo da QD · ItSOLUTIONS e encontra produtos de tecnologia disponíveis.",
+    "storeTitle": "Loja",
+    "businessTitle": "Empresas",
+    "supportTitle": "Apoio",
+    "paymentTitle": "Pagamento",
+    "businessSolutions": "Soluções empresariais",
+    "businessQuote": "Pedir informações",
+    "myCompanies": "As minhas empresas",
+    "businessWhatsapp": "WhatsApp Empresas",
+    "account": "A minha conta",
+    "phone": "+244 923 000 000",
+    "categoriesError": "Não foi possível carregar as categorias.",
+    "linksTitle": "Navegação",
+    "contactTitle": "Contacto",
+    "whatsapp": "WhatsApp",
+    "copyright": "© {{ year }} QD · ItSOLUTIONS",
+    "rights": "Todos os direitos reservados"
+  },
+  "whatsapp": {
+    "title": "Fala connosco",
+    "description": "Respondemos em minutos via WhatsApp. Segunda–Sábado, 8h–20h.",
+    "start": "Iniciar conversa",
+    "open": "Abrir conversa no WhatsApp",
+    "close": "Fechar painel do WhatsApp"
+  }
+}

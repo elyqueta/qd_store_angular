@@ -1,147 +1,272 @@
-<main class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+<main class="min-h-screen bg-surface-muted">
   @if (loading()) {
     <div
       role="status"
       aria-live="polite"
-      class="rounded-2xl border border-line bg-surface p-8 text-center text-fg-muted"
+      class="mx-auto max-w-[1200px] px-4 py-10 text-center text-sm text-fg-muted sm:px-6"
     >
       {{ 'common.loading' | transloco }}
     </div>
   } @else if (error()) {
     <div
       role="alert"
-      class="rounded-2xl border border-danger/30 bg-danger/10 p-8 text-center text-danger"
+      class="mx-auto max-w-[1200px] px-4 py-10 text-center text-sm text-danger sm:px-6"
     >
-      {{ error() | transloco }}
+      <p>{{ error() | transloco }}</p>
+      <a
+        [routerLink]="'/produtos'"
+        class="mt-4 inline-flex rounded-full bg-brand px-6 py-2.5 text-sm font-medium text-brand-fg transition-opacity hover:opacity-90"
+      >
+        {{ 'public.product.backToCatalog' | transloco }}
+      </a>
     </div>
   } @else if (product(); as product) {
-    <article class="grid gap-10 lg:grid-cols-[1.15fr_0.85fr]">
-      <div class="space-y-4">
-        <div class="overflow-hidden rounded-3xl border border-line bg-surface shadow-sm">
-          @if (product.mainImage; as mainImage) {
-            <img [src]="mainImage.url" [alt]="product.name" class="h-full w-full object-cover" />
-          } @else {
+    <nav
+      class="border-b border-line bg-surface"
+      [attr.aria-label]="'public.product.breadcrumb' | transloco"
+    >
+      <ol
+        class="mx-auto flex max-w-[1200px] items-center gap-1 overflow-hidden px-4 py-3 text-xs text-fg-muted sm:px-6"
+      >
+        <li class="shrink-0">
+          <a routerLink="/" class="transition-colors hover:text-brand">
+            {{ 'nav.home' | transloco }}
+          </a>
+        </li>
+        <li class="flex shrink-0 items-center gap-1" aria-hidden="true">
+          <qd-icon name="chevron-right" [size]="11" />
+        </li>
+        <li class="shrink-0">
+          <a routerLink="/produtos" class="transition-colors hover:text-brand">
+            {{ 'nav.catalog' | transloco }}
+          </a>
+        </li>
+        <li class="flex shrink-0 items-center gap-1" aria-hidden="true">
+          <qd-icon name="chevron-right" [size]="11" />
+        </li>
+        <li class="shrink-0 max-w-36 truncate">
+          {{ product.categoryName || ('public.product.categoryFallback' | transloco) }}
+        </li>
+        <li class="flex shrink-0 items-center gap-1" aria-hidden="true">
+          <qd-icon name="chevron-right" [size]="11" />
+        </li>
+        <li class="min-w-0 truncate text-fg" aria-current="page">{{ product.name }}</li>
+      </ol>
+    </nav>
+
+    <div class="mx-auto max-w-[1200px] px-4 py-8 sm:px-6 lg:py-10">
+      <article class="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10 xl:gap-16">
+        <div class="min-w-0">
+          <div class="relative mb-3 aspect-square overflow-hidden rounded-2xl bg-surface shadow-sm">
+            @if (activeImage(); as image) {
+              <img
+                [src]="image.url"
+                [alt]="product.name"
+                class="h-full w-full object-cover"
+                fetchpriority="high"
+              />
+            } @else {
+              <div
+                class="flex h-full w-full items-center justify-center bg-surface"
+                aria-hidden="true"
+              >
+                <qd-icon name="box" [size]="48" class="text-fg-muted/50" />
+              </div>
+            }
+
+            @if (discountPercent() !== null) {
+              <span
+                class="absolute left-4 top-4 rounded-xl bg-danger px-3 py-1 text-sm font-semibold text-brand-fg"
+              >
+                -{{ discountPercent() }}%
+              </span>
+            }
+          </div>
+
+          @if (galleryImages().length > 1) {
             <div
-              class="flex aspect-4/3 items-center justify-center bg-surface-muted"
-              aria-hidden="true"
+              class="flex flex-wrap gap-2"
+              role="group"
+              [attr.aria-label]="'public.product.gallery' | transloco"
             >
-              <qd-icon name="box" [size]="44" class="text-fg-muted" />
+              @for (image of galleryImages(); track image.id; let index = $index) {
+                <button
+                  type="button"
+                  class="h-16 w-16 overflow-hidden rounded-xl border-2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  [class.border-brand]="activeImage()?.id === image.id"
+                  [class.border-transparent]="activeImage()?.id !== image.id"
+                  [class.hover:border-line]="activeImage()?.id !== image.id"
+                  [attr.aria-label]="
+                    'public.product.selectImage' | transloco: { number: index + 1 }
+                  "
+                  [attr.aria-pressed]="activeImage()?.id === image.id"
+                  (click)="selectImage(image.id)"
+                >
+                  <img [src]="image.url" alt="" class="h-full w-full object-cover" loading="lazy" />
+                </button>
+              }
             </div>
           }
         </div>
 
-        @if (additionalImages().length) {
-          <div class="grid grid-cols-3 gap-3">
-            @for (image of additionalImages(); track image.id) {
-              <img
-                [src]="image.url"
-                alt=""
-                class="h-28 w-full rounded-2xl border border-line object-cover"
-              />
-            }
-          </div>
-        }
-      </div>
-
-      <div class="space-y-6">
-        <div class="space-y-3">
-          <p class="text-xs font-medium uppercase tracking-[0.22em] text-fg-muted">
-            {{ product.categoryName || ('public.product.categoryFallback' | transloco) }}
-          </p>
-          <h1 class="text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-            {{ product.name }}
-          </h1>
-        </div>
-
-        <div class="flex items-baseline gap-3">
-          <span class="text-3xl font-semibold text-fg">
-            {{ product.price | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
-          </span>
-          @if (product.originalPrice && product.originalPrice > product.price) {
-            <span class="text-lg text-fg-muted line-through">
-              {{ product.originalPrice | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
+        <div class="flex min-w-0 flex-col">
+          @if (product.badge) {
+            <span
+              class="mb-3 inline-flex self-start rounded-full bg-brand px-3 py-1 text-sm font-medium text-brand-fg"
+            >
+              {{ product.badge }}
             </span>
           }
-        </div>
 
-        @if (product.badge) {
-          <span
-            class="inline-flex rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-brand"
+          <p class="mb-2 font-mono text-xs uppercase tracking-widest text-fg-muted">
+            {{ product.categoryName || ('public.product.categoryFallback' | transloco) }}
+          </p>
+          <h1 class="mb-3 text-3xl font-medium leading-tight tracking-tight text-fg md:text-4xl">
+            {{ product.name }}
+          </h1>
+          <p class="mb-6 text-sm leading-relaxed text-fg-muted">
+            {{ product.description || ('public.product.noDescription' | transloco) }}
+          </p>
+
+          <section
+            class="mb-5 rounded-2xl bg-surface p-5 shadow-sm"
+            [attr.aria-label]="'public.product.price' | transloco"
           >
-            {{ product.badge }}
-          </span>
-        }
+            <p class="mb-1 text-xs text-fg-muted">{{ 'public.product.price' | transloco }}</p>
+            <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              <p
+                class="text-3xl font-semibold"
+                [class.text-danger]="discountPercent() !== null"
+                [class.text-fg]="discountPercent() === null"
+              >
+                {{ product.price | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
+              </p>
+              @if (product.originalPrice && product.originalPrice > product.price) {
+                <p class="text-base text-fg-muted line-through">
+                  {{ product.originalPrice | currency: 'AOA' : 'symbol-narrow' : '1.0-0' }}
+                </p>
+              }
+            </div>
+            <p class="mt-1 text-xs text-fg-muted">{{ 'public.product.priceNote' | transloco }}</p>
+          </section>
 
-        <p class="text-base leading-7 text-fg-muted">
-          {{ product.description || ('public.product.noDescription' | transloco) }}
-        </p>
-
-        <div class="flex flex-wrap gap-3">
-          @if (isAuthenticated()) {
-            <button
-              type="button"
-              class="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg disabled:opacity-50"
-              [disabled]="cartBusy() || product.status !== 'active'"
-              (click)="addToCart()"
-            >
-              {{
-                cartBusy()
-                  ? ('commerce.wishlist.addingToCart' | transloco)
-                  : ('commerce.wishlist.addToCart' | transloco)
-              }}
-            </button>
-            <button
-              type="button"
-              class="inline-flex items-center gap-2 rounded-full border border-line px-5 py-3 text-sm font-medium text-fg hover:border-brand hover:text-brand disabled:opacity-50"
-              [disabled]="wishlistBusy()"
-              [attr.aria-label]="'commerce.wishlist.addToFavorites' | transloco"
-              (click)="addToWishlist()"
-            >
-              <qd-icon name="heart" [size]="18" />
-              {{ 'commerce.wishlist.addToFavorites' | transloco }}
-            </button>
-          }
-          <a
-            [routerLink]="'/produtos'"
-            class="rounded-full border border-line px-5 py-3 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand"
-          >
-            {{ 'public.product.backToCatalog' | transloco }}
-          </a>
-        </div>
-      </div>
-    </article>
-
-    @if (product.specifications.length) {
-      <section class="mt-16">
-        <h2 class="text-2xl font-semibold tracking-tight text-fg">
-          {{ 'public.product.specifications' | transloco }}
-        </h2>
-        <div class="mt-6 overflow-hidden rounded-2xl border border-line bg-surface">
-          <dl class="divide-y divide-line">
-            @for (specification of product.specifications; track specification.id) {
-              <div class="grid grid-cols-2 gap-4 px-4 py-3 sm:px-6">
-                <dt class="font-medium text-fg-muted">{{ specification.specKey }}</dt>
-                <dd class="text-right text-fg sm:text-left">{{ specification.specValue }}</dd>
+          <div class="mb-6 flex flex-col gap-2.5">
+            @if (isAuthenticated()) {
+              <button
+                type="button"
+                class="flex min-h-11 w-full items-center justify-center rounded-full bg-brand px-6 py-3.5 text-sm font-medium text-brand-fg transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                [disabled]="cartBusy() || product.status !== 'active'"
+                (click)="addToCart()"
+              >
+                {{
+                  cartBusy()
+                    ? ('commerce.wishlist.addingToCart' | transloco)
+                    : ('public.product.buy' | transloco)
+                }}
+              </button>
+              <div class="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  class="flex min-h-11 items-center justify-center gap-2 rounded-full border px-3 py-3 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+                  [class.text-danger]="isWishlisted()"
+                  [class.border-line]="!isWishlisted()"
+                  [class.bg-surface]="!isWishlisted()"
+                  [class.text-fg-muted]="!isWishlisted()"
+                  [disabled]="wishlistBusy()"
+                  [attr.aria-pressed]="isWishlisted()"
+                  (click)="toggleWishlist()"
+                >
+                  <qd-icon name="heart" [size]="15" />
+                  {{
+                    isWishlisted()
+                      ? ('public.product.saved' | transloco)
+                      : ('public.product.addToFavorites' | transloco)
+                  }}
+                </button>
+                <button
+                  type="button"
+                  class="flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-surface px-3 py-3 text-sm font-medium text-fg-muted transition-colors hover:border-brand hover:text-brand"
+                  (click)="shareProduct()"
+                >
+                  @if (shareCompleted()) {
+                    <qd-icon name="circle-check" [size]="15" class="text-success" />
+                  }
+                  {{
+                    shareCompleted()
+                      ? ('public.product.linkCopied' | transloco)
+                      : ('public.product.share' | transloco)
+                  }}
+                </button>
+              </div>
+            } @else {
+              <a
+                routerLink="/entrar"
+                class="flex min-h-11 w-full items-center justify-center rounded-full bg-brand px-6 py-3.5 text-sm font-medium text-brand-fg transition-opacity hover:opacity-90"
+              >
+                {{ 'public.product.loginToBuy' | transloco }}
+              </a>
+              <div class="grid grid-cols-2 gap-2">
+                <a
+                  routerLink="/entrar"
+                  class="flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-surface px-3 py-3 text-sm font-medium text-fg-muted transition-colors hover:border-brand hover:text-brand"
+                >
+                  <qd-icon name="heart" [size]="15" />
+                  {{ 'public.product.addToFavorites' | transloco }}
+                </a>
+                <button
+                  type="button"
+                  class="flex min-h-11 items-center justify-center gap-2 rounded-full border border-line bg-surface px-3 py-3 text-sm font-medium text-fg-muted transition-colors hover:border-brand hover:text-brand"
+                  (click)="shareProduct()"
+                >
+                  {{ 'public.product.share' | transloco }}
+                </button>
               </div>
             }
-          </dl>
+          </div>
+
+          @if (product.specifications.length) {
+            <section class="rounded-2xl bg-surface p-5 shadow-sm">
+              <h2 class="mb-4 font-mono text-xs font-medium uppercase tracking-widest text-fg">
+                {{ 'public.product.specifications' | transloco }}
+              </h2>
+              <dl class="divide-y divide-line">
+                @for (specification of product.specifications; track specification.id) {
+                  <div class="flex justify-between gap-4 py-2.5 text-sm">
+                    <dt class="text-fg-muted">{{ specification.specKey }}</dt>
+                    <dd class="max-w-[55%] text-right font-medium text-fg">
+                      {{ specification.specValue }}
+                    </dd>
+                  </div>
+                }
+              </dl>
+            </section>
+          }
         </div>
-      </section>
-    }
+      </article>
+    </div>
 
     @if (relatedProducts().length) {
-      <section class="mt-16">
-        <h2 class="text-2xl font-semibold tracking-tight text-fg">
-          {{ 'public.product.related' | transloco }}
-        </h2>
-        <div class="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          @for (relatedProduct of relatedProducts(); track relatedProduct.id) {
-            <qd-product-card [product]="relatedProduct" />
-          }
+      <section class="border-t border-line bg-surface py-12 sm:py-16">
+        <div class="mx-auto max-w-[1200px] px-4 sm:px-6">
+          <div class="mb-8">
+            <p class="mb-1 text-xs font-medium uppercase tracking-[0.08em] text-fg-muted">
+              {{ 'public.product.relatedLabel' | transloco }}
+            </p>
+            <h2 class="text-2xl font-medium tracking-tight text-fg">
+              {{ 'public.product.related' | transloco }}
+            </h2>
+          </div>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            @for (relatedProduct of relatedProducts(); track relatedProduct.id) {
+              <qd-product-card [product]="relatedProduct" />
+            }
+          </div>
         </div>
       </section>
     } @else if (relatedError()) {
-      <p class="mt-8 text-sm text-fg-muted">{{ relatedError() | transloco }}</p>
+      <p class="mx-auto max-w-[1200px] px-4 py-8 text-sm text-fg-muted sm:px-6">
+        {{ relatedError() | transloco }}
+      </p>
     }
   }
 </main>
