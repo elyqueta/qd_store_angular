@@ -35,7 +35,7 @@ Nota: a listagem de produtos não inclui imagens no contrato actual; os cartões
 
 - [x] Perfil (dados da sessão; sem edição enquanto o back-end não permitir)
 - [x] Moradas (CRUD, padrão, cascata província→município)
-- [x] Criar empresa autenticada (ver/gerir empresas e membros aguarda endpoint de listagem própria)
+- [x] Criar empresa autenticada · listar empresas próprias e membros associados
 
 ## Fase 4 — Back office
 

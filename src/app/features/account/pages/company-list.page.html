@@ -1,0 +1,110 @@
+<main class="min-h-[60vh] bg-surface-muted pb-16">
+  <header class="border-b border-line bg-surface">
+    <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <a
+        routerLink="/conta/perfil"
+        class="text-sm font-medium text-brand underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        {{ 'account.companies.backToProfile' | transloco }}
+      </a>
+      <p class="mb-1 mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+        {{ 'account.companies.kicker' | transloco }}
+      </p>
+      <h1 class="text-3xl font-semibold tracking-tight text-fg">
+        {{ 'account.companies.listTitle' | transloco }}
+      </h1>
+      <p class="mt-2 max-w-2xl text-sm text-fg-muted">
+        {{ 'account.companies.listDescription' | transloco }}
+      </p>
+    </div>
+  </header>
+
+  <section class="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+    <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <h2 class="text-lg font-semibold text-fg">{{ 'account.companies.listTitle' | transloco }}</h2>
+      <a
+        routerLink="/conta/empresas/nova"
+        class="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        {{ 'account.companies.add' | transloco }}
+      </a>
+    </div>
+
+    @if (isLoading()) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+        {{ 'common.loading' | transloco }}
+      </p>
+    } @else if (loadError(); as message) {
+      <div class="rounded-2xl border border-danger/40 bg-surface p-6" role="alert">
+        <p class="text-sm text-danger">{{ message }}</p>
+        <button
+          type="button"
+          class="mt-4 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="load()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </div>
+    } @else if (!companies().length) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted">
+        {{ 'account.companies.empty' | transloco }}
+      </p>
+    } @else {
+      <ul class="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        @for (company of companies(); track company.id) {
+          <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div class="min-w-0">
+                <h3 class="wrap-break-word text-lg font-semibold text-fg">{{ company.name }}</h3>
+                <p class="mt-2 break-all text-sm text-fg-muted">
+                  {{ 'account.companies.fields.nif' | transloco }}: {{ company.nif }}
+                </p>
+                <p class="mt-1 text-sm text-fg-muted">
+                  {{ 'account.companies.fields.sector' | transloco }}:
+                  {{ company.sector || ('account.companies.notProvided' | transloco) }}
+                </p>
+              </div>
+              <span
+                class="w-fit rounded-full bg-surface-muted px-3 py-1 text-xs font-medium text-fg-muted"
+              >
+                {{ statusLabel(company.status) }}
+              </span>
+            </div>
+
+            <section
+              class="mt-5 border-t border-line pt-4"
+              [attr.aria-label]="'account.companies.membersTitle' | transloco"
+            >
+              <h4 class="text-sm font-semibold text-fg">
+                {{ 'account.companies.membersTitle' | transloco }} ({{ company.users.length }})
+              </h4>
+              @if (company.users.length) {
+                <ul class="mt-3 divide-y divide-line">
+                  @for (user of company.users; track user.id) {
+                    <li
+                      class="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div class="min-w-0">
+                        <p class="wrap-break-word text-sm font-medium text-fg">
+                          {{ user.fullName }}
+                        </p>
+                        <p class="break-all text-xs text-fg-muted">{{ user.email }}</p>
+                      </div>
+                      <p class="text-xs text-fg-muted">
+                        {{ user.companyRole || ('account.companies.noRole' | transloco) }}
+                      </p>
+                    </li>
+                  }
+                </ul>
+              } @else {
+                <p class="mt-2 text-sm text-fg-muted">
+                  {{ 'account.companies.noMembers' | transloco }}
+                </p>
+              }
+            </section>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</main>

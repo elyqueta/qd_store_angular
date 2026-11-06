@@ -51,7 +51,7 @@
     "register": "Criar conta",
     "profile": "Perfil",
     "addresses": "Moradas",
-    "createCompany": "Criar empresa",
+    "companies": "As minhas empresas",
     "admin": "Painel de administração",
     "logout": "Sair",
     "menu": "Abrir menu",
@@ -136,6 +136,19 @@
     },
     "companies": {
       "kicker": "Conta empresarial",
+      "listTitle": "As minhas empresas",
+      "listDescription": "Consulta as empresas associadas à tua conta e os utilizadores associados a cada uma.",
+      "add": "Registar empresa",
+      "empty": "Ainda não tens empresas associadas à tua conta.",
+      "membersTitle": "Membros associados",
+      "noMembers": "Não existem membros associados a esta empresa.",
+      "noRole": "Cargo não indicado",
+      "notProvided": "Não indicado",
+      "status": {
+        "active": "Activa",
+        "inactive": "Inactiva",
+        "banned": "Suspensa"
+      },
       "title": "Registar empresa",
       "description": "Regista uma empresa associada à tua conta.",
       "formDescription": "O NIF é obrigatório e não poderá ser alterado depois do registo. O sector é opcional.",
@@ -155,7 +168,7 @@
       "backToProfile": "Voltar ao perfil",
       "createdTitle": "Empresa registada",
       "createdDescription": "A empresa foi associada à tua conta.",
-      "managementPending": "A listagem de empresas e a gestão de membros ainda não estão disponíveis na API para a conta do cliente."
+      "backToCompanies": "Ver as minhas empresas"
     }
   },
   "admin": {

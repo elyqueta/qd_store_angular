@@ -21,6 +21,37 @@ describe('CompanyApiService', () => {
 
   afterEach(() => httpTesting.verify());
 
+  it('lists only the authenticated user companies and unwraps their members', async () => {
+    const companies = [
+      {
+        id: 'company-1',
+        ownerId: 'user-1',
+        name: 'QD Tecnologia',
+        nif: '005123456LA042',
+        sector: 'Tecnologia',
+        status: 'active' as const,
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:00:00.000Z',
+        users: [
+          {
+            id: 'user-2',
+            fullName: 'Maria Fernandes',
+            email: 'maria@example.test',
+            companyRole: 'Gerente',
+          },
+        ],
+      },
+    ];
+    const response = firstValueFrom(api.listMine());
+    const request = httpTesting.expectOne(`${endpoint}/mine`);
+
+    expect(request.request.method).toBe('GET');
+    expect(request.request.params.keys()).toEqual([]);
+    request.flush({ status: 'success', data: companies });
+
+    await expect(response).resolves.toEqual(companies);
+  });
+
   it('creates a company and unwraps the API response', async () => {
     const company = {
       id: 'company-1',

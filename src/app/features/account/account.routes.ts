@@ -15,4 +15,9 @@ export const accountRoutes: Routes = [
     loadComponent: () =>
       import('./pages/company-create.page').then((module) => module.CompanyCreatePage),
   },
+  {
+    path: 'empresas',
+    loadComponent: () =>
+      import('./pages/company-list.page').then((module) => module.CompanyListPage),
+  },
 ];

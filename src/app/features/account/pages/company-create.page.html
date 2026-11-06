@@ -5,7 +5,7 @@
         routerLink="/conta/perfil"
         class="text-sm font-medium text-brand underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
       >
-        {{ 'account.companies.backToProfile' | transloco }}
+        {{ 'account.companies.backToCompanies' | transloco }}
       </a>
       <p class="mb-1 mt-5 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
         {{ 'account.companies.kicker' | transloco }}
@@ -50,11 +50,8 @@
             </div>
           }
         </dl>
-        <p class="mt-6 rounded-xl border border-line bg-surface p-4 text-sm text-fg-muted">
-          {{ 'account.companies.managementPending' | transloco }}
-        </p>
         <a
-          routerLink="/conta/perfil"
+          routerLink="/conta/empresas"
           class="mt-6 inline-flex min-h-11 items-center rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
         >
           {{ 'account.companies.backToProfile' | transloco }}
