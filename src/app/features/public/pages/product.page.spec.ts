@@ -104,7 +104,9 @@ describe('ProductPage', () => {
       product.mainImage?.url,
     );
     expect(fixture.nativeElement.querySelector('dl')?.textContent).toContain('16 GB');
-    expect(fixture.nativeElement.textContent).toContain('Inicia sessão para comprar');
+    expect(fixture.nativeElement.textContent).toContain('250 000 Kz');
+    expect(fixture.nativeElement.textContent).toContain('Inclui IVA · Pagamento em Kwanzas');
+    expect(fixture.nativeElement.textContent).toContain('Comprar');
 
     const secondImageButton = fixture.nativeElement.querySelector(
       '[aria-label="Ver imagem 2"]',
@@ -116,5 +118,31 @@ describe('ProductPage', () => {
     expect(fixture.nativeElement.querySelector('.aspect-square img')?.getAttribute('src')).toBe(
       product.images[0].url,
     );
+  });
+
+  it('opens the purchase options dialog and closes it with Escape', async () => {
+    const fixture = TestBed.createComponent(ProductPage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const buyButton = fixture.nativeElement.querySelector(
+      '[aria-haspopup="dialog"]',
+    ) as HTMLButtonElement;
+    buyButton.click();
+    fixture.detectChanges();
+
+    const dialog = fixture.nativeElement.querySelector('[role="dialog"]') as HTMLElement | null;
+    expect(dialog).not.toBeNull();
+    expect(dialog?.textContent).toContain('Como preferes comprar?');
+    expect(dialog?.textContent).toContain('Via WhatsApp');
+    expect(dialog?.textContent).toContain('Comprar no Site');
+    expect(dialog?.querySelector('a[href*="wa.me/244923000000"]')).not.toBeNull();
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
+    expect(document.activeElement).toBe(buyButton);
   });
 });

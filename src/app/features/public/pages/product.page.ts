@@ -1,14 +1,16 @@
-import { CurrencyPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   DestroyRef,
+  ElementRef,
+  HostListener,
   inject,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { EMPTY, catchError, map, switchMap } from 'rxjs';
 import { AuthStore } from '../../../core/auth/auth.store';
@@ -23,21 +25,59 @@ import { IconComponent } from '../../../shared/ui/icon.component';
 
 @Component({
   selector: 'qd-product-page',
-  imports: [CurrencyPipe, RouterLink, ProductCardComponent, TranslocoPipe, IconComponent],
+  imports: [RouterLink, ProductCardComponent, TranslocoPipe, IconComponent],
   templateUrl: './product.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductPage {
+  @ViewChild('buyTrigger')
+  private buyTrigger?: ElementRef<HTMLButtonElement>;
+
+  private buyDialog?: ElementRef<HTMLElement>;
+
+  @ViewChild('buyDialog')
+  set buyDialogElement(dialog: ElementRef<HTMLElement> | undefined) {
+    this.buyDialog = dialog;
+    if (dialog && this.buyModalOpen()) {
+      dialog.nativeElement.querySelector<HTMLElement>('[data-buy-dialog-close]')?.focus();
+    }
+  }
+
   private readonly destroyRef = inject(DestroyRef);
   private readonly authStore = inject(AuthStore);
   private readonly commerceApi = inject(CommerceApiService);
   private readonly productApi = inject(ProductApiService);
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly seo = inject(SeoService);
   private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
+  private readonly priceFormatter = new Intl.NumberFormat('pt-AO', {
+    style: 'decimal',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
 
   readonly product = signal<ProductDetail | null>(null);
+  readonly buyModalOpen = signal(false);
+  readonly whatsappBuyUrl = computed(() => {
+    const product = this.product();
+    if (!product) {
+      return 'https://wa.me/244923000000';
+    }
+
+    const message = [
+      'Olá QD · ItSOLUTIONS!',
+      '',
+      'Quero comprar:',
+      product.name,
+      this.formatPrice(product.price),
+      '',
+      'Por favor confirmem disponibilidade.',
+    ].join('\n');
+
+    return `https://wa.me/244923000000?text=${encodeURIComponent(message)}`;
+  });
   readonly galleryImages = computed(() => {
     const product = this.product();
     if (!product) {
@@ -163,6 +203,57 @@ export class ProductPage {
     }
   }
 
+  formatPrice(price: number): string {
+    return `${this.priceFormatter.format(price)} Kz`;
+  }
+
+  openBuyModal(): void {
+    this.buyModalOpen.set(true);
+  }
+
+  closeBuyModal(): void {
+    this.buyModalOpen.set(false);
+    this.buyTrigger?.nativeElement.focus();
+  }
+
+  continuePurchase(): void {
+    if (!this.isAuthenticated()) {
+      this.closeBuyModal();
+      void this.router.navigateByUrl('/entrar');
+      return;
+    }
+
+    this.addToCart();
+  }
+
+  handleBuyDialogKeydown(event: KeyboardEvent): void {
+    if (event.key !== 'Tab' || !this.buyDialog) {
+      return;
+    }
+
+    const focusableElements = this.buyDialog.nativeElement.querySelectorAll<HTMLElement>(
+      'a[href], button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])',
+    );
+    const firstElement = focusableElements.item(0);
+    const lastElement = focusableElements.item(focusableElements.length - 1);
+    const activeElement = document.activeElement;
+
+    if (event.shiftKey && activeElement === firstElement) {
+      event.preventDefault();
+      lastElement?.focus();
+    } else if (!event.shiftKey && activeElement === lastElement) {
+      event.preventDefault();
+      firstElement?.focus();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  closeBuyDialogOnEscape(): void {
+    if (this.buyModalOpen()) {
+      this.closeBuyModal();
+    }
+  }
+
   addToCart(): void {
     const productId = this.product()?.id;
     if (!productId || !this.isAuthenticated() || this.cartBusy()) {
@@ -176,7 +267,9 @@ export class ProductPage {
       .subscribe({
         next: () => {
           this.cartBusy.set(false);
+          this.closeBuyModal();
           this.toast.success(this.transloco.translate('commerce.cart.added'));
+          void this.router.navigateByUrl('/conta/carrinho');
         },
         error: (error: unknown) => {
           this.cartBusy.set(false);

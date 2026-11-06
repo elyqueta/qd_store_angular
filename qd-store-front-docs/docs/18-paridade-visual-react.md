@@ -181,7 +181,7 @@ Até haver API: registar L-10 e preparar a rota/UI com estado "indisponível" tr
 - [x] Zero classes `text-[Npx]` e sem emojis renderizados na interface (os emojis legados da API são mapeados para SVG)
 - [x] Navbar com um único menu de utilizador glass; tema dentro do menu
 - [x] Catálogo e cartões aproximados à estrutura React, mantendo a API e os filtros de estado existentes
-- [x] Detalhe de produto aproximado à composição React, mantendo dados reais e operações da API
+- [x] Detalhe de produto aproximado à composição React, mantendo dados reais e operações da API; cartão de preço e modal de compra incluídos
 - [x] Traduções pt-PT separadas por domínio e agregadas no loader Transloco
 - [ ] Logótipo oficial em navbar, footer, favicon e preloader (falta o preloader)
 - [ ] Preloader reposto (só no primeiro carregamento)
