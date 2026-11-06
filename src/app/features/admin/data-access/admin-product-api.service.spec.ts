@@ -41,11 +41,13 @@ describe('AdminProductApiService', () => {
     );
     const createRequest = httpTesting.expectOne(`${apiRoot}/products`);
     expect(createRequest.request.method).toBe('POST');
-    expect(createRequest.request.body).toEqual({
-      categoryId: 'category-1',
-      name: product.name,
-      price: product.price,
-    });
+    expect(createRequest.request.body).toBeInstanceOf(FormData);
+    expect(createRequest.request.body.get('categoryId')).toBe('category-1');
+    expect(createRequest.request.body.get('name')).toBe(product.name);
+    expect(createRequest.request.body.get('price')).toBe(String(product.price));
+    expect(createRequest.request.body.get('image')).toBeNull();
+    expect(createRequest.request.body.get('url')).toBeNull();
+    expect(createRequest.request.headers.has('Content-Type')).toBe(false);
     createRequest.flush({ status: 'success', data: product });
     await expect(createPromise).resolves.toEqual(product);
 
@@ -68,7 +70,41 @@ describe('AdminProductApiService', () => {
     await expect(deletePromise).resolves.toBeUndefined();
   });
 
-  it('creates, updates, and deletes product images by URL', async () => {
+  it('creates products with optional fields and an image using multipart form data', async () => {
+    const file = new File(['image'], 'product.webp', { type: 'image/webp' });
+    const createPromise = firstValueFrom(
+      api.createProduct({
+        categoryId: 'category-1',
+        name: product.name,
+        description: 'Descrição do produto',
+        price: product.price,
+        originalPrice: 300000,
+        badge: 'Destaque',
+        image: file,
+      }),
+    );
+    const createRequest = httpTesting.expectOne(`${apiRoot}/products`);
+    expect(createRequest.request.method).toBe('POST');
+    expect(createRequest.request.body).toBeInstanceOf(FormData);
+    expect(createRequest.request.body.get('categoryId')).toBe('category-1');
+    expect(createRequest.request.body.get('name')).toBe(product.name);
+    expect(createRequest.request.body.get('description')).toBe('Descrição do produto');
+    expect(createRequest.request.body.get('price')).toBe(String(product.price));
+    expect(createRequest.request.body.get('originalPrice')).toBe('300000');
+    expect(createRequest.request.body.get('badge')).toBe('Destaque');
+    expect(createRequest.request.body.get('image')).toBe(file);
+    expect(createRequest.request.body.get('url')).toBeNull();
+    expect(createRequest.request.body.get('mainImage')).toBeNull();
+    expect(createRequest.request.body.get('width')).toBeNull();
+    expect(createRequest.request.body.get('height')).toBeNull();
+    expect(createRequest.request.body.get('format')).toBeNull();
+    expect(createRequest.request.body.get('sizeBytes')).toBeNull();
+    expect(createRequest.request.headers.has('Content-Type')).toBe(false);
+    createRequest.flush({ status: 'success', data: product });
+    await expect(createPromise).resolves.toEqual(product);
+  });
+
+  it('updates and deletes product image metadata without sending a URL', async () => {
     const image = {
       id: 'image-1',
       productId: 'product-1',
@@ -79,14 +115,6 @@ describe('AdminProductApiService', () => {
       format: null,
       sizeBytes: null,
     };
-
-    const createPromise = firstValueFrom(
-      api.createImage('product-1', { url: image.url, displayOrder: 0 }),
-    );
-    const createRequest = httpTesting.expectOne(`${apiRoot}/products/product-1/images`);
-    expect(createRequest.request.method).toBe('POST');
-    createRequest.flush({ status: 'success', data: image });
-    await expect(createPromise).resolves.toEqual(image);
 
     const updatePromise = firstValueFrom(
       api.updateImage('product-1', 'image-1', { displayOrder: 1 }),
@@ -102,6 +130,54 @@ describe('AdminProductApiService', () => {
     expect(deleteRequest.request.method).toBe('DELETE');
     deleteRequest.flush(null, { status: 204, statusText: 'No Content' });
     await expect(deletePromise).resolves.toBeUndefined();
+  });
+
+  it('uploads and replaces product images using multipart form data', async () => {
+    const image = {
+      id: 'image-1',
+      productId: 'product-1',
+      url: 'https://example.test/product.webp',
+      displayOrder: 2,
+      width: 1200,
+      height: 900,
+      format: 'webp',
+      sizeBytes: 12000,
+    };
+    const file = new File(['image'], 'product.webp', { type: 'image/webp' });
+
+    const createPromise = firstValueFrom(
+      api.uploadImage('product-1', file, {
+        displayOrder: 2,
+        width: 1200,
+        height: 900,
+        format: 'webp',
+        sizeBytes: 12000,
+      }),
+    );
+    const createRequest = httpTesting.expectOne(`${apiRoot}/products/product-1/images`);
+    expect(createRequest.request.method).toBe('POST');
+    expect(createRequest.request.body).toBeInstanceOf(FormData);
+    expect(createRequest.request.body.get('image')).toBe(file);
+    expect(createRequest.request.body.get('displayOrder')).toBe('2');
+    expect(createRequest.request.body.get('width')).toBe('1200');
+    expect(createRequest.request.body.get('height')).toBe('900');
+    expect(createRequest.request.body.get('format')).toBe('webp');
+    expect(createRequest.request.body.get('sizeBytes')).toBe('12000');
+    expect(createRequest.request.body.get('url')).toBeNull();
+    createRequest.flush({ status: 'success', data: image });
+    await expect(createPromise).resolves.toEqual(image);
+
+    const replacePromise = firstValueFrom(
+      api.replaceImage('product-1', 'image-1', file, { displayOrder: 3 }),
+    );
+    const replaceRequest = httpTesting.expectOne(`${apiRoot}/products/product-1/images/image-1`);
+    expect(replaceRequest.request.method).toBe('PATCH');
+    expect(replaceRequest.request.body).toBeInstanceOf(FormData);
+    expect(replaceRequest.request.body.get('image')).toBe(file);
+    expect(replaceRequest.request.body.get('displayOrder')).toBe('3');
+    expect(replaceRequest.request.body.get('url')).toBeNull();
+    replaceRequest.flush({ status: 'success', data: { ...image, displayOrder: 3 } });
+    await expect(replacePromise).resolves.toMatchObject({ displayOrder: 3 });
   });
 
   it('creates, updates, and deletes product specifications', async () => {

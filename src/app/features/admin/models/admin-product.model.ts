@@ -1,6 +1,7 @@
 export interface AdminCreateProductInput {
   categoryId: string;
   name: string;
+  image?: File;
   description?: string;
   price: number;
   originalPrice?: number;
@@ -16,22 +17,16 @@ export interface AdminUpdateProductInput {
   badge?: string | null;
 }
 
-export interface AdminCreateProductImageInput {
-  url: string;
+export interface AdminUpdateProductImageInput {
+  displayOrder?: number;
+}
+
+export interface AdminUploadProductImageMetadata {
   displayOrder?: number;
   width?: number;
   height?: number;
   format?: string;
   sizeBytes?: number;
-}
-
-export interface AdminUpdateProductImageInput {
-  url?: string;
-  displayOrder?: number;
-  width?: number | null;
-  height?: number | null;
-  format?: string | null;
-  sizeBytes?: number | null;
 }
 
 export interface AdminCreateProductSpecificationInput {

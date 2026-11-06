@@ -10,9 +10,9 @@ import {
   ProductSpecification,
 } from '../../public/models/product.model';
 import {
-  AdminCreateProductImageInput,
   AdminCreateProductInput,
   AdminCreateProductSpecificationInput,
+  AdminUploadProductImageMetadata,
   AdminUpdateProductImageInput,
   AdminUpdateProductInput,
   AdminUpdateProductSpecificationInput,
@@ -44,8 +44,25 @@ export class AdminProductApiService {
   }
 
   createProduct(input: AdminCreateProductInput): Observable<Product> {
+    const formData = new FormData();
+    formData.append('categoryId', input.categoryId);
+    formData.append('name', input.name);
+    formData.append('price', String(input.price));
+    if (input.description !== undefined) {
+      formData.append('description', input.description);
+    }
+    if (input.originalPrice !== undefined) {
+      formData.append('originalPrice', String(input.originalPrice));
+    }
+    if (input.badge !== undefined) {
+      formData.append('badge', input.badge);
+    }
+    if (input.image) {
+      formData.append('image', input.image);
+    }
+
     return this.http
-      .post<ApiSingleResponse<Product>>(this.endpoint, input)
+      .post<ApiSingleResponse<Product>>(this.endpoint, formData)
       .pipe(map((response) => response.data));
   }
 
@@ -61,9 +78,17 @@ export class AdminProductApiService {
       .pipe(map(() => undefined));
   }
 
-  createImage(productId: string, input: AdminCreateProductImageInput): Observable<ProductImage> {
+  uploadImage(
+    productId: string,
+    file: File,
+    metadata: AdminUploadProductImageMetadata = {},
+  ): Observable<ProductImage> {
+    const formData = new FormData();
+    formData.append('image', file);
+    this.appendImageMetadata(formData, metadata);
+
     return this.http
-      .post<ApiSingleResponse<ProductImage>>(this.imageEndpoint(productId), input)
+      .post<ApiSingleResponse<ProductImage>>(this.imageEndpoint(productId), formData)
       .pipe(map((response) => response.data));
   }
 
@@ -76,6 +101,24 @@ export class AdminProductApiService {
       .patch<ApiSingleResponse<ProductImage>>(
         `${this.imageEndpoint(productId)}/${encodeURIComponent(imageId)}`,
         input,
+      )
+      .pipe(map((response) => response.data));
+  }
+
+  replaceImage(
+    productId: string,
+    imageId: string,
+    file: File,
+    metadata: AdminUploadProductImageMetadata = {},
+  ): Observable<ProductImage> {
+    const formData = new FormData();
+    formData.append('image', file);
+    this.appendImageMetadata(formData, metadata);
+
+    return this.http
+      .patch<ApiSingleResponse<ProductImage>>(
+        `${this.imageEndpoint(productId)}/${encodeURIComponent(imageId)}`,
+        formData,
       )
       .pipe(map((response) => response.data));
   }
@@ -118,6 +161,14 @@ export class AdminProductApiService {
 
   private imageEndpoint(productId: string): string {
     return `${this.endpoint}/${encodeURIComponent(productId)}/images`;
+  }
+
+  private appendImageMetadata(formData: FormData, metadata: AdminUploadProductImageMetadata): void {
+    for (const [key, value] of Object.entries(metadata)) {
+      if (value !== undefined) {
+        formData.append(key, String(value));
+      }
+    }
   }
 
   private specificationEndpoint(productId: string): string {

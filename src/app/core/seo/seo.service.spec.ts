@@ -13,6 +13,7 @@ const product: ProductDetail = {
   originalPrice: null,
   badge: null,
   status: 'out_of_stock',
+  mainImage: null,
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
   images: [

@@ -146,16 +146,7 @@ describe('ProductApiService', () => {
         originalPrice: null,
         badge: null,
         status: 'active',
-        mainImage: {
-          id: 'main-image-1',
-          productId: 'product-1',
-          url: 'https://example.test/product-1-main.webp',
-          displayOrder: 0,
-          width: 1200,
-          height: 900,
-          format: 'webp',
-          sizeBytes: 12000,
-        },
+        mainImage: null,
         createdAt: '2026-01-01T00:00:00.000Z',
         updatedAt: '2026-01-01T00:00:00.000Z',
         images: [
@@ -184,7 +175,7 @@ describe('ProductApiService', () => {
 
     await expect(responsePromise).resolves.toMatchObject({
       id: 'product-1',
-      mainImage: { id: 'main-image-1', displayOrder: 0 },
+      mainImage: null,
       images: [{ id: 'image-1' }],
       specifications: [{ specKey: 'Memória', specValue: '16 GB' }],
     });

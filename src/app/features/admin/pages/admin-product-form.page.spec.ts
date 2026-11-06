@@ -9,6 +9,63 @@ import { AdminProductApiService } from '../data-access/admin-product-api.service
 import { AdminProductFormPage } from './admin-product-form.page';
 
 describe('AdminProductFormPage', () => {
+  it('creates the product with its selected image in one request', async () => {
+    const createdProduct = {
+      id: 'product-1',
+      categoryId: 'category-1',
+      name: 'Computador portátil',
+      description: null,
+      price: 250000,
+      originalPrice: null,
+      badge: null,
+      status: 'active' as const,
+      mainImage: null,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    };
+    const createProduct = vi.fn(() => of(createdProduct));
+    const file = new File(['image'], 'product.webp', { type: 'image/webp' });
+
+    await TestBed.configureTestingModule({
+      imports: [AdminProductFormPage],
+      providers: [
+        ...provideAppI18n(),
+        provideRouter([{ path: 'admin/produtos/:id', children: [] }]),
+        { provide: ProductApiService, useValue: { listCategories: () => of([]) } },
+        { provide: AdminProductApiService, useValue: { createProduct } },
+        { provide: SeoService, useValue: { setPage: () => undefined } },
+        {
+          provide: ToastService,
+          useValue: { success: () => undefined, warning: () => undefined, error: () => undefined },
+        },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(AdminProductFormPage);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    fixture.componentInstance.form.setValue({
+      categoryId: 'category-1',
+      name: 'Computador portátil',
+      description: '',
+      price: 250000,
+      originalPrice: 0,
+      badge: '',
+    });
+    fixture.componentInstance.productImageFile.set(file);
+    fixture.componentInstance.submitProduct();
+    await fixture.whenStable();
+
+    expect(createProduct).toHaveBeenCalledWith({
+      categoryId: 'category-1',
+      name: 'Computador portátil',
+      price: 250000,
+      image: file,
+    });
+  });
+
   it('rejects a previous price that is not greater than the current price', async () => {
     const createProduct = vi.fn(() => of());
 

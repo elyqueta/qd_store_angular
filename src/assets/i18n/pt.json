@@ -278,7 +278,7 @@
       "backToList": "Voltar à lista de produtos",
       "createTitle": "Adicionar produto",
       "editTitle": "Editar produto",
-      "formDescription": "Preenche os dados do produto. Depois de o criares, poderás gerir imagens e especificações.",
+      "formDescription": "Preenche os dados do produto. Podes carregar uma imagem durante a criação e gerir imagens e especificações depois.",
       "productData": "Dados do produto",
       "fields": {
         "name": "Nome",
@@ -287,7 +287,7 @@
         "originalPrice": "Preço anterior (Kz, opcional)",
         "badge": "Etiqueta (opcional)",
         "description": "Descrição (opcional)",
-        "imageUrl": "URL da imagem",
+        "imageFile": "Ficheiro de imagem",
         "displayOrder": "Ordem",
         "specKey": "Característica",
         "specValue": "Valor"
@@ -304,7 +304,7 @@
         "priceConsistency": "O preço anterior deve ser superior ao preço actual.",
         "badge": "A etiqueta não pode exceder 50 caracteres.",
         "description": "A descrição não pode exceder 5000 caracteres.",
-        "imageUrl": "Introduz um URL HTTP ou HTTPS válido.",
+        "imageFile": "Selecciona uma imagem JPEG, PNG, WebP ou AVIF com até 8 MB.",
         "displayOrder": "A ordem deve ser um número inteiro igual ou superior a zero.",
         "specKey": "A característica é obrigatória e não pode exceder 255 caracteres.",
         "specValue": "O valor é obrigatório e não pode exceder 255 caracteres."
@@ -314,7 +314,8 @@
       "save": "Guardar alterações",
       "cancel": "Cancelar",
       "imagesTitle": "Imagens",
-      "imagesDescription": "As imagens são adicionadas por URL; a API não suporta carregamento de ficheiros.",
+      "imagesDescription": "Carrega ficheiros de imagem para o produto. A API guarda-os e devolve os respectivos endereços.",
+      "imageUploadHelp": "JPEG, PNG, WebP ou AVIF; tamanho máximo de 8 MB. Não é necessário introduzir um URL.",
       "addImage": "Adicionar imagem",
       "imageOrder": "Ordem: {{ order }}",
       "noImages": "Este produto ainda não tem imagens.",

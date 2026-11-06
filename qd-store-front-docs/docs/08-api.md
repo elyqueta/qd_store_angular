@@ -43,29 +43,9 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 - `name` é obrigatório (máximo 200); `description` opcional (máximo 5000); `price` positivo; `originalPrice` opcional e, quando informado, deve ser superior a `price`; `badge` opcional (máximo 50). O PATCH é parcial e aceita `null` para limpar `description`, `originalPrice` e `badge`. O contrato actual não permite alterar directamente o estado do produto.
 - O detalhe do produto pede `include=images,specifications` para receber os dados relacionados numa única chamada, em vez de fazer três leituras separadas.
 
-- `mainImage` é a imagem associada com menor `displayOrder`, ou `null` quando o produto ainda não tem imagens. Durante a transição, o front também tolera respostas antigas sem esta propriedade.
-- `POST /` pode receber `mainImage` opcional para criar a imagem principal na mesma operação; continua compatível criar primeiro o produto e depois usar `POST /:productId/images`.
-- Exemplo de body para criar um produto com imagem principal:
-
-```json
-{
-  "categoryId": "c1b2a3d4-e5f6-4789-a012-3456789abcde",
-  "name": "Portátil Dell Inspiron 15",
-  "price": 450000,
-  "description": "Portátil para trabalho e estudo",
-  "originalPrice": 520000,
-  "badge": "Promoção",
-  "mainImage": {
-    "url": "https://cdn.exemplo.co.ao/produtos/dell-inspiron-15.jpg",
-    "width": 1200,
-    "height": 900,
-    "format": "jpg",
-    "sizeBytes": 204800
-  }
-}
-```
-
-- Imagens `/api/v1/products/:productId/images`: `GET` público; `POST { url, displayOrder?, width?, height?, format?, sizeBytes? }`, `PATCH /:id` parcial, `DELETE /:id` admin. Só URL (sem upload); `displayOrder` é inteiro ≥ 0.
+- `mainImage` está sempre presente nas respostas de listagem e detalhe e é `ProductImage | null`: imagem associada com menor `displayOrder`, ou `null` quando o produto ainda não tem imagens. `cloudinaryPublicId` é interno e não deve ser exposto nem enviado pelo cliente.
+- `POST /` recebe `multipart/form-data` para criar o produto. Os campos obrigatórios são `categoryId`, `name` e `price`; `description`, `originalPrice`, `badge` e `image` são opcionais. `image` é um ficheiro local e, se enviado, a API guarda-o e cria os metadados. O cliente não deve enviar `mainImage`, `url`, `width`, `height`, `format` ou `sizeBytes`, nem definir manualmente o cabeçalho `Content-Type`.
+- Imagens `/api/v1/products/:productId/images`: `GET` público; `POST` aceita `FormData` com `image` (ficheiro obrigatório) e `displayOrder` opcional. `PATCH /:id` aceita `FormData` com `image` e metadados opcionais para substituir o ficheiro; edições de metadados sem ficheiro podem continuar a usar JSON parcial. A API mantém compatibilidade com payloads JSON legados, mas o front-end não envia URLs de imagem. `DELETE /:id` admin devolve `204`. O upload aceita JPEG, PNG, WebP e AVIF, até 8 MB; `displayOrder` é inteiro ≥ 0.
 - Especificações `/api/v1/products/:productId/specifications`: `GET` público; `POST { specKey, specValue, displayOrder }`, `PATCH /:id` parcial e `DELETE /:id` admin. Chave e valor têm até 255 caracteres; `displayOrder` inteiro ≥ 0 e obrigatório na criação.
 
 **Tipos de entrega** (`/api/v1/delivery-types`): `GET /` (só activos) e `GET /:id` públicos; `POST { name, description?, price, type }`, `PATCH /:id` parcial e `DELETE /:id` (=desactivar) admin. `name` tem entre 1 e 100 caracteres; `description` tem até 200 caracteres e pode ser `null` no PATCH; `price` é ≥ 0; `type` é `standard | express | corporate | pickup`. A API não disponibiliza a listagem de inactivos nem a reactivação.
@@ -124,7 +104,7 @@ interface Product {
   originalPrice: number | null;
   badge: string | null;
   status: 'active' | 'inactive' | 'out_of_stock';
-  mainImage?: ProductImage | null;
+  mainImage: ProductImage | null;
   createdAt: string;
   updatedAt: string;
 }

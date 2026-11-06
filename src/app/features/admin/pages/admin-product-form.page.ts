@@ -33,6 +33,9 @@ import {
 const nonNegativeIntegerValidator: ValidatorFn = (control) =>
   Number.isInteger(control.value) && control.value >= 0 ? null : { nonNegativeInteger: true };
 
+const supportedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/avif']);
+const maximumImageSizeBytes = 8 * 1024 * 1024;
+
 @Component({
   selector: 'qd-admin-product-form-page',
   imports: [ReactiveFormsModule, RouterLink, TranslocoPipe],
@@ -60,9 +63,12 @@ export class AdminProductFormPage {
   readonly hasLoadError = signal(false);
   readonly savingProduct = signal(false);
   readonly formError = signal<string | null>(null);
+  readonly productImageFile = signal<File | null>(null);
+  readonly productImageError = signal<string | null>(null);
   readonly imageFormOpen = signal(false);
   readonly editingImageId = signal<string | null>(null);
   readonly imageError = signal<string | null>(null);
+  readonly imageFile = signal<File | null>(null);
   readonly savingImage = signal(false);
   readonly confirmingImageDeletionId = signal<string | null>(null);
   readonly pendingImageDeletionId = signal<string | null>(null);
@@ -86,10 +92,6 @@ export class AdminProductFormPage {
   });
 
   readonly imageForm = this.formBuilder.group({
-    url: [
-      '',
-      [Validators.required, Validators.pattern(/^https?:\/\/\S+$/i), Validators.maxLength(2048)],
-    ],
     displayOrder: [0, [Validators.required, nonNegativeIntegerValidator]],
   });
 
@@ -201,10 +203,12 @@ export class AdminProductFormPage {
       return;
     }
 
+    const imageFile = this.productImageFile();
     const input: AdminCreateProductInput = {
       categoryId: values.categoryId,
       name: values.name.trim(),
       price: values.price,
+      ...(imageFile ? { image: imageFile } : {}),
       ...(values.description.trim() ? { description: values.description.trim() } : {}),
       ...(values.originalPrice > 0 ? { originalPrice: values.originalPrice } : {}),
       ...(values.badge.trim() ? { badge: values.badge.trim() } : {}),
@@ -225,6 +229,23 @@ export class AdminProductFormPage {
       });
   }
 
+  selectProductImage(event: Event): void {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+
+    const file = input.files?.[0] ?? null;
+    this.productImageError.set(null);
+    if (file && !this.isValidImageFile(file)) {
+      input.value = '';
+      this.productImageFile.set(null);
+      this.productImageError.set(this.transloco.translate('admin.products.validation.imageFile'));
+      return;
+    }
+    this.productImageFile.set(file);
+  }
+
   openCreateImageForm(): void {
     this.resetImageForm();
     this.imageFormOpen.set(true);
@@ -232,7 +253,7 @@ export class AdminProductFormPage {
 
   openEditImageForm(image: ProductImage): void {
     this.resetImageForm();
-    this.imageForm.setValue({ url: image.url, displayOrder: image.displayOrder });
+    this.imageForm.setValue({ displayOrder: image.displayOrder });
     this.editingImageId.set(image.id);
     this.imageFormOpen.set(true);
   }
@@ -244,7 +265,8 @@ export class AdminProductFormPage {
   }
 
   submitImage(): void {
-    if (this.imageForm.invalid || this.savingImage() || !this.productId) {
+    const file = this.imageFile();
+    if (this.savingImage() || !this.productId || this.imageForm.controls.displayOrder.invalid) {
       this.imageForm.markAllAsTouched();
       return;
     }
@@ -256,10 +278,15 @@ export class AdminProductFormPage {
       this.imageError.set(this.transloco.translate('admin.products.errors.imageUnavailable'));
       return;
     }
+    if (!current && !file) {
+      this.imageForm.markAllAsTouched();
+      this.imageError.set(this.transloco.translate('admin.products.validation.imageFile'));
+      return;
+    }
 
     this.savingImage.set(true);
     this.imageError.set(null);
-    const input = current ? this.createImageUpdateInput(values, current) : null;
+    const input = current && !file ? this.createImageUpdateInput(values, current) : null;
     if (input && !Object.keys(input).length) {
       this.savingImage.set(false);
       this.closeImageForm();
@@ -268,12 +295,23 @@ export class AdminProductFormPage {
     }
 
     const request =
-      current && imageId && input
-        ? this.api.updateImage(this.productId, imageId, input)
-        : this.api.createImage(this.productId, {
-            url: values.url.trim(),
-            displayOrder: values.displayOrder,
-          });
+      current && imageId && file
+        ? this.api.replaceImage(this.productId, imageId, file, {
+            ...(values.displayOrder !== current.displayOrder
+              ? { displayOrder: values.displayOrder }
+              : {}),
+          })
+        : current && imageId && input
+          ? this.api.updateImage(this.productId, imageId, input)
+          : file
+            ? this.api.uploadImage(this.productId, file, { displayOrder: values.displayOrder })
+            : null;
+
+    if (!request) {
+      this.savingImage.set(false);
+      this.imageError.set(this.transloco.translate('admin.products.validation.imageFile'));
+      return;
+    }
 
     request
       .pipe(
@@ -496,10 +534,6 @@ export class AdminProductFormPage {
     current: ProductImage,
   ): AdminUpdateProductImageInput {
     const input: AdminUpdateProductImageInput = {};
-    const url = values.url.trim();
-    if (url !== current.url) {
-      input.url = url;
-    }
     if (values.displayOrder !== current.displayOrder) {
       input.displayOrder = values.displayOrder;
     }
@@ -528,8 +562,30 @@ export class AdminProductFormPage {
   private resetImageForm(): void {
     const nextDisplayOrder =
       this.images().reduce((highest, image) => Math.max(highest, image.displayOrder), -1) + 1;
-    this.imageForm.reset({ url: '', displayOrder: nextDisplayOrder });
+    this.imageForm.reset({ displayOrder: nextDisplayOrder });
+    this.imageFile.set(null);
     this.imageError.set(null);
+  }
+
+  selectImageFile(event: Event): void {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement)) {
+      return;
+    }
+
+    const file = input.files?.[0] ?? null;
+    this.imageError.set(null);
+    if (file && !this.isValidImageFile(file)) {
+      input.value = '';
+      this.imageFile.set(null);
+      this.imageError.set(this.transloco.translate('admin.products.validation.imageFile'));
+      return;
+    }
+    this.imageFile.set(file);
+  }
+
+  private isValidImageFile(file: File): boolean {
+    return supportedImageTypes.has(file.type) && file.size <= maximumImageSizeBytes;
   }
 
   private resetSpecificationForm(): void {

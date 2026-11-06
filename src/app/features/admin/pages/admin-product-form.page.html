@@ -205,6 +205,30 @@
           }
         </div>
 
+        @if (isCreating) {
+          <div class="rounded-xl border border-line bg-surface-muted p-4 md:col-span-2">
+            <label for="qd-product-create-image" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'admin.products.fields.imageFile' | transloco }}
+            </label>
+            <p class="mb-3 text-xs text-fg-muted">
+              {{ 'admin.products.imageUploadHelp' | transloco }}
+            </p>
+            <input
+              id="qd-product-create-image"
+              type="file"
+              accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
+              class="block min-h-11 w-full rounded-xl border border-line bg-surface px-3 py-2 text-sm text-fg file:mr-3 file:rounded-full file:border-0 file:bg-brand file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              (change)="selectProductImage($event)"
+            />
+            @if (productImageFile(); as selectedFile) {
+              <p class="mt-2 text-xs text-fg-muted">{{ selectedFile.name }}</p>
+            }
+            @if (productImageError(); as message) {
+              <p class="mt-2 text-sm text-danger" role="alert">{{ message }}</p>
+            }
+          </div>
+        }
+
         @if (product(); as currentProduct) {
           <div class="rounded-xl border border-line bg-surface-muted p-4 md:col-span-2">
             <p class="text-sm font-medium text-fg">
@@ -352,25 +376,24 @@
               [formGroup]="imageForm"
               (ngSubmit)="submitImage()"
             >
-              <div>
-                <label for="qd-product-image-url" class="mb-2 block text-sm font-medium text-fg">
-                  {{ 'admin.products.fields.imageUrl' | transloco }}
+              <div class="sm:col-span-2">
+                <label for="qd-product-image-file" class="mb-2 block text-sm font-medium text-fg">
+                  {{ 'admin.products.fields.imageFile' | transloco }}
                 </label>
+                <p class="mb-3 text-xs text-fg-muted">
+                  {{ 'admin.products.imageUploadHelp' | transloco }}
+                </p>
                 <input
-                  id="qd-product-image-url"
-                  type="url"
-                  formControlName="url"
-                  maxlength="2048"
-                  required
-                  class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
-                  [attr.aria-invalid]="
-                    imageForm.controls.url.invalid && imageForm.controls.url.touched
-                  "
+                  id="qd-product-image-file"
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif"
+                  [attr.aria-required]="!editingImageId() ? 'true' : null"
+                  [attr.aria-invalid]="!editingImageId() && !imageFile() && !!imageError()"
+                  class="block min-h-11 w-full rounded-xl border border-line bg-surface px-3 py-2 text-sm text-fg file:mr-3 file:rounded-full file:border-0 file:bg-brand file:px-3 file:py-1.5 file:text-sm file:font-semibold file:text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  (change)="selectImageFile($event)"
                 />
-                @if (imageForm.controls.url.invalid && imageForm.controls.url.touched) {
-                  <p class="mt-1 text-sm text-danger">
-                    {{ 'admin.products.validation.imageUrl' | transloco }}
-                  </p>
+                @if (imageFile(); as selectedFile) {
+                  <p class="mt-2 text-xs text-fg-muted">{{ selectedFile.name }}</p>
                 }
               </div>
               <div>

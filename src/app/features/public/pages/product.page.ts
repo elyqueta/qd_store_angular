@@ -36,7 +36,7 @@ export class ProductPage {
       return [];
     }
 
-    const mainImageId = (product.mainImage ?? product.images[0])?.id;
+    const mainImageId = product.mainImage?.id;
     return product.images.filter((image) => image.id !== mainImageId).slice(0, 3);
   });
   readonly relatedProducts = signal<Product[]>([]);
@@ -92,7 +92,7 @@ export class ProductPage {
                 product.description ??
                 this.transloco.translate('seo.product.description', { name: product.name }),
               canonicalPath: `/produtos/${encodeURIComponent(product.id)}`,
-              imageUrl: product.mainImage?.url ?? product.images[0]?.url,
+              imageUrl: product.mainImage?.url,
             },
             product,
           );
