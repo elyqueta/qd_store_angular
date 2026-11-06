@@ -4,7 +4,6 @@ import {
   computed,
   DestroyRef,
   ElementRef,
-  HostListener,
   inject,
   signal,
   ViewChild,
@@ -22,26 +21,23 @@ import { ProductApiService } from '../data-access/product-api.service';
 import { Product, ProductDetail } from '../models/product.model';
 import { ProductCardComponent } from '../../../shared/ui/product-card.component';
 import { IconComponent } from '../../../shared/ui/icon.component';
+import { ProductPurchaseDialogComponent } from '../../../shared/ui/product-purchase-dialog.component';
 
 @Component({
   selector: 'qd-product-page',
-  imports: [RouterLink, ProductCardComponent, TranslocoPipe, IconComponent],
+  imports: [
+    RouterLink,
+    ProductCardComponent,
+    ProductPurchaseDialogComponent,
+    TranslocoPipe,
+    IconComponent,
+  ],
   templateUrl: './product.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductPage {
   @ViewChild('buyTrigger')
   private buyTrigger?: ElementRef<HTMLButtonElement>;
-
-  private buyDialog?: ElementRef<HTMLElement>;
-
-  @ViewChild('buyDialog')
-  set buyDialogElement(dialog: ElementRef<HTMLElement> | undefined) {
-    this.buyDialog = dialog;
-    if (dialog && this.buyModalOpen()) {
-      dialog.nativeElement.querySelector<HTMLElement>('[data-buy-dialog-close]')?.focus();
-    }
-  }
 
   private readonly destroyRef = inject(DestroyRef);
   private readonly authStore = inject(AuthStore);
@@ -224,34 +220,6 @@ export class ProductPage {
     }
 
     this.addToCart();
-  }
-
-  handleBuyDialogKeydown(event: KeyboardEvent): void {
-    if (event.key !== 'Tab' || !this.buyDialog) {
-      return;
-    }
-
-    const focusableElements = this.buyDialog.nativeElement.querySelectorAll<HTMLElement>(
-      'a[href], button:not(:disabled), input:not(:disabled), [tabindex]:not([tabindex="-1"])',
-    );
-    const firstElement = focusableElements.item(0);
-    const lastElement = focusableElements.item(focusableElements.length - 1);
-    const activeElement = document.activeElement;
-
-    if (event.shiftKey && activeElement === firstElement) {
-      event.preventDefault();
-      lastElement?.focus();
-    } else if (!event.shiftKey && activeElement === lastElement) {
-      event.preventDefault();
-      firstElement?.focus();
-    }
-  }
-
-  @HostListener('document:keydown.escape')
-  closeBuyDialogOnEscape(): void {
-    if (this.buyModalOpen()) {
-      this.closeBuyModal();
-    }
   }
 
   addToCart(): void {

@@ -22,6 +22,7 @@
 | D-016 | Reproduzir visualmente o perfil React sem os seus dados simulados                           | 2026-11-06 | Aprovado pelo Elizandro: usar os SVG inline e a estrutura visual de `ProfilePage.jsx`; mostrar dados pessoais da sessão como só de leitura e ligar separadores apenas a funcionalidades/rotas com API. |
 | D-017 | Não reestilizar o back-office sem protótipo React                                           | 2026-11-06 | O Elizandro confirmou que a UI antiga não tem back-office. Manter a UI administrativa actual; não inventar um protótipo visual. |
 | D-018 | Repor entrada pública de Empresas e fluxos de compra autorizados                            | 2026-11-06 | Aprovado no âmbito de `18-paridade-visual-react.md`: reintroduzir `/empresas` e integrar carrinho, favoritos, encomendas e notificações usando apenas endpoints existentes. A página B2B encaminha pedidos de informação por WhatsApp; sem submissão fictícia de orçamento. |
+| D-019 | Navegação partilhada da conta com transição discreta                                        | 2026-11-06 | Manter as rotas actuais, apresentar as secções suportadas num painel de conta partilhado, ocultar o cabeçalho de perfil nas restantes rotas e animar a entrada do conteúdo respeitando `prefers-reduced-motion`. Omitir Pagamento e Segurança enquanto não houver operações suportadas. |
 
 ## Perguntas em aberto (o agente deve perguntar em escolha múltipla)
 

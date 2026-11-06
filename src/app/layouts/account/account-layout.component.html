@@ -5,7 +5,67 @@
   {{ 'a11y.skipToContent' | transloco }}
 </a>
 <qd-site-navbar />
-<div id="qd-main-content" tabindex="-1">
-  <router-outlet />
+<div id="qd-main-content" tabindex="-1" class="min-h-[60vh] bg-surface-muted pb-12 pt-[70px]">
+  @if (isProfileRoute()) {
+    <header class="border-b border-line bg-surface">
+      <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-fg-muted">
+          {{ 'account.profile.kicker' | transloco }}
+        </p>
+        <h1 class="text-3xl font-semibold tracking-tight text-fg">
+          {{ 'account.profile.title' | transloco }}
+        </h1>
+      </div>
+    </header>
+  }
+
+  <div
+    class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 pt-6 sm:px-6 lg:grid-cols-[minmax(0,280px)_1fr] lg:px-8"
+  >
+    <aside class="h-fit overflow-hidden rounded-2xl border border-line bg-surface">
+      @if (user(); as profile) {
+        <div
+          class="flex items-center gap-3 border-b border-line p-4 lg:flex-col lg:items-start lg:p-6"
+        >
+          <div
+            class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand/10 text-lg font-semibold text-brand"
+            aria-hidden="true"
+          >
+            {{ initials() }}
+          </div>
+          <div class="min-w-0">
+            <h2 class="truncate text-base font-semibold text-fg">{{ profile.fullName }}</h2>
+            <p class="break-all text-sm text-fg-muted">{{ profile.email }}</p>
+          </div>
+        </div>
+      }
+
+      <nav
+        class="flex gap-1 overflow-x-auto p-2 lg:flex-col"
+        [attr.aria-label]="'account.profile.navigation' | transloco"
+      >
+        @for (item of navigationItems; track item.route) {
+          <a
+            [routerLink]="item.route"
+            routerLinkActive="bg-brand/10 text-brand"
+            [routerLinkActiveOptions]="{ exact: item.exact }"
+            ariaCurrentWhenActive="page"
+            class="flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg lg:w-full"
+          >
+            <qd-icon [name]="item.icon" [size]="18" />
+            {{ item.labelKey | transloco }}
+          </a>
+        }
+      </nav>
+    </aside>
+
+    <section
+      #routeContent
+      class="min-w-0"
+      [attr.aria-label]="'account.profile.content' | transloco"
+    >
+      <router-outlet (activate)="onRouteActivate()" />
+    </section>
+  </div>
 </div>
 <qd-site-footer />

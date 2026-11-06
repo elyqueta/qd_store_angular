@@ -22,12 +22,15 @@
     },
     "wishlist": {
       "title": "Os meus favoritos",
+      "sectionTitle": "Favoritos",
+      "savedOne": "1 produto guardado",
+      "savedMany": "{{ count }} produtos guardados",
       "loadError": "Não foi possível carregar os favoritos.",
       "addToCart": "Adicionar ao carrinho",
       "addingToCart": "A adicionar…",
       "addToFavorites": "Adicionar aos favoritos",
       "added": "Produto guardado nos favoritos.",
-      "remove": "Remover",
+      "remove": "Remover dos favoritos",
       "emptyTitle": "Ainda não guardaste favoritos",
       "emptyDescription": "Guarda produtos para os encontrares facilmente mais tarde."
     },

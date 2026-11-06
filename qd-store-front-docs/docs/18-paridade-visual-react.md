@@ -148,7 +148,7 @@ Alvo:
 
 ## 9.1 Perfil da conta
 
-A tela React `src/pages/ProfilePage.jsx` é a referência visual. Reproduzir o painel, navegação por separadores e iconografia SVG sem copiar os dados fictícios ou operações não suportadas. Os dados pessoais continuam apenas de leitura a partir da sessão; encomendas, favoritos e notificações devem usar os endpoints próprios documentados em `08`. A referência não prova que exista edição de perfil, notificações configuráveis, alteração de palavra-passe ou métodos guardados no perfil.
+A tela React `src/pages/ProfilePage.jsx` é a referência visual. Reproduzir o painel, a navegação lateral e a iconografia SVG sem copiar os dados fictícios ou operações não suportadas. Manter as rotas Angular actuais e usar uma transição discreta entre secções, respeitando `prefers-reduced-motion`. Os dados pessoais continuam apenas de leitura a partir da sessão; encomendas, favoritos e notificações usam os endpoints próprios documentados em `08`. Não apresentar secções de métodos de pagamento guardados, preferências de notificações ou alteração de palavra-passe enquanto essas operações não existirem.
 
 ## 10. Back-office: seguir o estilo do protótipo React
 

@@ -55,6 +55,8 @@
       "kicker": "Conta",
       "title": "O meu perfil",
       "description": "Consulta os dados pessoais associados à tua sessão.",
+      "navigation": "Navegação da conta",
+      "content": "Conteúdo da conta",
       "personalData": "Dados pessoais",
       "fullName": "Nome completo",
       "email": "E-mail",
