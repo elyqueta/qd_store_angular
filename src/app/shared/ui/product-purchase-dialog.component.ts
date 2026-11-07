@@ -140,7 +140,19 @@ export class ProductPurchaseDialogComponent {
   }
 
   goBack(): void {
-    this.purchaseStep.set('account');
+    switch (this.purchaseStep()) {
+      case 'account':
+        this.purchaseStep.set('method');
+        return;
+      case 'company-create':
+        this.purchaseStep.set('company-list');
+        return;
+      case 'company-list':
+        this.purchaseStep.set('account');
+        return;
+      case 'method':
+        return;
+    }
   }
 
   handleKeydown(event: KeyboardEvent): void {

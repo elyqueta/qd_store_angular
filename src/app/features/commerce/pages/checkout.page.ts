@@ -28,10 +28,11 @@ import { Address } from '../../account/models/address.model';
 import { CompanyApiService } from '../../account/data-access/company-api.service';
 import { CompanyWithUsers } from '../../account/models/company.model';
 import { DeliveryType } from '../../public/models/delivery-type.model';
+import { IconComponent } from '../../../shared/ui/icon.component';
 
 @Component({
   selector: 'qd-checkout-page',
-  imports: [CurrencyPipe, ReactiveFormsModule, RouterLink, TranslocoPipe],
+  imports: [CurrencyPipe, IconComponent, ReactiveFormsModule, RouterLink, TranslocoPipe],
   templateUrl: './checkout.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
