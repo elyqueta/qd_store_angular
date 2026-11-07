@@ -3,10 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import { I18nService } from './core/i18n/i18n.service';
 import { ThemeService } from './core/theme/theme.service';
 import { ToastRegionComponent } from './shared/ui/toast-region.component';
+import { FeedbackDialogComponent } from './shared/ui/feedback-dialog.component';
 
 @Component({
   selector: 'qd-root',
-  imports: [RouterOutlet, ToastRegionComponent],
+  imports: [RouterOutlet, ToastRegionComponent, FeedbackDialogComponent],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

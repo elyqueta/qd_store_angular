@@ -20,6 +20,7 @@ import { IconComponent } from './icon.component';
 
 export interface PurchaseSelection {
   companyId?: string;
+  quantity: number;
 }
 
 @Component({
@@ -56,6 +57,7 @@ export class ProductPurchaseDialogComponent {
     'method',
   );
   readonly accountType = signal<'personal' | 'business'>('personal');
+  readonly quantity = signal(1);
   readonly companies = signal<CompanyWithUsers[]>([]);
   readonly companyLoading = signal(false);
   readonly companyError = signal(false);
@@ -71,7 +73,12 @@ export class ProductPurchaseDialogComponent {
   }
 
   requestPurchase(): void {
+    this.quantity.set(1);
     this.purchaseStep.set('account');
+  }
+
+  changeQuantity(delta: number): void {
+    this.quantity.update((current) => Math.min(99, Math.max(1, current + delta)));
   }
 
   chooseAccount(type: 'personal' | 'business'): void {
@@ -80,7 +87,7 @@ export class ProductPurchaseDialogComponent {
 
   continueAccount(): void {
     if (this.accountType() === 'personal') {
-      this.purchaseSelected.emit({});
+      this.purchaseSelected.emit({ quantity: this.quantity() });
       return;
     }
     this.purchaseStep.set('company-list');
@@ -93,7 +100,7 @@ export class ProductPurchaseDialogComponent {
         next: (companies) => {
           this.companies.set(companies);
           if (companies.length === 1) {
-            this.purchaseSelected.emit({ companyId: companies[0].id });
+            this.purchaseSelected.emit({ companyId: companies[0].id, quantity: this.quantity() });
           }
         },
         error: (error: unknown) => {
@@ -108,7 +115,7 @@ export class ProductPurchaseDialogComponent {
   }
 
   chooseCompany(companyId: string): void {
-    this.purchaseSelected.emit({ companyId });
+    this.purchaseSelected.emit({ companyId, quantity: this.quantity() });
   }
 
   openCompanyForm(): void {
@@ -128,7 +135,8 @@ export class ProductPurchaseDialogComponent {
       .createCompany({ name: values.name.trim(), nif: values.nif.trim() })
       .pipe(finalize(() => this.companyLoading.set(false)))
       .subscribe({
-        next: (company) => this.purchaseSelected.emit({ companyId: company.id }),
+        next: (company) =>
+          this.purchaseSelected.emit({ companyId: company.id, quantity: this.quantity() }),
         error: (error: unknown) => {
           this.toast.error(
             error instanceof ApiError

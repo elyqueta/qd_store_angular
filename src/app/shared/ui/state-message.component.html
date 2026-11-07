@@ -1,0 +1,23 @@
+<div
+  class="flex min-h-[40vh] flex-col items-center justify-center p-6 text-center"
+  [attr.role]="tone() === 'danger' ? 'alert' : 'status'"
+  aria-live="polite"
+>
+  <span
+    class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-brand/10 text-brand"
+    [class.bg-success/10]="tone() === 'success'"
+    [class.text-success]="tone() === 'success'"
+    [class.bg-warning/10]="tone() === 'warning'"
+    [class.text-warning]="tone() === 'warning'"
+    [class.bg-danger/10]="tone() === 'danger'"
+    [class.text-danger]="tone() === 'danger'"
+    aria-hidden="true"
+  >
+    <qd-icon [name]="icon()" [size]="24" />
+  </span>
+  <h2 class="text-lg font-semibold text-fg">{{ title() }}</h2>
+  <p class="mt-2 max-w-md text-base text-fg-muted">{{ message() }}</p>
+  <div class="mt-5 flex flex-wrap justify-center gap-3">
+    <ng-content />
+  </div>
+</div>

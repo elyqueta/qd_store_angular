@@ -1,0 +1,30 @@
+@if (open()) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <button
+      type="button"
+      class="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      [attr.aria-label]="'common.close' | transloco"
+      (click)="handleOverlayClick()"
+    ></button>
+    <section
+      #dialog
+      class="relative z-10 w-full max-w-md rounded-2xl border border-line bg-surface p-6 text-fg shadow-2xl motion-safe:animate-[qd-modal-in_250ms_ease-out]"
+      [attr.role]="alert() ? 'alertdialog' : 'dialog'"
+      aria-modal="true"
+      [attr.aria-labelledby]="labelledBy()"
+      [attr.aria-describedby]="describedBy()"
+      tabindex="-1"
+      (keydown)="handleKeydown($event)"
+    >
+      <button
+        type="button"
+        class="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-surface-muted text-fg-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-brand"
+        aria-label="Fechar"
+        (click)="hide()"
+      >
+        <qd-icon name="xmark" [size]="14" />
+      </button>
+      <ng-content />
+    </section>
+  </div>
+}

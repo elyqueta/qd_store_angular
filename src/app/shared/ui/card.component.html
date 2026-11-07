@@ -1,0 +1,9 @@
+<div
+  class="rounded-2xl border border-line bg-surface p-6 text-fg shadow-sm"
+  [class.bg-surface/80]="variant() === 'glass'"
+  [class.backdrop-blur]="variant() === 'glass'"
+  [class.transition-shadow]="variant() === 'interactive'"
+  [class.hover:shadow-lg]="variant() === 'interactive'"
+>
+  <ng-content />
+</div>

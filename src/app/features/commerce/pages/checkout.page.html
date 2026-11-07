@@ -1,5 +1,5 @@
 <main class="min-h-[60vh] bg-surface-muted px-4 py-10 sm:px-6 lg:px-8">
-  <div class="mx-auto max-w-6xl">
+  <div class="mx-auto max-w-350">
     <header class="mb-8">
       <a routerLink="/conta/carrinho" class="text-sm font-medium text-brand hover:underline">{{
         'commerce.checkout.backToCart' | transloco
@@ -13,7 +13,7 @@
     </header>
 
     @if (loading()) {
-      <div class="grid gap-6 lg:grid-cols-[1fr_360px]" role="status" aria-label="A carregar">
+      <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px]" role="status" aria-label="A carregar">
         <div class="space-y-6">
           @for (skeleton of [1, 2, 3]; track skeleton) {
             <div class="rounded-2xl border border-line bg-surface p-6">
@@ -57,7 +57,7 @@
         >
       </section>
     } @else {
-      <form class="grid gap-6 lg:grid-cols-[1fr_360px]" [formGroup]="form" (ngSubmit)="submit()">
+      <form class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px]" [formGroup]="form" (ngSubmit)="submit()">
         <div class="space-y-6">
           <nav
             class="flex items-center gap-2 overflow-x-auto rounded-2xl border border-line bg-surface p-4"
@@ -128,50 +128,72 @@
                 </button>
               } @else {
                 <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <input
+                  <select
+                    #provinceField
                     formControlName="province"
-                    [placeholder]="'account.profile.province' | transloco"
                     class="rounded-xl border border-line bg-surface px-3 py-3 text-sm text-fg"
-                  />
-                  <input
+                    [class.border-danger]="isAddressFieldInvalid('province')"
+                    [disabled]="locationsLoading()"
+                    (change)="onProvinceChange()"
+                  >
+                    <option value="">{{ 'account.profile.province' | transloco }}</option>
+                    @for (location of locations(); track location.slug) {
+                      <option [value]="location.name">{{ location.name }}</option>
+                    }
+                  </select>
+                  @if (isAddressFieldInvalid('province')) {
+                    <p class="text-xs text-danger sm:col-span-2">
+                      {{ 'commerce.checkout.validation.province' | transloco }}
+                    </p>
+                  }
+                  <select
+                    #municipalityField
                     formControlName="municipality"
-                    [placeholder]="'account.profile.municipality' | transloco"
                     class="rounded-xl border border-line bg-surface px-3 py-3 text-sm text-fg"
-                  />
+                    [class.border-danger]="isAddressFieldInvalid('municipality')"
+                    [disabled]="locationsLoading() || !selectedProvince()"
+                  >
+                    <option value="">{{ 'account.profile.municipality' | transloco }}</option>
+                    @for (municipality of municipalities(); track municipality) {
+                      <option [value]="municipality">{{ municipality }}</option>
+                    }
+                  </select>
+                  @if (isAddressFieldInvalid('municipality')) {
+                    <p class="text-xs text-danger sm:col-span-2">
+                      {{ 'commerce.checkout.validation.municipality' | transloco }}
+                    </p>
+                  }
                   <input
+                    #neighborhoodField
                     formControlName="neighborhood"
                     [placeholder]="'account.profile.neighborhood' | transloco"
                     class="rounded-xl border border-line bg-surface px-3 py-3 text-sm text-fg"
+                    [class.border-danger]="isAddressFieldInvalid('neighborhood')"
                   />
+                  @if (isAddressFieldInvalid('neighborhood')) {
+                    <p class="text-xs text-danger">
+                      {{ 'commerce.checkout.validation.neighborhood' | transloco }}
+                    </p>
+                  }
                   <input
                     formControlName="reference"
                     [placeholder]="'commerce.checkout.reference' | transloco"
                     class="rounded-xl border border-line bg-surface px-3 py-3 text-sm text-fg"
                   />
                   <input
+                    #addressField
                     formControlName="address"
                     [placeholder]="'account.profile.address' | transloco"
                     class="rounded-xl border border-line bg-surface px-3 py-3 text-sm text-fg sm:col-span-2"
+                    [class.border-danger]="isAddressFieldInvalid('address')"
                   />
-                </div>
-                <div class="mt-4 rounded-xl border border-line bg-surface-muted p-4">
-                  <p class="text-sm font-medium text-fg">
-                    {{ 'commerce.checkout.mapTitle' | transloco }}
-                  </p>
-                  <p class="mt-1 text-xs text-fg-muted">
-                    {{ 'commerce.checkout.mapUnavailable' | transloco }}
-                  </p>
-                  <button
-                    type="button"
-                    class="mt-3 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-fg hover:border-brand"
-                    (click)="useCurrentLocation()"
-                  >
-                    {{ 'commerce.checkout.useCurrentLocation' | transloco }}
-                  </button>
-                  @if (locationMessage(); as message) {
-                    <p class="mt-2 text-xs text-fg-muted">{{ message | transloco }}</p>
+                  @if (isAddressFieldInvalid('address')) {
+                    <p class="text-xs text-danger sm:col-span-2">
+                      {{ 'commerce.checkout.validation.address' | transloco }}
+                    </p>
                   }
                 </div>
+                <!-- A selecção automática por mapa fica suspensa até existir uma chave Google Maps. -->
                 <label class="mt-4 flex items-center gap-2 text-sm text-fg">
                   <input type="checkbox" formControlName="saveAddress" class="accent-brand" />
                   {{ 'commerce.checkout.saveAddress' | transloco }}
@@ -187,16 +209,6 @@
                 }
               }
             </section>
-            <div class="flex justify-end">
-              <button
-                type="button"
-                class="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
-                (click)="nextStep()"
-              >
-                {{ 'commerce.checkout.nextStep' | transloco }}
-                <qd-icon name="chevron-right" [size]="11" aria-hidden="true" />
-              </button>
-            </div>
           }
 
           @if (checkoutStep() === 'delivery') {
@@ -239,19 +251,11 @@
             <div class="flex justify-between">
               <button
                 type="button"
-                class="rounded-full border border-line px-5 py-3 text-sm font-semibold text-fg"
+                class="inline-flex items-center gap-2 rounded-full border border-line px-5 py-3 text-sm font-semibold text-fg"
                 (click)="previousStep()"
               >
                 <qd-icon name="chevron-right" class="-rotate-180" [size]="11" aria-hidden="true" />
                 {{ 'commerce.checkout.previousStep' | transloco }}
-              </button>
-              <button
-                type="button"
-                class="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
-                (click)="nextStep()"
-              >
-                {{ 'commerce.checkout.nextStep' | transloco }}
-                <qd-icon name="chevron-right" [size]="11" aria-hidden="true" />
               </button>
             </div>
           }
@@ -303,19 +307,11 @@
             <div class="flex justify-between">
               <button
                 type="button"
-                class="rounded-full border border-line px-5 py-3 text-sm font-semibold text-fg"
+                class="inline-flex items-center gap-2 rounded-full border border-line px-5 py-3 text-sm font-semibold text-fg"
                 (click)="previousStep()"
               >
                 <qd-icon name="chevron-right" class="-rotate-180" [size]="11" aria-hidden="true" />
                 {{ 'commerce.checkout.previousStep' | transloco }}
-              </button>
-              <button
-                type="button"
-                class="rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
-                (click)="nextStep()"
-              >
-                {{ 'commerce.checkout.nextStep' | transloco }}
-                <qd-icon name="chevron-right" [size]="11" aria-hidden="true" />
               </button>
             </div>
           }
@@ -335,7 +331,7 @@
             <div class="flex justify-start">
               <button
                 type="button"
-                class="rounded-full border border-line px-5 py-3 text-sm font-semibold text-fg"
+                class="inline-flex items-center gap-2 rounded-full border border-line px-5 py-3 text-sm font-semibold text-fg"
                 (click)="previousStep()"
               >
                 <qd-icon name="chevron-right" class="-rotate-180" [size]="11" aria-hidden="true" />
@@ -345,16 +341,65 @@
           }
         </div>
 
-        <aside class="h-fit rounded-2xl border border-line bg-surface p-6">
+        <aside class="h-fit rounded-2xl border border-line bg-surface p-6 lg:sticky lg:top-24">
           <h2 class="text-lg font-semibold text-fg">
             {{ 'commerce.checkout.summaryTitle' | transloco }}
           </h2>
           @for (item of cart()?.items ?? []; track item.id) {
-            <div class="mt-4 flex justify-between gap-3 text-sm">
-              <span class="text-fg-muted">{{ item.productName }} × {{ item.quantity }}</span>
-              <span class="font-medium text-fg">{{
-                item.subtotal | currency: 'AOA' : 'symbol-narrow' : '1.0-0'
-              }}</span>
+            <div class="mt-4 rounded-xl border border-line p-3">
+              <div class="flex justify-between gap-3 text-sm">
+                <div class="flex min-w-0 items-center gap-3">
+                  @if (item.imageUrl) {
+                    <img
+                      [src]="item.imageUrl"
+                      alt=""
+                      class="h-14 w-14 shrink-0 rounded-lg object-cover"
+                    />
+                  } @else {
+                    <span
+                      class="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-fg-muted"
+                      aria-hidden="true"
+                    >
+                      <qd-icon name="box" [size]="20" />
+                    </span>
+                  }
+                  <span class="min-w-0 text-fg-muted">{{ item.productName }}</span>
+                </div>
+                <span class="shrink-0 font-medium text-fg">{{
+                  item.subtotal | currency: 'AOA' : 'symbol-narrow' : '1.0-0'
+                }}</span>
+              </div>
+              <div class="mt-2 flex items-center justify-between">
+                <span class="text-xs text-fg-muted">
+                  {{ 'commerce.cart.quantity' | transloco }}
+                </span>
+                <div
+                  class="flex items-center gap-2"
+                  [attr.aria-label]="'commerce.cart.quantity' | transloco"
+                >
+                  <button
+                    type="button"
+                    class="flex h-7 w-7 items-center justify-center rounded-full border border-line text-base text-fg disabled:opacity-40"
+                    [disabled]="busyItems().has(item.id) || item.quantity <= 1"
+                    [attr.aria-label]="'commerce.cart.decrease' | transloco"
+                    (click)="changeQuantity(item.id, item.quantity - 1)"
+                  >
+                    −
+                  </button>
+                  <span class="min-w-5 text-center text-xs font-semibold text-fg">
+                    {{ item.quantity }}
+                  </span>
+                  <button
+                    type="button"
+                    class="flex h-7 w-7 items-center justify-center rounded-full border border-line text-base text-fg disabled:opacity-40"
+                    [disabled]="busyItems().has(item.id) || item.quantity >= 99"
+                    [attr.aria-label]="'commerce.cart.increase' | transloco"
+                    (click)="changeQuantity(item.id, item.quantity + 1)"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
             </div>
           }
           <div class="mt-5 flex justify-between border-t border-line pt-4 font-semibold text-fg">
@@ -377,15 +422,6 @@
                   ? ('commerce.checkout.submitting' | transloco)
                   : ('commerce.checkout.submit' | transloco)
               }}
-            </button>
-          } @else {
-            <button
-              type="button"
-              class="mt-6 w-full rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg"
-              (click)="nextStep()"
-            >
-              {{ 'commerce.checkout.nextStep' | transloco }}
-              <qd-icon name="chevron-right" [size]="11" aria-hidden="true" />
             </button>
           }
           <p class="mt-3 text-xs leading-5 text-fg-muted">

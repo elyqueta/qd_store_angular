@@ -20,9 +20,13 @@
   }
 
   <div
-    class="mx-auto grid max-w-7xl grid-cols-1 gap-6 px-4 pt-6 sm:px-6 lg:grid-cols-[minmax(0,280px)_1fr] lg:px-8"
+    class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8"
+    [class.grid]="!isCheckoutRoute()"
+    [class.gap-6]="!isCheckoutRoute()"
+    [class.lg:grid-cols-[minmax(0,280px)_1fr]]="!isCheckoutRoute()"
   >
-    <aside class="h-fit overflow-hidden rounded-2xl border border-line bg-surface">
+    @if (!isCheckoutRoute()) {
+      <aside class="h-fit overflow-hidden rounded-2xl border border-line bg-surface">
       @if (user(); as profile) {
         <div
           class="flex items-center gap-3 border-b border-line p-4 lg:flex-col lg:items-start lg:p-6"
@@ -57,7 +61,8 @@
           </a>
         }
       </nav>
-    </aside>
+      </aside>
+    }
 
     <section
       #routeContent

@@ -153,6 +153,37 @@
         <p class="mt-4 text-sm leading-5 text-[#4b4b4b]">
           {{ 'commerce.cart.personalNifNote' | transloco }}
         </p>
+        <div class="mt-5 flex items-center justify-between rounded-xl border border-[#d1d5db] bg-white px-3 py-2.5">
+          <span class="text-sm font-medium text-[#2e2e2e]">
+            {{ 'commerce.cart.quantity' | transloco }}
+          </span>
+          <div
+            class="flex items-center gap-3"
+            [attr.aria-label]="'commerce.cart.quantity' | transloco"
+          >
+            <button
+              type="button"
+              class="flex h-8 w-8 items-center justify-center rounded-full border border-[#d1d5db] text-lg text-[#2e2e2e] disabled:opacity-40"
+              [disabled]="quantity() <= 1"
+              [attr.aria-label]="'commerce.cart.decrease' | transloco"
+              (click)="changeQuantity(-1)"
+            >
+              −
+            </button>
+            <span class="min-w-5 text-center text-sm font-semibold text-[#1b1b1b]">
+              {{ quantity() }}
+            </span>
+            <button
+              type="button"
+              class="flex h-8 w-8 items-center justify-center rounded-full border border-[#d1d5db] text-lg text-[#2e2e2e] disabled:opacity-40"
+              [disabled]="quantity() >= 99"
+              [attr.aria-label]="'commerce.cart.increase' | transloco"
+              (click)="changeQuantity(1)"
+            >
+              +
+            </button>
+          </div>
+        </div>
         <button
           type="button"
           class="mt-6 w-full rounded-full bg-[#0a7bdc] px-5 py-3 text-sm font-semibold text-white shadow-[0_6px_14px_rgba(10,123,220,0.28)] transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"

@@ -91,7 +91,28 @@
       "submitting": "A processar encomenda…",
       "paymentNotice": "O estado do pagamento será apresentado no detalhe da encomenda. Não são recolhidos dados bancários nesta página.",
       "invalidSelection": "Confirma os dados de entrega e pagamento antes de continuar.",
-      "orderCreated": "Encomenda criada. Consulta o estado do pagamento no detalhe."
+      "orderCreated": "Encomenda criada. Consulta o estado do pagamento no detalhe.",
+      "reference": "Ponto de referência",
+      "mapTitle": "Localização",
+      "mapUnavailable": "A selecção no mapa estará disponível quando o Google Maps estiver configurado.",
+      "useCurrentLocation": "Usar localização actual",
+      "saveAddress": "Guardar esta morada na minha conta",
+      "useSavedAddress": "Usar uma morada guardada",
+      "locationUnavailable": "A geolocalização não está disponível neste dispositivo.",
+      "locationPermission": "A pedir permissão de localização…",
+      "locationNeedsMap": "A localização foi obtida. Selecciona a morada no mapa ou preenche os campos.",
+      "locationDenied": "Não foi possível obter a localização. Podes preencher os campos manualmente.",
+      "company": "Empresa da transacção",
+      "companyLoadError": "Não foi possível carregar as empresas.",
+      "companyCreateError": "Não foi possível criar a empresa.",
+      "companyRole": "Cargo na empresa",
+      "companyRolePending": "O cargo será associado quando o back-end disponibilizar essa operação.",
+      "validation": {
+        "province": "Selecciona uma província.",
+        "municipality": "Selecciona um município.",
+        "neighborhood": "Indica o bairro.",
+        "address": "Indica o endereço completo."
+      }
     },
     "orders": {
       "title": "As minhas encomendas",

@@ -11,6 +11,32 @@
   "a11y": {
     "skipToContent": "Saltar para o conteúdo principal"
   },
+  "feedback": {
+    "loadError": {
+      "title": "Não foi possível carregar",
+      "message": "Verifica a ligação e tenta novamente.",
+      "retry": "Tentar novamente"
+    },
+    "empty": {
+      "products": {
+        "title": "Ainda não há produtos",
+        "message": "Volta em breve para ver as novidades."
+      }
+    },
+    "actionError": {
+      "title": "Não foi possível concluir a acção",
+      "close": "Fechar"
+    },
+    "success": {
+      "title": "Concluído"
+    },
+    "warning": {
+      "title": "Atenção"
+    },
+    "confirm": {
+      "cancel": "Cancelar"
+    }
+  },
   "notifications": {
     "regionLabel": "Notificações"
   },

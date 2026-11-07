@@ -46,6 +46,7 @@ export class AccountLayoutComponent {
   @ViewChild('routeContent') private routeContent?: ElementRef<HTMLElement>;
 
   readonly isProfileRoute = signal(false);
+  readonly isCheckoutRoute = signal(false);
   readonly user = this.authStore.user;
   readonly initials = computed(() =>
     this.user()
@@ -104,6 +105,7 @@ export class AccountLayoutComponent {
   onRouteActivate(): void {
     const path = this.router.url.split(/[?#]/, 1)[0];
     this.isProfileRoute.set(path === '/conta/perfil');
+    this.isCheckoutRoute.set(path === '/conta/checkout');
     this.animateRoute();
   }
 

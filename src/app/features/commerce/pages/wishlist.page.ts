@@ -150,10 +150,10 @@ export class WishlistPage implements OnInit {
     this.addToCart(item.productId, selection);
   }
 
-  private addToCart(productId: string, selection: PurchaseSelection = {}): void {
+  private addToCart(productId: string, selection: PurchaseSelection = { quantity: 1 }): void {
     this.busyProductIds.update((ids) => new Set(ids).add(productId));
     this.api
-      .addCartItem(productId)
+      .addCartItem(productId, selection.quantity)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

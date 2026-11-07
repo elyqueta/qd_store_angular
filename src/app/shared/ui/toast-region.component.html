@@ -35,13 +35,13 @@
         <p class="text-sm font-semibold">
           @switch (toast.kind) {
             @case ('success') {
-              {{ 'common.success' | transloco }}
+              {{ 'feedback.success.title' | transloco }}
             }
             @case ('error') {
-              {{ 'common.errorTitle' | transloco }}
+              {{ 'feedback.actionError.title' | transloco }}
             }
             @default {
-              {{ 'common.warning' | transloco }}
+              {{ 'feedback.warning.title' | transloco }}
             }
           }
         </p>

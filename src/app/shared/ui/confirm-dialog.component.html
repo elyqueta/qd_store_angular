@@ -1,0 +1,41 @@
+<qd-modal
+  [open]="open()"
+  titleId="qd-confirm-title"
+  descriptionId="qd-confirm-description"
+  labelledBy="qd-confirm-title"
+  describedBy="qd-confirm-description"
+  [alert]="true"
+  [closeOnOverlay]="!busy()"
+  (closed)="cancelled.emit()"
+>
+  <div class="pr-8">
+    <span
+      class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-warning/10 text-warning"
+      [class.bg-danger/10]="tone() === 'danger'"
+      [class.text-danger]="tone() === 'danger'"
+      aria-hidden="true"
+    >
+      <qd-icon [name]="icon()" [size]="22" />
+    </span>
+    <h2 id="qd-confirm-title" class="text-lg font-semibold">{{ title() }}</h2>
+    <p id="qd-confirm-description" class="mt-2 text-base text-fg-muted">{{ message() }}</p>
+  </div>
+  <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+    <button
+      type="button"
+      class="rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-fg disabled:opacity-50"
+      [disabled]="busy()"
+      (click)="cancelled.emit()"
+    >
+      {{ cancelLabel() }}
+    </button>
+    <button
+      type="button"
+      class="rounded-full bg-danger px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
+      [disabled]="busy()"
+      (click)="confirmed.emit()"
+    >
+      {{ confirmLabel() }}
+    </button>
+  </div>
+</qd-modal>

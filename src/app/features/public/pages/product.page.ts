@@ -223,7 +223,7 @@ export class ProductPage {
     this.addToCart(selection);
   }
 
-  addToCart(selection: PurchaseSelection = {}): void {
+  addToCart(selection: PurchaseSelection = { quantity: 1 }): void {
     const productId = this.product()?.id;
     if (!productId || !this.isAuthenticated() || this.cartBusy()) {
       return;
@@ -231,7 +231,7 @@ export class ProductPage {
 
     this.cartBusy.set(true);
     this.commerceApi
-      .addCartItem(productId)
+      .addCartItem(productId, selection.quantity)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {

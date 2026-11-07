@@ -1,0 +1,28 @@
+@if (feedback.request(); as request) {
+  <qd-modal
+    [open]="true"
+    titleId="qd-feedback-title"
+    descriptionId="qd-feedback-description"
+    labelledBy="qd-feedback-title"
+    describedBy="qd-feedback-description"
+    (closed)="feedback.dismiss()"
+  >
+    <div class="pr-8">
+      <span class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-danger/10 text-danger" aria-hidden="true">
+        <qd-icon [name]="request.icon" [size]="22" />
+      </span>
+      <h2 id="qd-feedback-title" class="text-lg font-semibold">{{ request.title }}</h2>
+      <p id="qd-feedback-description" class="mt-2 text-base text-fg-muted">{{ request.message }}</p>
+    </div>
+    <div class="mt-6 flex justify-end">
+      <button
+        type="button"
+        autofocus
+        class="rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg"
+        (click)="feedback.dismiss()"
+      >
+        {{ request.actionLabel ?? ('common.close' | transloco) }}
+      </button>
+    </div>
+  </qd-modal>
+}
