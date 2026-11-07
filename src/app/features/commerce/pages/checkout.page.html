@@ -101,6 +101,29 @@
                   </p>
                   <p class="mt-1 text-sm font-semibold text-fg">{{ company.name }}</p>
                   <p class="text-xs text-fg-muted">{{ company.nif }}</p>
+                  @if (companies().length > 1) {
+                    <label class="mt-3 block text-xs font-medium text-fg-muted" for="qd-checkout-company">
+                      {{ 'commerce.checkout.changeCompany' | transloco }}
+                    </label>
+                    <select
+                      id="qd-checkout-company"
+                      formControlName="companyId"
+                      class="mt-1 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg"
+                      (change)="onCompanyChange()"
+                    >
+                      @for (option of companies(); track option.id) {
+                        <option [value]="option.id">{{ option.name }} — {{ option.nif }}</option>
+                      }
+                    </select>
+                  }
+                </div>
+              } @else if (companySnapshot(); as snapshot) {
+                <div class="mb-4 rounded-xl bg-surface-muted p-4">
+                  <p class="text-xs font-semibold uppercase tracking-wide text-fg-muted">
+                    {{ 'commerce.checkout.companyForThisOrder' | transloco }}
+                  </p>
+                  <p class="mt-1 text-sm font-semibold text-fg">{{ snapshot.name }}</p>
+                  <p class="text-xs text-fg-muted">{{ snapshot.nif }}</p>
                 </div>
               }
               @if (addresses().length && !newAddressMode()) {
@@ -121,7 +144,7 @@
                 </select>
                 <button
                   type="button"
-                  class="mt-3 text-sm font-semibold text-brand hover:underline"
+                  class="mt-3 inline-flex w-fit items-center rounded-lg px-1 text-sm font-semibold text-brand underline decoration-brand/60 underline-offset-4 hover:text-brand/80 focus-visible:outline-2 focus-visible:outline-brand"
                   (click)="toggleNewAddress()"
                 >
                   {{ 'commerce.checkout.useNewAddress' | transloco }}
@@ -422,6 +445,16 @@
                   ? ('commerce.checkout.submitting' | transloco)
                   : ('commerce.checkout.submit' | transloco)
               }}
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="mt-6 w-full rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg transition-opacity hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-50"
+              [disabled]="submitting()"
+              (click)="nextStep()"
+            >
+              {{ 'commerce.checkout.nextStep' | transloco }}
+              <qd-icon name="chevron-right" [size]="11" aria-hidden="true" />
             </button>
           }
           <p class="mt-3 text-xs leading-5 text-fg-muted">

@@ -83,9 +83,10 @@ describe('CommerceApiService', () => {
       paymentMethodId: 'method-1',
       addressId: 'address-1',
     };
-    const create = firstValueFrom(api.createOrder(input));
+    const create = firstValueFrom(api.createOrder(input, 'order-operation-1'));
     const request = httpTesting.expectOne(`${apiRoot}/orders`);
     expect(request.request.method).toBe('POST');
+    expect(request.request.headers.get('Idempotency-Key')).toBe('order-operation-1');
     expect(request.request.body).toEqual(input);
     request.flush({ status: 'success', data: { id: 'order-1', reference: 'QD-1' } });
     await expect(create).resolves.toMatchObject({ id: 'order-1' });

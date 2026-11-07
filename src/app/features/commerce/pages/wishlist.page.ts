@@ -18,6 +18,7 @@ import { WishlistItem } from '../models/commerce.model';
 import { IconComponent } from '../../../shared/ui/icon.component';
 import { ProductPurchaseDialogComponent } from '../../../shared/ui/product-purchase-dialog.component';
 import { PurchaseSelection } from '../../../shared/ui/product-purchase-dialog.component';
+import { PurchaseContextService } from '../data-access/purchase-context.service';
 import { FeedbackStateComponent } from '../../../shared/ui/feedback-state.component';
 
 @Component({
@@ -35,6 +36,7 @@ import { FeedbackStateComponent } from '../../../shared/ui/feedback-state.compon
 })
 export class WishlistPage implements OnInit {
   private readonly api = inject(CommerceApiService);
+  private readonly purchaseContext = inject(PurchaseContextService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
@@ -163,6 +165,11 @@ export class WishlistPage implements OnInit {
             return next;
           });
           this.closeBuyModal();
+          if (selection.companySnapshot) {
+            this.purchaseContext.setCompanySnapshot(selection.companySnapshot);
+          } else {
+            this.purchaseContext.clear();
+          }
           this.toast.success(this.transloco.translate('commerce.cart.added'));
           void this.router.navigate(['/conta/checkout'], {
             queryParams: selection.companyId ? { companyId: selection.companyId } : {},

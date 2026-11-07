@@ -147,7 +147,14 @@ export interface CreateOrderInput {
   paymentMethodId: string;
   addressId: string;
   companyId?: string;
+  companySnapshot?: CompanySnapshot;
   notes?: string;
+}
+
+export interface CompanySnapshot {
+  name: string;
+  nif: string;
+  role?: string;
 }
 
 export interface Notification {

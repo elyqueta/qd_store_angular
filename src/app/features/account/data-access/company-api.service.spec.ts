@@ -64,11 +64,15 @@ describe('CompanyApiService', () => {
       updatedAt: '2026-01-01T00:00:00.000Z',
     };
     const response = firstValueFrom(
-      api.createCompany({ name: company.name, nif: company.nif, sector: company.sector }),
+      api.createCompany(
+        { name: company.name, nif: company.nif, sector: company.sector },
+        'company-operation-1',
+      ),
     );
     const request = httpTesting.expectOne(endpoint);
 
     expect(request.request.method).toBe('POST');
+    expect(request.request.headers.get('Idempotency-Key')).toBe('company-operation-1');
     expect(request.request.body).toEqual({
       name: company.name,
       nif: company.nif,

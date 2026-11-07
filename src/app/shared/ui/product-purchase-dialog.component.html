@@ -13,7 +13,7 @@
       aria-labelledby="qd-buy-dialog-title"
       aria-describedby="qd-buy-dialog-note"
       tabindex="-1"
-      class="relative z-10 max-h-[calc(100dvh-2rem)] w-full max-w-[400px] overflow-y-auto rounded-[20px] border border-[#dfe3e7] bg-[#f3f3f3] p-6 shadow-[0_18px_42px_rgba(0,0,0,0.2)]"
+      class="relative z-10 max-h-[calc(100dvh-2rem)] w-full max-w-[400px] overflow-y-auto rounded-[20px] border border-line bg-surface p-6 text-fg shadow-[0_18px_42px_rgba(0,0,0,0.2)]"
       (keydown)="handleKeydown($event)"
     >
       <div class="mb-5 flex min-w-0 items-center gap-3 pr-10">
@@ -21,28 +21,28 @@
           <img
             [src]="url"
             alt=""
-            class="h-[52px] w-[52px] shrink-0 rounded-xl border border-[#d4d4d4] bg-[#dbdfe2] object-cover shadow-sm"
+            class="h-[52px] w-[52px] shrink-0 rounded-xl border border-line bg-surface-muted object-cover shadow-sm"
           />
         } @else {
           <span
-            class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-xl border border-[#d4d4d4] bg-[#dbdfe2] text-[#4f4f4f]"
+            class="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-xl border border-line bg-surface-muted text-fg-muted"
             aria-hidden="true"
           >
             <qd-icon name="box" [size]="22" />
           </span>
         }
         <div class="min-w-0">
-          <p class="line-clamp-2 text-[15px] font-medium leading-5 text-[#1a1a1a]">
+          <p class="line-clamp-2 text-[15px] font-medium leading-5 text-fg">
             {{ productName() }}
           </p>
-          <p class="mt-1 text-[17px] font-semibold text-[#0b71d0]">{{ priceLabel() }}</p>
+          <p class="mt-1 text-[17px] font-semibold text-brand">{{ priceLabel() }}</p>
         </div>
       </div>
 
       <button
         type="button"
         data-buy-dialog-close
-        class="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-[#e3e4e8] text-[#333333] transition-colors hover:bg-[#d8d9de] hover:text-[#111111]"
+        class="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full bg-surface-muted text-fg-muted transition-colors hover:bg-line hover:text-fg"
         [attr.aria-label]="'public.product.closeBuyDialog' | transloco"
         (click)="requestClose()"
       >
@@ -107,54 +107,52 @@
       } @else if (purchaseStep() === 'account') {
         <button
           type="button"
-          class="mb-5 inline-flex items-center gap-1 rounded-lg py-1 text-sm font-medium text-[#4a4a4a] transition-colors hover:text-[#111111] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          class="mb-5 inline-flex items-center gap-1 rounded-lg py-1 text-sm font-medium text-fg-muted transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           (click)="goBack()"
         >
           <qd-icon name="chevron-right" class="-rotate-180" [size]="11" aria-hidden="true" />
           {{ 'public.product.back' | transloco }}
         </button>
-        <h2 class="mb-3 text-[15px] font-medium text-[#2e2e2e]">
+        <h2 class="mb-3 text-[15px] font-medium text-fg">
           {{ 'commerce.cart.purchaseFor' | transloco }}
         </h2>
         <div class="grid grid-cols-2 gap-2.5">
           <button
             type="button"
-            class="rounded-[14px] border p-3.5 text-center text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            [class.border-[#0a7bdc]]="accountType() === 'personal'"
-            [class.bg-[#dfeefb]]="accountType() === 'personal'"
-            [class.text-[#0e5ea7]]="accountType() === 'personal'"
-            [class.border-[#d1d5db]]="accountType() !== 'personal'"
-            [class.bg-[#f0f0f0]]="accountType() !== 'personal'"
-            [class.text-[#1b1b1b]]="accountType() !== 'personal'"
+            class="rounded-[14px] border bg-brand/10 p-3.5 text-center text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [class.border-brand]="accountType() === 'personal'"
+            [class.text-brand]="accountType() === 'personal'"
+            [class.border-line]="accountType() !== 'personal'"
+            [class.bg-surface-muted]="accountType() !== 'personal'"
+            [class.text-fg]="accountType() !== 'personal'"
             (click)="chooseAccount('personal')"
           >
-            <span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#ecf6ff] text-current">
+            <span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-brand/10 text-current">
               <qd-icon name="user" [size]="20" aria-hidden="true" />
             </span>
             <span class="mt-2 block">{{ 'commerce.cart.personal' | transloco }}</span>
           </button>
           <button
             type="button"
-            class="rounded-[14px] border p-3.5 text-center text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            [class.border-[#0a7bdc]]="accountType() === 'business'"
-            [class.bg-[#dfeefb]]="accountType() === 'business'"
-            [class.text-[#0e5ea7]]="accountType() === 'business'"
-            [class.border-[#d1d5db]]="accountType() !== 'business'"
-            [class.bg-[#f0f0f0]]="accountType() !== 'business'"
-            [class.text-[#1b1b1b]]="accountType() !== 'business'"
+            class="rounded-[14px] border bg-brand/10 p-3.5 text-center text-sm font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [class.border-brand]="accountType() === 'business'"
+            [class.text-brand]="accountType() === 'business'"
+            [class.border-line]="accountType() !== 'business'"
+            [class.bg-surface-muted]="accountType() !== 'business'"
+            [class.text-fg]="accountType() !== 'business'"
             (click)="chooseAccount('business')"
           >
-            <span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[#ecf6ff] text-current">
+            <span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-brand/10 text-current">
               <qd-icon name="building" [size]="20" aria-hidden="true" />
             </span>
             <span class="mt-2 block">{{ 'commerce.cart.business' | transloco }}</span>
           </button>
         </div>
-        <p class="mt-4 text-sm leading-5 text-[#4b4b4b]">
+        <p class="mt-4 text-sm leading-5 text-fg-muted">
           {{ 'commerce.cart.personalNifNote' | transloco }}
         </p>
-        <div class="mt-5 flex items-center justify-between rounded-xl border border-[#d1d5db] bg-white px-3 py-2.5">
-          <span class="text-sm font-medium text-[#2e2e2e]">
+        <div class="mt-5 flex items-center justify-between rounded-xl border border-line bg-surface px-3 py-2.5">
+          <span class="text-sm font-medium text-fg">
             {{ 'commerce.cart.quantity' | transloco }}
           </span>
           <div
@@ -163,19 +161,19 @@
           >
             <button
               type="button"
-              class="flex h-8 w-8 items-center justify-center rounded-full border border-[#d1d5db] text-lg text-[#2e2e2e] disabled:opacity-40"
+              class="flex h-8 w-8 items-center justify-center rounded-full border border-line text-lg text-fg disabled:opacity-40"
               [disabled]="quantity() <= 1"
               [attr.aria-label]="'commerce.cart.decrease' | transloco"
               (click)="changeQuantity(-1)"
             >
               −
             </button>
-            <span class="min-w-5 text-center text-sm font-semibold text-[#1b1b1b]">
+            <span class="min-w-5 text-center text-sm font-semibold text-fg">
               {{ quantity() }}
             </span>
             <button
               type="button"
-              class="flex h-8 w-8 items-center justify-center rounded-full border border-[#d1d5db] text-lg text-[#2e2e2e] disabled:opacity-40"
+              class="flex h-8 w-8 items-center justify-center rounded-full border border-line text-lg text-fg disabled:opacity-40"
               [disabled]="quantity() >= 99"
               [attr.aria-label]="'commerce.cart.increase' | transloco"
               (click)="changeQuantity(1)"
@@ -186,7 +184,7 @@
         </div>
         <button
           type="button"
-          class="mt-6 w-full rounded-full bg-[#0a7bdc] px-5 py-3 text-sm font-semibold text-white shadow-[0_6px_14px_rgba(10,123,220,0.28)] transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          class="mt-6 w-full rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg shadow-[0_6px_14px_rgba(10,123,220,0.28)] transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
           (click)="continueAccount()"
         >
           <span class="inline-flex items-center gap-2">
@@ -232,6 +230,13 @@
               </button>
             }
           </div>
+          <button
+            type="button"
+            class="mt-4 w-full rounded-full border border-line px-4 py-3 text-sm font-semibold text-fg"
+            (click)="openCompanyForm()"
+          >
+            {{ 'commerce.checkout.useAnotherCompany' | transloco }}
+          </button>
         } @else {
           <div class="space-y-4">
             <p class="text-sm text-fg-muted">{{ 'commerce.checkout.noCompany' | transloco }}</p>
@@ -285,9 +290,70 @@
         </form>
       }
 
+      @if (purchaseStep() === 'company-save') {
+        <button
+          type="button"
+          class="mb-5 inline-flex items-center gap-1 rounded-lg py-1 text-sm text-fg-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="goBack()"
+        >
+          <qd-icon name="chevron-right" class="-rotate-180" [size]="11" aria-hidden="true" />
+          {{ 'public.product.back' | transloco }}
+        </button>
+        <h2 class="text-base font-semibold text-fg">
+          {{ 'commerce.checkout.saveCompanyTitle' | transloco }}
+        </h2>
+        <p class="mt-2 text-sm leading-5 text-fg-muted">
+          {{ 'commerce.checkout.saveCompanyDescription' | transloco }}
+        </p>
+        <div class="mt-5 grid gap-2">
+          <button
+            type="button"
+            class="rounded-full bg-brand px-4 py-3 text-sm font-semibold text-brand-fg disabled:opacity-50"
+            [disabled]="processing()"
+            (click)="useCompanyForThisPurchase(true)"
+          >
+            {{ 'commerce.checkout.saveCompany' | transloco }}
+          </button>
+          <button
+            type="button"
+            class="rounded-full border border-line px-4 py-3 text-sm font-semibold text-fg disabled:opacity-50"
+            [disabled]="processing()"
+            (click)="useCompanyForThisPurchase(false)"
+          >
+            {{ 'commerce.checkout.useOnceCompany' | transloco }}
+          </button>
+        </div>
+      }
+
       <p id="qd-buy-dialog-note" class="mt-4 text-center text-xs text-fg-muted">
         {{ 'public.product.paymentValidationNote' | transloco }}
       </p>
+
+      @if (processing()) {
+        <div class="absolute inset-0 z-20 flex items-center justify-center rounded-[20px] bg-surface/95 p-6 backdrop-blur-sm">
+          <div class="w-full text-center" role="status" aria-live="polite">
+            <div class="mx-auto h-2 w-full overflow-hidden rounded-full bg-surface-muted">
+              <div
+                class="h-full rounded-full bg-brand transition-[width] duration-300"
+                [style.width.%]="processingProgress()"
+              ></div>
+            </div>
+            <p class="mt-4 text-sm font-semibold text-fg">
+              {{ 'commerce.checkout.processingCompany' | transloco }}
+            </p>
+            <p class="mt-1 text-xs text-fg-muted">
+              {{ 'commerce.checkout.processingCompanyDescription' | transloco }}
+            </p>
+            <button
+              type="button"
+              class="mt-5 rounded-full border border-line px-4 py-2 text-sm font-semibold text-fg"
+              (click)="cancelProcessing()"
+            >
+              {{ 'commerce.checkout.cancelProcessing' | transloco }}
+            </button>
+          </div>
+        </div>
+      }
     </section>
   </div>
 }

@@ -119,9 +119,11 @@ export class CommerceApiService {
       .pipe(map((response) => response.data));
   }
 
-  createOrder(input: CreateOrderInput): Observable<Order> {
+  createOrder(input: CreateOrderInput, idempotencyKey?: string): Observable<Order> {
     return this.http
-      .post<ApiSingleResponse<Order>>(`${this.endpoint}/orders`, input)
+      .post<ApiSingleResponse<Order>>(`${this.endpoint}/orders`, input, {
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+      })
       .pipe(map((response) => response.data));
   }
 

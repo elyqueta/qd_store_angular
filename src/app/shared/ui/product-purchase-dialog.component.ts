@@ -11,15 +11,17 @@ import {
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
-import { finalize } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { CompanyApiService } from '../../features/account/data-access/company-api.service';
 import { CompanyWithUsers } from '../../features/account/models/company.model';
 import { ApiError } from '../../core/http/api-error.model';
 import { ToastService } from '../../core/notifications/toast.service';
 import { IconComponent } from './icon.component';
+import { CompanySnapshot } from '../../features/commerce/models/commerce.model';
 
 export interface PurchaseSelection {
   companyId?: string;
+  companySnapshot?: CompanySnapshot;
   quantity: number;
 }
 
@@ -34,6 +36,7 @@ export class ProductPurchaseDialogComponent {
   private readonly formBuilder = inject(FormBuilder).nonNullable;
   private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
+  private companyRequest?: Subscription;
   private dialog?: ElementRef<HTMLElement>;
 
   @ViewChild('dialog')
@@ -53,7 +56,9 @@ export class ProductPurchaseDialogComponent {
   readonly canPurchase = input(true);
   readonly closed = output<void>();
   readonly purchaseSelected = output<PurchaseSelection>();
-  readonly purchaseStep = signal<'method' | 'account' | 'company-list' | 'company-create'>(
+  readonly purchaseStep = signal<
+    'method' | 'account' | 'company-list' | 'company-create' | 'company-save'
+  >(
     'method',
   );
   readonly accountType = signal<'personal' | 'business'>('personal');
@@ -61,6 +66,8 @@ export class ProductPurchaseDialogComponent {
   readonly companies = signal<CompanyWithUsers[]>([]);
   readonly companyLoading = signal(false);
   readonly companyError = signal(false);
+  readonly processing = signal(false);
+  readonly processingProgress = signal(0);
   readonly companyForm = this.formBuilder.group({
     name: ['', [Validators.required, Validators.maxLength(200)]],
     nif: ['', [Validators.required, Validators.maxLength(20)]],
@@ -129,15 +136,37 @@ export class ProductPurchaseDialogComponent {
       return;
     }
 
+    this.purchaseStep.set('company-save');
+  }
+
+  useCompanyForThisPurchase(save: boolean): void {
     const values = this.companyForm.getRawValue();
-    this.companyLoading.set(true);
-    this.companyApi
-      .createCompany({ name: values.name.trim(), nif: values.nif.trim() })
-      .pipe(finalize(() => this.companyLoading.set(false)))
+    const snapshot: CompanySnapshot = {
+      name: values.name.trim(),
+      nif: values.nif.trim(),
+      role: values.role.trim(),
+    };
+
+    if (!save) {
+      this.purchaseSelected.emit({ companySnapshot: snapshot, quantity: this.quantity() });
+      return;
+    }
+
+    this.processing.set(true);
+    this.processingProgress.set(35);
+    this.companyRequest = this.companyApi
+      .createCompany(
+        { name: snapshot.name, nif: snapshot.nif },
+        globalThis.crypto?.randomUUID(),
+      )
+      .pipe(finalize(() => this.processing.set(false)))
       .subscribe({
-        next: (company) =>
-          this.purchaseSelected.emit({ companyId: company.id, quantity: this.quantity() }),
+        next: (company) => {
+          this.processingProgress.set(100);
+          this.purchaseSelected.emit({ companyId: company.id, quantity: this.quantity() });
+        },
         error: (error: unknown) => {
+          this.processingProgress.set(0);
           this.toast.error(
             error instanceof ApiError
               ? error.message
@@ -145,6 +174,14 @@ export class ProductPurchaseDialogComponent {
           );
         },
       });
+  }
+
+  cancelProcessing(): void {
+    this.companyRequest?.unsubscribe();
+    this.companyRequest = undefined;
+    this.processing.set(false);
+    this.processingProgress.set(0);
+    this.purchaseStep.set('company-create');
   }
 
   goBack(): void {
@@ -157,6 +194,9 @@ export class ProductPurchaseDialogComponent {
         return;
       case 'company-list':
         this.purchaseStep.set('account');
+        return;
+      case 'company-save':
+        this.purchaseStep.set('company-create');
         return;
       case 'method':
         return;

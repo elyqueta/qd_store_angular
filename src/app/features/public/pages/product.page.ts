@@ -23,6 +23,7 @@ import { ProductCardComponent } from '../../../shared/ui/product-card.component'
 import { IconComponent } from '../../../shared/ui/icon.component';
 import { ProductPurchaseDialogComponent } from '../../../shared/ui/product-purchase-dialog.component';
 import { PurchaseSelection } from '../../../shared/ui/product-purchase-dialog.component';
+import { PurchaseContextService } from '../../commerce/data-access/purchase-context.service';
 
 @Component({
   selector: 'qd-product-page',
@@ -44,6 +45,7 @@ export class ProductPage {
   private readonly authStore = inject(AuthStore);
   private readonly commerceApi = inject(CommerceApiService);
   private readonly productApi = inject(ProductApiService);
+  private readonly purchaseContext = inject(PurchaseContextService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly seo = inject(SeoService);
@@ -237,6 +239,11 @@ export class ProductPage {
         next: () => {
           this.cartBusy.set(false);
           this.closeBuyModal();
+          if (selection.companySnapshot) {
+            this.purchaseContext.setCompanySnapshot(selection.companySnapshot);
+          } else {
+            this.purchaseContext.clear();
+          }
           this.toast.success(this.transloco.translate('commerce.cart.added'));
           void this.router.navigate(['/conta/checkout'], {
             queryParams: selection.companyId ? { companyId: selection.companyId } : {},

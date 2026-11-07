@@ -20,9 +20,11 @@ export class CompanyApiService {
       .pipe(map((response) => response.data));
   }
 
-  createCompany(input: CreateCompanyInput): Observable<Company> {
+  createCompany(input: CreateCompanyInput, idempotencyKey?: string): Observable<Company> {
     return this.http
-      .post<ApiSingleResponse<Company>>(this.endpoint, input)
+      .post<ApiSingleResponse<Company>>(this.endpoint, input, {
+        headers: idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : undefined,
+      })
       .pipe(map((response) => response.data));
   }
 }

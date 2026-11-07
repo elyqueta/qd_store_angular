@@ -34,6 +34,7 @@ import { CompanyApiService } from '../../account/data-access/company-api.service
 import { CompanyWithUsers } from '../../account/models/company.model';
 import { DeliveryType } from '../../public/models/delivery-type.model';
 import { IconComponent } from '../../../shared/ui/icon.component';
+import { PurchaseContextService } from '../data-access/purchase-context.service';
 
 @Component({
   selector: 'qd-checkout-page',
@@ -58,6 +59,7 @@ export class CheckoutPage implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly toast = inject(ToastService);
   private readonly transloco = inject(TranslocoService);
+  private readonly purchaseContext = inject(PurchaseContextService);
 
   readonly form = this.fb.nonNullable.group({
     addressId: ['', Validators.required],
@@ -91,6 +93,8 @@ export class CheckoutPage implements OnInit {
   readonly submitting = signal(false);
   readonly busyItems = signal<ReadonlySet<string>>(new Set());
   readonly selectedCompany = signal<CompanyWithUsers | null>(null);
+  readonly companies = signal<CompanyWithUsers[]>([]);
+  readonly companySnapshot = this.purchaseContext.companySnapshot;
   readonly newAddressMode = signal(false);
   readonly checkoutStep = signal<'address' | 'delivery' | 'payment' | 'review'>('address');
 
@@ -148,6 +152,7 @@ export class CheckoutPage implements OnInit {
               .pipe(takeUntilDestroyed(this.destroyRef))
               .subscribe({
                 next: (companies) => {
+                  this.companies.set(companies);
                   const company = companies.find((candidate) => candidate.id === companyId) ?? null;
                   this.selectedCompany.set(company);
                 },
@@ -176,6 +181,13 @@ export class CheckoutPage implements OnInit {
     const province = this.form.controls.province.value;
     this.selectedProvince.set(province);
     this.form.controls.municipality.setValue('');
+  }
+
+  onCompanyChange(): void {
+    const companyId = this.form.controls.companyId.value;
+    this.selectedCompany.set(
+      this.companies().find((company) => company.id === companyId) ?? null,
+    );
   }
 
   selectedPaymentMethodType(): PaymentMethodType | null {
@@ -313,19 +325,24 @@ export class CheckoutPage implements OnInit {
     }
 
     const createOrder = (addressId: string): void => {
+      const companySnapshot = this.purchaseContext.companySnapshot();
       const input: CreateOrderInput = {
         addressId,
         deliveryTypeId: values.deliveryTypeId,
         paymentMethodId: values.paymentMethodId,
         ...(values.companyId ? { companyId: values.companyId } : {}),
+        ...(companySnapshot ? { companySnapshot } : {}),
         ...(values.notes.trim() ? { notes: values.notes.trim() } : {}),
       };
 
       this.api
-        .createOrder(input)
+        .createOrder(input, globalThis.crypto?.randomUUID())
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
-          next: (order) => this.startPayment(order.id, paymentMethod, values.customerPhone),
+          next: (order) => {
+            this.purchaseContext.clear();
+            this.startPayment(order.id, paymentMethod, values.customerPhone);
+          },
           error: (error: unknown) => {
             this.submitting.set(false);
             this.showError(error);
