@@ -1,8 +1,9 @@
 {
+  "outputDirectory": "dist/qd_store_angular/browser",
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/index.csr.html"
     }
   ]
 }
