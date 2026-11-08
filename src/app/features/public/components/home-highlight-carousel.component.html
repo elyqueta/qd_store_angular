@@ -1,0 +1,294 @@
+@if (variant() === 'hero') {
+  <section
+    class="relative h-[min(100svh,900px)] min-h-135 overflow-hidden bg-fg"
+    role="region"
+    [attr.aria-roledescription]="'public.home.carouselRole' | transloco"
+    [attr.aria-label]="label()"
+    (mouseenter)="onPointerEnter()"
+    (mouseleave)="onPointerLeave()"
+    (focusin)="onFocusIn()"
+    (focusout)="onFocusOut($event)"
+  >
+    @for (highlight of highlights(); track highlight.id; let index = $index) {
+      <article
+        class="absolute inset-0 transition-opacity duration-[1400ms] ease-out motion-reduce:transition-none"
+        [class.opacity-0]="activeIndex() !== index"
+        [class.opacity-100]="activeIndex() === index"
+        [class.pointer-events-none]="activeIndex() !== index"
+        [attr.aria-hidden]="activeIndex() !== index"
+        [attr.inert]="activeIndex() !== index ? '' : null"
+      >
+        @if (highlight.imageUrl) {
+          <img
+            [src]="highlight.imageUrl"
+            alt=""
+            class="absolute inset-0 h-full w-full object-cover transition-transform duration-[7000ms] ease-out motion-reduce:transition-none"
+            [class.scale-105]="activeIndex() !== index"
+            [class.scale-100]="activeIndex() === index"
+          />
+        }
+
+        <div
+          class="absolute inset-0 bg-linear-to-b"
+          [class.from-black/10]="!isLightTheme(highlight)"
+          [class.via-transparent]="!isLightTheme(highlight)"
+          [class.to-black/70]="!isLightTheme(highlight)"
+          [class.from-white/0]="isLightTheme(highlight)"
+          [class.via-white/5]="isLightTheme(highlight)"
+          [class.to-surface-muted]="isLightTheme(highlight)"
+        ></div>
+
+        <div
+          class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-between px-6 text-center"
+        >
+          <div
+            class="w-full pt-24 transition-all delay-150 duration-700 ease-out motion-reduce:transition-none sm:pt-28"
+            [class.translate-y-4]="activeIndex() !== index"
+            [class.opacity-0]="activeIndex() !== index"
+            [class.translate-y-0]="activeIndex() === index"
+            [class.opacity-100]="activeIndex() === index"
+          >
+            @if (highlight.label) {
+              <p
+                class="mb-2 text-xs font-medium uppercase tracking-[0.15em]"
+                [class.text-white/70]="!isLightTheme(highlight)"
+                [class.text-fg-muted]="isLightTheme(highlight)"
+              >
+                {{ highlight.label }}
+              </p>
+            }
+            <h1
+              class="text-3xl font-medium tracking-tight md:text-5xl"
+              [class.text-white]="!isLightTheme(highlight)"
+              [class.text-fg]="isLightTheme(highlight)"
+            >
+              {{ highlight.title }}
+            </h1>
+            @if (highlight.subtitle) {
+              <p
+                class="mt-2 text-sm font-light md:text-base"
+                [class.text-white/80]="!isLightTheme(highlight)"
+                [class.text-fg-muted]="isLightTheme(highlight)"
+              >
+                {{ highlight.subtitle }}
+              </p>
+            }
+          </div>
+
+          <div class="w-full pb-10 sm:pb-12">
+            <div class="flex flex-col items-center justify-center gap-3 sm:flex-row">
+              @if (highlight.product?.id) {
+                <a
+                  [routerLink]="['/produtos', highlight.product.id]"
+                  class="inline-flex min-w-45 items-center justify-center rounded-full bg-contrast-surface px-6 py-3 text-sm font-medium text-contrast-fg transition-opacity hover:opacity-90 motion-reduce:transition-none"
+                >
+                  {{ highlight.ctaLabel || ('public.home.primaryCta' | transloco) }}
+                </a>
+              } @else if (safeCtaUrl(highlight.ctaUrl); as ctaUrl) {
+                @if (isExternalUrl(highlight.ctaUrl)) {
+                  <a
+                    [href]="ctaUrl"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex min-w-45 items-center justify-center rounded-full bg-contrast-surface px-6 py-3 text-sm font-medium text-contrast-fg transition-opacity hover:opacity-90 motion-reduce:transition-none"
+                  >
+                    {{ highlight.ctaLabel || ('public.home.primaryCta' | transloco) }}
+                  </a>
+                } @else {
+                  <a
+                    [routerLink]="ctaUrl"
+                    class="inline-flex min-w-45 items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-medium text-fg transition-colors hover:bg-surface-muted motion-reduce:transition-none"
+                  >
+                    {{ highlight.ctaLabel || ('public.home.primaryCta' | transloco) }}
+                  </a>
+                }
+              }
+              <a
+                routerLink="/produtos"
+                class="inline-flex min-w-45 items-center justify-center rounded-full border border-white/40 bg-white/15 px-6 py-3 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-white/25 motion-reduce:transition-none"
+              >
+                {{ 'public.home.secondaryCta' | transloco }}
+              </a>
+            </div>
+
+            @if (highlights().length > 1) {
+              <div class="mt-6 flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  class="rounded-full border border-white/40 bg-black/20 px-3 py-2 text-sm text-white transition-colors hover:bg-black/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+                  [attr.aria-label]="'public.home.previousSlide' | transloco"
+                  (click)="previous()"
+                >
+                  <qd-icon name="chevron-right" class="-rotate-180" [size]="14" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  class="rounded-full border border-white/40 bg-black/20 px-3 py-2 text-sm text-white transition-colors hover:bg-black/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+                  [attr.aria-label]="
+                    (paused() ? 'public.home.resumeCarousel' : 'public.home.pauseCarousel')
+                      | transloco
+                  "
+                  (click)="togglePaused()"
+                >
+                  {{
+                    (paused() ? 'public.home.playCarousel' : 'public.home.pauseCarousel')
+                      | transloco
+                  }}
+                </button>
+                <div
+                  class="flex items-center justify-center gap-1.5"
+                  role="group"
+                  [attr.aria-label]="'public.home.carouselSlides' | transloco"
+                >
+                  @for (item of highlights(); track item.id; let dotIndex = $index) {
+                    <button
+                      type="button"
+                      class="h-1.5 rounded-full transition-all duration-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+                      [class.w-5]="activeIndex() === dotIndex"
+                      [class.w-1.5]="activeIndex() !== dotIndex"
+                      [class.bg-white]="activeIndex() === dotIndex"
+                      [class.bg-white/40]="activeIndex() !== dotIndex"
+                      [attr.aria-label]="
+                        'public.home.goToSlide' | transloco: { number: dotIndex + 1 }
+                      "
+                      [attr.aria-current]="activeIndex() === dotIndex ? 'true' : null"
+                      (click)="goTo(dotIndex)"
+                    ></button>
+                  }
+                </div>
+                <button
+                  type="button"
+                  class="rounded-full border border-white/40 bg-black/20 px-3 py-2 text-sm text-white transition-colors hover:bg-black/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white motion-reduce:transition-none"
+                  [attr.aria-label]="'public.home.nextSlide' | transloco"
+                  (click)="next()"
+                >
+                  <qd-icon name="chevron-right" [size]="14" aria-hidden="true" />
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <section
+    class="relative"
+    role="region"
+    [attr.aria-roledescription]="'public.home.carouselRole' | transloco"
+    [attr.aria-label]="label()"
+  >
+    <div class="mb-4 flex justify-end gap-2">
+      <button
+        type="button"
+        class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-fg transition-colors hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none"
+        [attr.aria-label]="'public.home.previousSlide' | transloco"
+        [disabled]="!canScrollPrevious()"
+        (click)="scrollCards(-1)"
+      >
+        <qd-icon name="chevron-right" class="-rotate-180" [size]="16" aria-hidden="true" />
+      </button>
+      <button
+        type="button"
+        class="rounded-full border border-line bg-surface px-4 py-2 text-sm text-fg transition-colors hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-40 motion-reduce:transition-none"
+        [attr.aria-label]="'public.home.nextSlide' | transloco"
+        [disabled]="!canScrollNext()"
+        (click)="scrollCards(1)"
+      >
+        <qd-icon name="chevron-right" [size]="16" aria-hidden="true" />
+      </button>
+    </div>
+
+    <div
+      #cardsTrack
+      class="flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden motion-reduce:scroll-auto"
+      (scroll)="updateScrollControls()"
+    >
+      @for (highlight of highlights(); track highlight.id; let index = $index) {
+        <article
+          #cardItem
+          [attr.data-highlight-id]="highlight.id"
+          class="group relative min-h-[390px] w-[86%] shrink-0 snap-center overflow-hidden rounded-3xl bg-fg shadow-sm transition-all duration-700 ease-out hover:-translate-y-1 hover:shadow-xl motion-reduce:transition-none sm:w-[calc(50%-0.5rem)] xl:w-[calc(33.333%-0.667rem)]"
+          [class.translate-y-6]="!isCardVisible(highlight.id)"
+          [class.opacity-0]="!isCardVisible(highlight.id)"
+          [class.translate-y-0]="isCardVisible(highlight.id)"
+          [class.opacity-100]="isCardVisible(highlight.id)"
+          [class.delay-100]="index % 3 === 1"
+          [class.delay-200]="index % 3 === 2"
+        >
+          @if (highlight.imageUrl) {
+            <img
+              [src]="highlight.imageUrl"
+              [alt]="highlight.title"
+              loading="lazy"
+              class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 motion-reduce:transition-none"
+            />
+          }
+          <div
+            class="absolute inset-0 bg-linear-to-t"
+            [class.from-black/85]="!isLightTheme(highlight)"
+            [class.via-black/30]="!isLightTheme(highlight)"
+            [class.to-black/5]="!isLightTheme(highlight)"
+            [class.from-white/95]="isLightTheme(highlight)"
+            [class.via-white/45]="isLightTheme(highlight)"
+            [class.to-white/5]="isLightTheme(highlight)"
+          ></div>
+
+          <div class="relative z-10 flex min-h-[390px] flex-col justify-end p-6 sm:p-8">
+            @if (highlight.label) {
+              <p
+                class="text-xs font-medium uppercase tracking-[0.2em]"
+                [class.text-white/70]="!isLightTheme(highlight)"
+                [class.text-fg-muted]="isLightTheme(highlight)"
+              >
+                {{ highlight.label }}
+              </p>
+            }
+            <h3
+              class="mt-2 text-2xl font-medium tracking-tight"
+              [class.text-white]="!isLightTheme(highlight)"
+              [class.text-fg]="isLightTheme(highlight)"
+            >
+              {{ highlight.title }}
+            </h3>
+            @if (highlight.subtitle) {
+              <p
+                class="mt-2 text-sm leading-6"
+                [class.text-white/80]="!isLightTheme(highlight)"
+                [class.text-fg-muted]="isLightTheme(highlight)"
+              >
+                {{ highlight.subtitle }}
+              </p>
+            }
+            @if (highlight.product?.id) {
+              <a
+                [routerLink]="['/produtos', highlight.product.id]"
+                class="mt-5 inline-flex w-fit items-center rounded-full bg-contrast-surface px-5 py-2.5 text-sm font-medium text-contrast-fg transition-opacity hover:opacity-90 motion-reduce:transition-none"
+              >
+                {{ highlight.ctaLabel || ('public.home.primaryCta' | transloco) }}
+              </a>
+            } @else if (safeCtaUrl(highlight.ctaUrl); as ctaUrl) {
+              @if (isExternalUrl(highlight.ctaUrl)) {
+                <a
+                  [href]="ctaUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-5 inline-flex w-fit items-center rounded-full bg-contrast-surface px-5 py-2.5 text-sm font-medium text-contrast-fg transition-opacity hover:opacity-90 motion-reduce:transition-none"
+                >
+                  {{ highlight.ctaLabel || ('public.home.primaryCta' | transloco) }}
+                </a>
+              } @else {
+                <a
+                  [routerLink]="ctaUrl"
+                  class="mt-5 inline-flex w-fit items-center rounded-full bg-white px-5 py-2.5 text-sm font-medium text-fg transition-colors hover:bg-surface-muted motion-reduce:transition-none"
+                >
+                  {{ highlight.ctaLabel || ('public.home.primaryCta' | transloco) }}
+                </a>
+              }
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+}

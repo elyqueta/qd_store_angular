@@ -22,6 +22,8 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-contrast-surface: var(--contrast-surface);
+  --color-contrast-fg: var(--contrast-fg);
   --font-sans: "DM Sans", sans-serif;
   --font-display: "Playfair Display", serif;
   --font-mono: "DM Mono", monospace;
@@ -39,6 +41,8 @@
     --danger: #ff3b30;
     --success: #16a34a;
     --warning: #92400e;
+    --contrast-surface: #ffffff;
+    --contrast-fg: #1c1c1e;
   }
   .dark {
     --surface: #1c1c1e;
@@ -78,6 +82,8 @@ Cores, fontes, raios e sombras **não se inventam**: extraem-se do front antigo 
 | `danger` | `#ff3b30` | `#ff6961` | Claro: `qd.red`; escuro: D-011 |
 | `success` | `#16a34a` | `#4ade80` | Claro: estados de sucesso/poupança; escuro: D-011 |
 | `warning` | `#92400e` | `#fbbf24` | Claro: `text-amber-800` usado no aviso do checkout React; escuro: D-011 |
+| `contrast-surface` | `#ffffff` | `#ffffff` | Superfície fixa de alto contraste para controlos sobre imagens |
+| `contrast-fg` | `#1c1c1e` | `#1c1c1e` | Texto fixo escuro sobre `contrast-surface`, legível nos dois temas |
 | `font-sans` | `DM Sans, sans-serif` | Não aplicável | `index.html`, `src/index.css` e `tailwind.config.js` |
 | `font-display` | `Playfair Display, serif` | Não aplicável | `index.html` e `tailwind.config.js` |
 | `font-mono` | `DM Mono, monospace` | Não aplicável | `index.html` e `tailwind.config.js` |

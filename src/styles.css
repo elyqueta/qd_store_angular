@@ -13,6 +13,8 @@
   --color-danger: var(--danger);
   --color-success: var(--success);
   --color-warning: var(--warning);
+  --color-contrast-surface: var(--contrast-surface);
+  --color-contrast-fg: var(--contrast-fg);
   --color-glass: var(--glass);
   --color-glass-border: var(--glass-border);
   --color-whatsapp: #25d366;
@@ -34,6 +36,8 @@
     --danger: #ff3b30;
     --success: #16a34a;
     --warning: #92400e;
+    --contrast-surface: #ffffff;
+    --contrast-fg: #1c1c1e;
     --glass: rgba(255, 255, 255, 0.72);
     --glass-border: rgba(255, 255, 255, 0.45);
     --nav-height: 70px;

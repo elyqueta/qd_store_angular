@@ -1,38 +1,53 @@
 <main class="bg-surface-muted">
-  <section class="relative overflow-hidden bg-fg">
-    <div class="absolute inset-0 bg-gradient-to-br from-fg via-fg/90 to-brand/50"></div>
-    <div class="absolute -right-32 -top-32 h-96 w-96 rounded-full border border-white/10"></div>
-    <div class="absolute -right-16 -top-16 h-64 w-64 rounded-full border border-white/10"></div>
+  @if (heroHighlights().length) {
+    <qd-home-highlight-carousel
+      variant="hero"
+      [highlights]="heroHighlights()"
+      [label]="'public.home.heroCarousel' | transloco"
+    />
+  } @else {
+    <section class="relative h-[min(100svh,900px)] min-h-135 overflow-hidden bg-fg">
+      <div class="absolute inset-0 bg-linear-to-br from-fg via-fg/90 to-brand/50"></div>
 
-    <div class="relative z-10 mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8 lg:py-32">
-      <div class="max-w-2xl">
-        <p class="text-xs font-medium uppercase tracking-[0.26em] text-surface/70">
-          QD · ItSOLUTIONS
-        </p>
-        <h1 class="mt-4 text-4xl font-semibold tracking-tight text-surface sm:text-5xl lg:text-6xl">
-          {{ 'public.home.title' | transloco }}
-        </h1>
-        <p class="mt-6 max-w-xl text-base leading-7 text-surface/80 sm:text-lg">
-          {{ 'public.home.subtitle' | transloco }}
-        </p>
-
-        <div class="mt-8 flex flex-wrap gap-4">
+      <div
+        class="relative z-10 mx-auto flex h-full max-w-7xl flex-col items-center justify-between px-6 text-center"
+      >
+        <div class="w-full pt-24 sm:pt-28">
+          <p class="mb-2 text-xs font-medium uppercase tracking-[0.15em] text-surface/70">
+            QD · ItSOLUTIONS
+          </p>
+          <h1 class="text-3xl font-medium tracking-tight text-white md:text-5xl">
+            {{ 'public.home.title' | transloco }}
+          </h1>
+          <p class="mt-2 text-sm font-light text-white/80 md:text-base">
+            {{ 'public.home.subtitle' | transloco }}
+          </p>
+        </div>
+        <div class="flex flex-col items-center justify-center gap-3 pb-10 sm:flex-row sm:pb-12">
           <a
-            [routerLink]="'/produtos'"
-            class="inline-flex items-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-fg transition-colors hover:opacity-90"
+            routerLink="/produtos"
+            class="inline-flex min-w-45 items-center justify-center rounded-full bg-contrast-surface px-6 py-3 text-sm font-medium text-contrast-fg transition-opacity hover:opacity-90 motion-reduce:transition-none"
           >
             {{ 'public.home.primaryCta' | transloco }}
           </a>
           <a
-            [routerLink]="'/sobre'"
-            class="inline-flex items-center rounded-full border border-surface/30 bg-surface/5 px-6 py-3 text-sm font-semibold text-surface transition-colors hover:border-surface/60 hover:bg-surface/10"
+            routerLink="/sobre"
+            class="inline-flex min-w-45 items-center justify-center rounded-full border border-white/40 bg-white/15 px-6 py-3 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-white/25 motion-reduce:transition-none"
           >
             {{ 'public.home.secondaryCta' | transloco }}
           </a>
         </div>
       </div>
+    </section>
+  }
+
+  @if (highlightsError()) {
+    <div class="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+      <div class="rounded-2xl border border-danger/30 bg-danger/10 p-4 text-sm text-danger">
+        {{ 'public.errors.highlights' | transloco }}
+      </div>
     </div>
-  </section>
+  }
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
     <div class="mb-8 flex items-end justify-between gap-4">
@@ -76,6 +91,42 @@
       </p>
     }
   </section>
+
+  @if (showcaseHighlights().length) {
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="mb-8 text-center">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-fg-muted">
+          {{ 'public.highlights.showcaseLabel' | transloco }}
+        </p>
+        <h2 class="mt-2 text-3xl font-medium tracking-tight text-fg md:text-[2.2rem]">
+          {{ 'public.highlights.showcaseTitle' | transloco }}
+        </h2>
+      </div>
+      <qd-home-highlight-carousel
+        variant="cards"
+        [highlights]="showcaseHighlights()"
+        [label]="'public.highlights.showcaseTitle' | transloco"
+      />
+    </section>
+  }
+
+  @if (categoryBlockHighlights().length) {
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="mb-8 text-center">
+        <p class="text-xs font-medium uppercase tracking-[0.15em] text-fg-muted">
+          {{ 'public.highlights.categoryBlockLabel' | transloco }}
+        </p>
+        <h2 class="mt-2 text-3xl font-medium tracking-tight text-fg md:text-[2.2rem]">
+          {{ 'public.highlights.categoryBlockTitle' | transloco }}
+        </h2>
+      </div>
+      <qd-home-highlight-carousel
+        variant="cards"
+        [highlights]="categoryBlockHighlights()"
+        [label]="'public.highlights.categoryBlockTitle' | transloco"
+      />
+    </section>
+  }
 
   <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
     <div class="mb-8 text-center">

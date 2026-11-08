@@ -31,6 +31,14 @@
           {{ 'admin.layout.dashboard' | transloco }}
         </a>
         <a
+          routerLink="/admin/destaques"
+          routerLinkActive="text-brand"
+          ariaCurrentWhenActive="page"
+          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
+        >
+          {{ 'admin.layout.highlights' | transloco }}
+        </a>
+        <a
           routerLink="/admin/categorias"
           routerLinkActive="text-brand"
           ariaCurrentWhenActive="page"

@@ -4,7 +4,16 @@
       "title": "Tecnologia que acompanha o teu dia.",
       "subtitle": "Explora o catálogo da QD · ItSOLUTIONS e conhece os produtos de tecnologia disponíveis.",
       "primaryCta": "Explorar produtos",
-      "secondaryCta": "Conhecer a marca"
+      "secondaryCta": "Conhecer a marca",
+      "heroCarousel": "Destaques principais",
+      "carouselRole": "carrossel",
+      "carouselSlides": "Escolher destaque",
+      "goToSlide": "Ver destaque {{ number }}",
+      "previousSlide": "Destaque anterior",
+      "nextSlide": "Destaque seguinte",
+      "pauseCarousel": "Pausar rotação",
+      "resumeCarousel": "Retomar rotação",
+      "playCarousel": "Reproduzir"
     },
     "categories": {
       "label": "Categorias",
@@ -15,6 +24,12 @@
       "label": "Catálogo",
       "title": "Produtos disponíveis",
       "empty": "Não existem produtos disponíveis neste momento."
+    },
+    "highlights": {
+      "showcaseLabel": "Destaques",
+      "showcaseTitle": "Campanhas e novidades",
+      "categoryBlockLabel": "Para descobrir",
+      "categoryBlockTitle": "Escolhas para ti"
     },
     "catalog": {
       "label": "QD · ItSOLUTIONS",
@@ -146,6 +161,7 @@
     "errors": {
       "categories": "Não foi possível carregar as categorias.",
       "featured": "Não foi possível carregar os produtos em destaque.",
+      "highlights": "Não foi possível carregar os destaques da página inicial.",
       "catalog": "Não foi possível carregar o catálogo.",
       "product": "Não foi possível carregar a informação do produto.",
       "relatedProducts": "Não foi possível carregar produtos relacionados.",

@@ -4,6 +4,7 @@
       "title": "QD · ItSOLUTIONS",
       "navigation": "Navegação administrativa",
       "dashboard": "Painel",
+      "highlights": "Destaques",
       "categories": "Categorias",
       "products": "Produtos",
       "deliveryTypes": "Tipos de entrega",
@@ -132,6 +133,7 @@
       "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
       "empty": "Não existem produtos para os filtros seleccionados.",
       "noImage": "Sem imagem",
+      "linkedProduct": "Produto associado",
       "edit": "Editar",
       "delete": "Remover",
       "confirmDeleteTitle": "Confirmar remoção do produto",
@@ -259,6 +261,70 @@
         "updated": "Tipo de entrega actualizado.",
         "deactivated": "Tipo de entrega desactivado.",
         "noChanges": "Não existem alterações por guardar."
+      }
+    },
+    "highlights": {
+      "seoTitle": "Destaques | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Gere os destaques promocionais da página inicial e dos blocos públicos.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de destaques",
+      "description": "Cria, edita e reordena os destaques visíveis na loja pública.",
+      "listTitle": "Destaques activos",
+      "add": "Adicionar destaque",
+      "empty": "Ainda não existem destaques configurados.",
+      "errorTitle": "Não foi possível carregar os destaques.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "edit": "Editar",
+      "activate": "Activar",
+      "deactivate": "Desactivar",
+      "confirmTitle": "Confirmar desactivação do destaque",
+      "confirmDescription": "Pretendes desactivar este destaque? Deixa de aparecer na loja pública.",
+      "confirmAction": "Sim, desactivar",
+      "createTitle": "Adicionar destaque",
+      "editTitle": "Editar destaque",
+      "inactive": "Inactivo",
+      "noImage": "Sem imagem",
+      "moveUp": "Mover para cima",
+      "moveDown": "Mover para baixo",
+      "fields": {
+        "title": "Título",
+        "subtitle": "Subtítulo",
+        "label": "Etiqueta",
+        "ctaLabel": "Texto do botão",
+        "ctaUrl": "Destino do botão",
+        "product": "Produto",
+        "productSearch": "Procurar produto",
+        "productSearchPlaceholder": "Escreve o nome do produto",
+        "editorialImage": "Destaque editorial — escolher imagem manualmente",
+        "loadingProducts": "A carregar produtos…",
+        "usesProductImage": "A imagem principal de {{ name }} será usada automaticamente.",
+        "productCtaNotice": "O botão principal abrirá automaticamente a página deste produto.",
+        "placement": "Posição",
+        "theme": "Tema",
+        "startsAt": "Início",
+        "endsAt": "Fim",
+        "image": "Imagem"
+      },
+      "placements": {
+        "hero": "Hero",
+        "showcase": "Destaques",
+        "category_block": "Bloco por categoria"
+      },
+      "themes": {
+        "dark": "Escuro",
+        "light": "Claro",
+        "brand": "Marca",
+        "neutral": "Neutro"
+      },
+      "create": "Criar destaque",
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "messages": {
+        "created": "Destaque criado.",
+        "updated": "Destaque actualizado.",
+        "deleted": "Destaque desactivado.",
+        "activated": "Destaque activado."
       }
     }
   }

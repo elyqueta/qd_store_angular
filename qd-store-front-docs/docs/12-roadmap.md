@@ -30,7 +30,8 @@
 - [x] Páginas institucionais · 404
 - [x] Consulta pública dos tipos de entrega activos
 - [x] Página pública de empresas informativa (benefícios; pedidos encaminhados por WhatsApp, sem formulário simulado)
-- [ ] Destaques/serviços dinâmicos (bloqueado: não há contrato de API)
+- [x] M2 — Destaques públicos na Home e gestão administrativa; carrosséis e transições da Home alinhados com a referência React
+- [ ] Serviços dinâmicos (dependem do contrato da API M3)
 - [x] SEO por página + JSON-LD de produto
 
 Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, o menu de categorias e as páginas de compra usam `mainImage.url` ou um ícone neutro.
@@ -52,6 +53,7 @@ Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, 
 - [x] Produtos, imagens por URL e especificações (admin)
 - [x] Tipos de entrega (admin; reactivação depende de endpoint no back-end)
 - [x] Empresas (admin: listagem com membros, edição de nome/sector e desactivação)
+- [x] Destaques (admin: gestão de ordem, criação, edição, desactivação e upload de imagem)
 - [ ] Métodos de pagamento (admin CRUD disponível; interface depende do âmbito administrativo aprovado)
 
 ## Fase 5 — Endurecimento

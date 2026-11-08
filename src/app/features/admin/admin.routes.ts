@@ -34,6 +34,11 @@ export const adminRoutes: Routes = [
       import('./pages/admin-dashboard.page').then((module) => module.AdminDashboardPage),
   },
   {
+    path: 'destaques',
+    loadComponent: () =>
+      import('./pages/admin-highlights.page').then((module) => module.AdminHighlightsPage),
+  },
+  {
     path: 'categorias',
     loadComponent: () =>
       import('./pages/admin-categories.page').then((module) => module.AdminCategoriesPage),
