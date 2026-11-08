@@ -79,7 +79,10 @@
                         @if (product.mainImage; as image) {
                           <img [src]="image.url" alt="" class="h-12 w-12 rounded-lg object-cover" />
                         } @else {
-                          <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-muted text-fg-muted" aria-hidden="true">
+                          <span
+                            class="flex h-12 w-12 items-center justify-center rounded-lg bg-surface-muted text-fg-muted"
+                            aria-hidden="true"
+                          >
                             <qd-icon name="box" [size]="20" />
                           </span>
                         }
@@ -146,7 +149,11 @@
           aria-haspopup="menu"
         >
           @if (isAuthenticated()) {
-            {{ userInitials() }}
+            @if (user()?.profilePhoto?.url; as photoUrl) {
+              <img class="h-full w-full rounded-full object-cover" [src]="photoUrl" alt="" />
+            } @else {
+              {{ userInitials() }}
+            }
           } @else {
             <qd-icon name="user" [size]="18" />
           }

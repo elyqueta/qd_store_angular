@@ -27,40 +27,44 @@
   >
     @if (!isCheckoutRoute()) {
       <aside class="h-fit overflow-hidden rounded-2xl border border-line bg-surface">
-      @if (user(); as profile) {
-        <div
-          class="flex items-center gap-3 border-b border-line p-4 lg:flex-col lg:items-start lg:p-6"
-        >
+        @if (user(); as profile) {
           <div
-            class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand/10 text-lg font-semibold text-brand"
-            aria-hidden="true"
+            class="flex items-center gap-3 border-b border-line p-4 lg:flex-col lg:items-start lg:p-6"
           >
-            {{ initials() }}
+            @if (profilePhotoUrl(); as photoUrl) {
+              <img class="h-14 w-14 shrink-0 rounded-full object-cover" [src]="photoUrl" alt="" />
+            } @else {
+              <div
+                class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand/10 text-lg font-semibold text-brand"
+                aria-hidden="true"
+              >
+                {{ initials() }}
+              </div>
+            }
+            <div class="min-w-0">
+              <h2 class="truncate text-base font-semibold text-fg">{{ profile.fullName }}</h2>
+              <p class="break-all text-sm text-fg-muted">{{ profile.email }}</p>
+            </div>
           </div>
-          <div class="min-w-0">
-            <h2 class="truncate text-base font-semibold text-fg">{{ profile.fullName }}</h2>
-            <p class="break-all text-sm text-fg-muted">{{ profile.email }}</p>
-          </div>
-        </div>
-      }
-
-      <nav
-        class="grid grid-cols-2 gap-1 p-2 lg:flex lg:flex-col"
-        [attr.aria-label]="'account.profile.navigation' | transloco"
-      >
-        @for (item of navigationItems; track item.route) {
-          <a
-            [routerLink]="item.route"
-            routerLinkActive="bg-brand/10 text-brand"
-            [routerLinkActiveOptions]="{ exact: item.exact }"
-            ariaCurrentWhenActive="page"
-            class="flex min-w-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg lg:w-full"
-          >
-            <qd-icon class="shrink-0" [name]="item.icon" [size]="18" />
-            <span class="min-w-0 truncate">{{ item.labelKey | transloco }}</span>
-          </a>
         }
-      </nav>
+
+        <nav
+          class="grid grid-cols-2 gap-1 p-2 lg:flex lg:flex-col"
+          [attr.aria-label]="'account.profile.navigation' | transloco"
+        >
+          @for (item of navigationItems; track item.route) {
+            <a
+              [routerLink]="item.route"
+              routerLinkActive="bg-brand/10 text-brand"
+              [routerLinkActiveOptions]="{ exact: item.exact }"
+              ariaCurrentWhenActive="page"
+              class="flex min-w-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg lg:w-full"
+            >
+              <qd-icon class="shrink-0" [name]="item.icon" [size]="18" />
+              <span class="min-w-0 truncate">{{ item.labelKey | transloco }}</span>
+            </a>
+          }
+        </nav>
       </aside>
     }
 

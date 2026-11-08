@@ -10,6 +10,50 @@ import { ProductApiService } from '../../features/public/data-access/product-api
 import { SiteNavbarComponent } from './site-navbar.component';
 
 describe('SiteNavbarComponent', () => {
+  it('uses the profile photo in the authenticated user menu trigger', async () => {
+    const user = {
+      fullName: 'Ana Silva',
+      email: 'ana@example.com',
+      profilePhoto: {
+        url: 'https://example.com/profile.jpg',
+        width: 400,
+        height: 400,
+        format: 'jpg',
+        sizeBytes: 1200,
+      },
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [SiteNavbarComponent],
+      providers: [
+        ...provideAppI18n(),
+        provideRouter([]),
+        {
+          provide: ProductApiService,
+          useValue: { listCategories: () => of([]), listProducts: () => of({ items: [] }) },
+        },
+        {
+          provide: AuthStore,
+          useValue: { isAuthenticated: () => true, user: () => user },
+        },
+        { provide: ThemeService, useValue: { effective: () => 'light', setPreference: vi.fn() } },
+        { provide: AuthService, useValue: { logout: () => of(undefined) } },
+        { provide: ToastService, useValue: { error: vi.fn() } },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(SiteNavbarComponent);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    const trigger = fixture.nativeElement.querySelector(
+      '#qd-user-menu-trigger',
+    ) as HTMLButtonElement;
+    expect(trigger.querySelector('img')?.getAttribute('src')).toBe(user.profilePhoto.url);
+    expect(trigger.textContent?.trim()).toBe('');
+  });
+
   it('opens a category menu from the keyboard and focuses its first item', async () => {
     const category = {
       id: 'category-1',

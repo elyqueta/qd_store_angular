@@ -13,10 +13,14 @@
         <button
           type="button"
           class="rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-fg hover:border-brand disabled:opacity-50"
-          [disabled]="saving()"
+          [disabled]="markingAllRead() || pendingReadIds().size > 0"
           (click)="markAllRead()"
         >
-          {{ 'commerce.notifications.markAllRead' | transloco }}
+          {{
+            markingAllRead()
+              ? ('commerce.notifications.markingAllRead' | transloco)
+              : ('commerce.notifications.markAllRead' | transloco)
+          }}
         </button>
       }
     </header>
@@ -75,10 +79,14 @@
                 <button
                   type="button"
                   class="shrink-0 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand disabled:opacity-50"
-                  [disabled]="saving()"
+                  [disabled]="markingAllRead() || pendingReadIds().has(notification.id)"
                   (click)="markRead(notification)"
                 >
-                  {{ 'commerce.notifications.markRead' | transloco }}
+                  {{
+                    pendingReadIds().has(notification.id)
+                      ? ('commerce.notifications.markingRead' | transloco)
+                      : ('commerce.notifications.markRead' | transloco)
+                  }}
                 </button>
               } @else {
                 <span class="shrink-0 text-xs text-fg-muted">{{

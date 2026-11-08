@@ -29,7 +29,8 @@ export class NotificationsPage implements OnInit {
   readonly result = signal<PageResult<Notification> | null>(null);
   readonly loading = signal(true);
   readonly error = signal(false);
-  readonly saving = signal(false);
+  readonly pendingReadIds = signal<ReadonlySet<string>>(new Set());
+  readonly markingAllRead = signal(false);
   readonly page = signal(1);
   readonly pageSize = 20;
   readonly hasUnread = () =>
@@ -60,49 +61,80 @@ export class NotificationsPage implements OnInit {
   }
 
   markRead(notification: Notification): void {
-    if (notification.isRead || this.saving()) {
+    if (
+      notification.isRead ||
+      this.markingAllRead() ||
+      this.pendingReadIds().has(notification.id)
+    ) {
       return;
     }
 
-    this.saving.set(true);
+    this.pendingReadIds.update((ids) => new Set(ids).add(notification.id));
+    this.updateNotification({ ...notification, isRead: true });
     this.api
       .markNotificationRead(notification.id)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (updated) => {
           this.updateNotification(updated);
-          this.saving.set(false);
+          this.pendingReadIds.update((ids) => {
+            const next = new Set(ids);
+            next.delete(notification.id);
+            return next;
+          });
         },
         error: (error: unknown) => {
-          this.saving.set(false);
+          this.updateNotification(notification);
+          this.pendingReadIds.update((ids) => {
+            const next = new Set(ids);
+            next.delete(notification.id);
+            return next;
+          });
           this.showError(error);
         },
       });
   }
 
   markAllRead(): void {
-    if (this.saving() || !this.result()?.items.some((notification) => !notification.isRead)) {
+    const result = this.result();
+    if (
+      this.markingAllRead() ||
+      this.pendingReadIds().size > 0 ||
+      !result?.items.some((notification) => !notification.isRead)
+    ) {
       return;
     }
 
-    this.saving.set(true);
+    const unreadItems = result.items.filter((notification) => !notification.isRead);
+    this.markingAllRead.set(true);
+    this.result.update((current) =>
+      current
+        ? {
+            ...current,
+            items: current.items.map((notification) => ({ ...notification, isRead: true })),
+          }
+        : current,
+    );
     this.api
       .markAllNotificationsRead()
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
-          this.result.update((result) =>
-            result
-              ? {
-                  ...result,
-                  items: result.items.map((notification) => ({ ...notification, isRead: true })),
-                }
-              : result,
-          );
-          this.saving.set(false);
-        },
+        next: () => this.markingAllRead.set(false),
         error: (error: unknown) => {
-          this.saving.set(false);
+          const unreadById = new Map(
+            unreadItems.map((notification) => [notification.id, notification]),
+          );
+          this.result.update((current) =>
+            current
+              ? {
+                  ...current,
+                  items: current.items.map(
+                    (notification) => unreadById.get(notification.id) ?? notification,
+                  ),
+                }
+              : current,
+          );
+          this.markingAllRead.set(false);
           this.showError(error);
         },
       });

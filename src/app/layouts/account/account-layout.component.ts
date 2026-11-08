@@ -57,6 +57,7 @@ export class AccountLayoutComponent {
       .join('')
       .toUpperCase(),
   );
+  readonly profilePhotoUrl = computed(() => this.user()?.profilePhoto?.url ?? null);
   readonly navigationItems: AccountNavigationItem[] = [
     {
       route: '/conta/perfil',
