@@ -5,13 +5,14 @@ import { ToastService } from '../../../core/notifications/toast.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { ProductCategory } from '../../public/models/product.model';
 import { AdminCategoryApiService } from '../data-access/admin-category-api.service';
+import { IconCatalogApiService } from '../../../shared/data-access/icon-catalog-api.service';
 import { AdminCategoriesPage } from './admin-categories.page';
 
 const category: ProductCategory = {
   id: 'category-1',
   slug: 'portateis',
   label: 'Portáteis',
-  icon: '💻',
+  icon: 'laptop',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
 };
@@ -42,6 +43,12 @@ describe('AdminCategoriesPage', () => {
       providers: [
         ...provideAppI18n(),
         { provide: AdminCategoryApiService, useValue: api },
+        {
+          provide: IconCatalogApiService,
+          useValue: {
+            listIcons: () => of([{ name: 'laptop', label: 'Portátil', keywords: ['computador'] }]),
+          },
+        },
         { provide: SeoService, useValue: { setPage: () => undefined } },
         {
           provide: ToastService,
@@ -62,11 +69,13 @@ describe('AdminCategoriesPage', () => {
     expect(page.textContent).toContain('Portáteis');
 
     fixture.componentInstance.openCreateForm();
-    fixture.componentInstance.form.setValue({ label: '  Acessórios  ', icon: '' });
+    fixture.detectChanges();
+    expect(page.querySelector('select option[value="laptop"]')?.textContent).toContain('Portátil');
+    fixture.componentInstance.form.setValue({ label: '  Acessórios  ', icon: 'laptop' });
     fixture.componentInstance.submitForm();
     fixture.detectChanges();
 
-    expect(createdInputs).toEqual([{ label: 'Acessórios' }]);
+    expect(createdInputs).toEqual([{ label: 'Acessórios', icon: 'laptop' }]);
     expect(fixture.componentInstance.categories().map((item) => item.label)).toEqual([
       'Acessórios',
       'Portáteis',
@@ -91,6 +100,10 @@ describe('AdminCategoriesPage', () => {
       providers: [
         ...provideAppI18n(),
         { provide: AdminCategoryApiService, useValue: api },
+        {
+          provide: IconCatalogApiService,
+          useValue: { listIcons: () => of([]) },
+        },
         { provide: SeoService, useValue: { setPage: () => undefined } },
       ],
     }).compileComponents();

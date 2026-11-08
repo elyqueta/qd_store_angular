@@ -64,7 +64,7 @@
               class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted text-brand"
               aria-hidden="true"
             >
-              <qd-icon [name]="categoryIconName(category.icon, category.slug)" [size]="22" />
+              <qd-icon [name]="category.icon ?? 'box'" [size]="22" />
             </div>
             <p class="font-medium text-fg">{{ category.label }}</p>
           </a>

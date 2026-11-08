@@ -12,7 +12,7 @@ const category = {
   id: 'category-1',
   slug: 'portateis',
   label: 'Portáteis',
-  icon: '💻',
+  icon: 'laptop',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
 };
@@ -52,10 +52,10 @@ describe('AdminCategoryApiService', () => {
     });
     await expect(cachedCategories).resolves.toEqual([category]);
 
-    const createdPromise = firstValueFrom(api.createCategory({ label: 'Acessórios', icon: '🔌' }));
+    const createdPromise = firstValueFrom(api.createCategory({ label: 'Acessórios', icon: 'usb' }));
     const createRequest = httpTesting.expectOne(`${apiRoot}/categories`);
     expect(createRequest.request.method).toBe('POST');
-    expect(createRequest.request.body).toEqual({ label: 'Acessórios', icon: '🔌' });
+    expect(createRequest.request.body).toEqual({ label: 'Acessórios', icon: 'usb' });
     createRequest.flush({
       status: 'success',
       data: { ...category, id: 'category-2', label: 'Acessórios', slug: 'acessorios' },

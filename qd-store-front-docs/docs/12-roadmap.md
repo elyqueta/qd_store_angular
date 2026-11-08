@@ -26,6 +26,7 @@
 ## Fase 2 — Área pública
 
 - [x] Home · Catálogo (paginação, filtros categoria/estado, pesquisa e ordenação via API) · Detalhe (galeria, especificações)
+- [x] M1 — Catálogo público de ícones Font Awesome e escolha de ícones nas categorias
 - [x] Páginas institucionais · 404
 - [x] Consulta pública dos tipos de entrega activos
 - [x] Página pública de empresas informativa (benefícios; pedidos encaminhados por WhatsApp, sem formulário simulado)

@@ -61,14 +61,12 @@
           <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
             <div class="flex items-start justify-between gap-4">
               <div class="flex min-w-0 items-start gap-3">
-                @if (category.icon) {
-                  <span
-                    class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-muted text-xl"
-                    aria-hidden="true"
-                  >
-                    {{ category.icon }}
-                  </span>
-                }
+                <span
+                  class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-surface-muted text-brand"
+                  aria-hidden="true"
+                >
+                  <qd-icon [name]="category.icon ?? 'box'" [size]="20" />
+                </span>
                 <div class="min-w-0">
                   <h3 class="break-words font-semibold text-fg">{{ category.label }}</h3>
                   <p class="mt-1 break-all text-xs text-fg-muted">{{ category.slug }}</p>
@@ -200,23 +198,40 @@
             <label for="qd-category-icon" class="mb-2 block text-sm font-medium text-fg">
               {{ 'admin.categories.fields.icon' | transloco }}
             </label>
-            <input
+            <select
               id="qd-category-icon"
-              type="text"
               formControlName="icon"
-              maxlength="10"
               class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none transition placeholder:text-fg-muted focus:border-brand focus:ring-2 focus:ring-brand/20"
-              [attr.aria-invalid]="form.controls.icon.invalid && form.controls.icon.touched"
-              [attr.aria-describedby]="
-                form.controls.icon.invalid && form.controls.icon.touched
-                  ? 'qd-category-icon-error'
-                  : null
-              "
-            />
-            @if (form.controls.icon.invalid && form.controls.icon.touched) {
-              <p id="qd-category-icon-error" class="mt-1 text-sm text-danger">
-                {{ 'admin.categories.validation.icon' | transloco }}
+              [attr.aria-describedby]="isIconCatalogLoading() ? 'qd-category-icons-loading' : null"
+            >
+              <option value="">{{ 'admin.categories.noIcon' | transloco }}</option>
+              @for (icon of icons(); track icon.name) {
+                <option [value]="icon.name">{{ icon.label }} ({{ icon.name }})</option>
+              }
+            </select>
+            @if (form.controls.icon.value; as iconName) {
+              <span class="mt-2 inline-flex items-center gap-2 text-sm text-fg-muted">
+                <qd-icon [name]="iconName" [size]="18" />
+                {{ iconName }}
+              </span>
+            }
+            @if (isIconCatalogLoading()) {
+              <p id="qd-category-icons-loading" class="mt-1 text-sm text-fg-muted" role="status">
+                {{ 'admin.categories.iconsLoading' | transloco }}
               </p>
+            } @else if (hasIconCatalogError()) {
+              <div class="mt-2" role="alert">
+                <p class="text-sm text-danger">
+                  {{ 'admin.categories.iconsError' | transloco }}
+                </p>
+                <button
+                  type="button"
+                  class="mt-1 text-sm font-medium text-brand underline underline-offset-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+                  (click)="loadIcons()"
+                >
+                  {{ 'common.retry' | transloco }}
+                </button>
+              </div>
             }
           </div>
 

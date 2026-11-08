@@ -43,14 +43,16 @@
       "confirmDeleteAction": "Sim, remover",
       "createTitle": "Adicionar categoria",
       "editTitle": "Editar categoria",
-      "formDescription": "A etiqueta é obrigatória. O ícone é opcional e pode ter até 10 caracteres.",
+      "formDescription": "A etiqueta é obrigatória. O ícone é opcional e deve ser escolhido no catálogo.",
       "fields": {
         "label": "Nome da categoria",
         "icon": "Ícone (opcional)"
       },
+      "noIcon": "Sem ícone",
+      "iconsLoading": "A carregar o catálogo de ícones…",
+      "iconsError": "Não foi possível carregar o catálogo de ícones.",
       "validation": {
-        "label": "Indica um nome com até 100 caracteres.",
-        "icon": "O ícone não pode exceder 10 caracteres."
+        "label": "Indica um nome com até 100 caracteres."
       },
       "create": "Criar categoria",
       "save": "Guardar alterações",
