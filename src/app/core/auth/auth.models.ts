@@ -14,6 +14,13 @@ export interface AuthUser {
   deactivatedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  profilePhoto?: {
+    url: string;
+    width: number;
+    height: number;
+    format: string;
+    sizeBytes: number;
+  } | null;
 }
 
 export interface AuthResult {

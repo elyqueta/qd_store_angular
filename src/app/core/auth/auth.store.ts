@@ -21,6 +21,10 @@ export class AuthStore {
     this.statusState.set('authenticated');
   }
 
+  updateUser(user: AuthUser): void {
+    this.userState.set(user);
+  }
+
   clearSession(): void {
     this.userState.set(null);
     this.accessTokenState.set(null);

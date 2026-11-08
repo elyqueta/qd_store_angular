@@ -36,7 +36,13 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 
 **Auth** (`/api/v1/auth`): `POST /register` (cria conta pessoal e devolve `User`), `POST /login` e `POST /refresh` (devolvem `AuthResult`), `POST /logout` (204). Login envia `{ email, password }`; registo envia `{ fullName, email, password, phone, accountType: 'personal', nif? }`; refresh/logout enviam `{ refreshToken }`.
 
-**Categorias** (`/api/v1/categories`): `GET /` e `GET /:id` públicos; `POST { label, icon? }`, `PATCH /:id { label?, icon? }` e `DELETE /:id` admin (409 se tiver produtos). `label` tem entre 1 e 100 caracteres; `icon` é opcional e pode ser `null` num PATCH para o remover (máximo de 10 caracteres).
+**Perfil** (`/api/v1/users`): `GET /me` devolve o perfil autenticado; `PATCH /me` recebe `multipart/form-data` com `fullName?`, `email?`, `phone?`, `currentPassword?`, `newPassword?`, `removePhoto?` e a imagem opcional no campo `photo`; `DELETE /me/photo` remove a foto. O NIF não pode ser alterado. Alterações de email e telefone preservam histórico no back-end; a alteração de password invalida as sessões de refresh. O upload aceita JPEG, PNG, WebP e AVIF até 8 MB. Não definir manualmente `Content-Type` ao enviar `FormData`.
+
+**Ícones** (`/api/v1/icons`): `GET /` público e cacheável; devolve o catálogo estático de nomes Font Awesome, rótulos pt-PT e palavras-chave. O catálogo é a fonte de verdade usada pela validação de categorias e futuras entidades com ícone.
+
+**Destaques** (`/api/v1/highlights`): `GET /?placement=hero|showcase|category_block` público, devolvendo apenas destaques activos dentro da janela `startsAt`/`endsAt`, ordenados por `displayOrder`, com produto e categoria resumidos. O back-office usa `GET /admin`, `POST /` e `PATCH /:id` em `multipart/form-data` com a imagem no campo `image`, `PATCH /reorder` com `{ items: [{ id, displayOrder }] }` e `DELETE /:id` para desactivar. Imagens são sempre carregadas pela API para o Cloudinary; URLs arbitrárias não são aceites.
+
+**Categorias** (`/api/v1/categories`): `GET /` e `GET /:id` públicos; `POST { label, icon? }`, `PATCH /:id { label?, icon? }` e `DELETE /:id` admin (409 se tiver produtos). `label` tem entre 1 e 100 caracteres; `icon` é opcional e pode ser `null` num PATCH para o remover, com nome Font Awesome em kebab-case e máximo de 60 caracteres. O nome tem de existir em `GET /api/v1/icons`; emojis legados foram migrados na base de dados.
 
 **Produtos** (`/api/v1/products`): `GET /?page&limit(≤100)&categoryId&status&search&sort&priceMin&priceMax&availableOnly&excludeId` público (inclui `categoryName` e `mainImage`); `GET /:id?include=images,specifications` público; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado por carrinhos ou pedidos).
 

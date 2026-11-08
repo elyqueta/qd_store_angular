@@ -55,6 +55,7 @@
       "kicker": "Conta",
       "title": "O meu perfil",
       "description": "Consulta os dados pessoais associados à tua sessão.",
+      "loadError": "Não foi possível carregar o perfil.",
       "navigation": "Navegação da conta",
       "content": "Conteúdo da conta",
       "personalData": "Dados pessoais",
@@ -69,7 +70,25 @@
       },
       "edit": "Editar",
       "save": "Guardar alterações",
-      "editUnavailable": "A edição do perfil ficará disponível quando o serviço de perfil do servidor estiver disponível.",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "photo": "Fotografia de perfil",
+      "removePhoto": "Remover fotografia",
+      "currentPassword": "Palavra-passe actual",
+      "newPassword": "Nova palavra-passe",
+      "status": "Estado",
+      "statusValue": {
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "banned": "Suspenso"
+      },
+      "validation": {
+        "currentPassword": "Indica a palavra-passe actual para alterar o e-mail ou a palavra-passe."
+      },
+      "messages": {
+        "updated": "Perfil actualizado.",
+        "photoRemoved": "Fotografia removida."
+      },
       "province": "Província",
       "municipality": "Município",
       "neighborhood": "Bairro",
