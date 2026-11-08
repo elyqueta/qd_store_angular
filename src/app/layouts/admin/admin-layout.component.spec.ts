@@ -29,6 +29,11 @@ describe('AdminLayoutComponent', () => {
     fixture.detectChanges();
 
     const page = fixture.nativeElement as HTMLElement;
+    const desktopSidebar = page.querySelector<HTMLElement>('aside.hidden');
+    expect(desktopSidebar?.classList.contains('h-screen')).toBe(true);
+    expect(desktopSidebar?.classList.contains('sticky')).toBe(true);
+    expect(desktopSidebar?.classList.contains('overflow-y-auto')).toBe(true);
+
     const menuButton = page.querySelector<HTMLButtonElement>(
       'button[aria-controls="qd-admin-mobile-sidebar"]',
     );
