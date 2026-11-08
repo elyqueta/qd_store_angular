@@ -84,7 +84,7 @@ Alvo:
 
 ## 5. Logótipo e preloader
 
-- **Logótipo:** usar `public/favicon.webp` do React (copiar para `public/` do Angular). Substituir todos os "QD" em círculo e o texto "QD · ItSOLUTIONS" na navbar, footer e preloader. Corrigir o `index.html` que referencia `favicon.ico`/`favicon.svg` inexistentes.
+- **Logótipo:** usar `public/favicon.webp` do React (copiar para `public/` do Angular) na navbar, footer e preloader. O `public/favicon.ico` é reservado ao ícone do separador do navegador e deve ser referenciado no `index.html`.
 - **Preloader:** reintroduzir como no React (`Preloader.jsx` + `PreloaderContext`): fundo em gradiente claro, logo central com glow, feixes de luz, anel pulsante, barra de progresso e pontos. Aparece **apenas no primeiro carregamento**, não em cada rota (o React tinha um `usePageTransition` que não deve ser replicado em cada navegação).
 - Regras técnicas Angular: componente standalone, signal `visible`; em SSR não bloquear o HTML (renderizar já escondido ou só no browser, via `isPlatformBrowser`); respeitar `prefers-reduced-motion` (sem feixes nem pulsar, só fade); duração máxima de 3,2 s com opção de sair mais cedo se a página estiver pronta; não bloquear o carregamento real.
 - Esta peça é distinta de `15-estados-de-carregamento.md` (que cobre carregamento de dados).

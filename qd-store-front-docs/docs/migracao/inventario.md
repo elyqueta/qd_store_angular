@@ -100,7 +100,7 @@ Há gradientes para sobreposição do hero, glassmorphism na navbar, sombra em c
 
 ### Assets e ícones
 
-- Asset local encontrado em `public/favicon.webp`, usado como logótipo em navbar, footer e preloader. O HTML aponta para `/favicon.svg`, ficheiro que não aparece entre os ficheiros públicos inventariados.
+- `public/favicon.webp` é usado como logótipo na navbar, no footer, no preloader e no painel administrativo. `public/favicon.ico` é usado exclusivamente como ícone do separador do navegador.
 - As imagens dos produtos e fundos do hero são URLs externas do Unsplash definidas em `src/data/products.js` e `src/pages/HomePage.jsx` / `src/components/layout/Navbar.jsx`; não há biblioteca local de imagens de produto observada.
 - Fontes carregadas do Google Fonts no `index.html`: DM Sans, DM Mono e Playfair Display.
 - Ícones de interface vêm de Lucide React. Categorias e opções de pagamento incluem strings SVG inline; o React usa `dangerouslySetInnerHTML` para as apresentar. Na migração, os ícones devem ser reconstruídos sem reproduzir esse mecanismo.
