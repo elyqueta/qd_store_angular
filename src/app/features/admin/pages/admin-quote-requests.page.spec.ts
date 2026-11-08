@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { ApiError } from '../../../core/http/api-error.model';
 import { provideAppI18n } from '../../../core/i18n/i18n.providers';
 import { SeoService } from '../../../core/seo/seo.service';
 import { QuoteRequestApiService } from '../../quote-requests/data-access/quote-request-api.service';
@@ -24,8 +25,14 @@ const request: QuoteRequest = {
   updatedAt: '2026-01-01T00:00:00.000Z',
 };
 
+interface ApiStubOptions {
+  listError?: unknown;
+  updateError?: unknown;
+  empty?: boolean;
+}
+
 describe('AdminQuoteRequestsPage', () => {
-  function configure() {
+  function configure(options: ApiStubOptions = {}) {
     const listCalls: Array<{
       page: number;
       limit: number;
@@ -36,14 +43,23 @@ describe('AdminQuoteRequestsPage', () => {
     const api = {
       listAdmin: (params: (typeof listCalls)[number]) => {
         listCalls.push(params);
-        return of({
-          items: [request],
-          pagination: { page: params.page, limit: params.limit, total: 21, totalPages: 2 },
-        });
+        return options.listError
+          ? throwError(() => options.listError)
+          : of({
+              items: options.empty ? [] : [request],
+              pagination: {
+                page: params.page,
+                limit: params.limit,
+                total: options.empty ? 0 : 21,
+                totalPages: options.empty ? 0 : 2,
+              },
+            });
       },
       updateAdminStatus: (id: string, input: { status: QuoteRequestStatus }) => {
         statusUpdates.push({ id, status: input.status });
-        return of({ ...request, status: input.status });
+        return options.updateError
+          ? throwError(() => options.updateError)
+          : of({ ...request, status: input.status });
       },
     };
 
@@ -129,6 +145,48 @@ describe('AdminQuoteRequestsPage', () => {
 
     expect(statusUpdates).toEqual([]);
     expect(fixture.componentInstance.pendingStatusChange()).toBeNull();
+    fixture.destroy();
+  });
+
+  it('shows an empty state when the API returns no requests', () => {
+    configure({ empty: true });
+    const fixture = TestBed.createComponent(AdminQuoteRequestsPage);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.requests()).toEqual([]);
+    expect(fixture.componentInstance.hasLoadError()).toBe(false);
+    expect(fixture.nativeElement.textContent).toContain(
+      'Não existem pedidos para os filtros seleccionados.',
+    );
+    fixture.destroy();
+  });
+
+  it('presents a localized access error without exposing the API message', () => {
+    configure({ listError: new ApiError(403, 'Sensitive backend detail', [], {}, null) });
+    const fixture = TestBed.createComponent(AdminQuoteRequestsPage);
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.hasLoadError()).toBe(true);
+    expect(fixture.componentInstance.loadError()).not.toContain('Sensitive backend detail');
+    fixture.destroy();
+  });
+
+  it('keeps the existing status and reports an error when the API rejects an update', () => {
+    configure({ updateError: new ApiError(422, 'Invalid status detail', [], {}, null) });
+    const fixture = TestBed.createComponent(AdminQuoteRequestsPage);
+    fixture.detectChanges();
+    const select = document.createElement('select');
+    select.add(new Option('Contactado', 'contacted'));
+    select.value = 'contacted';
+    const changeEvent = new Event('change');
+    Object.defineProperty(changeEvent, 'target', { value: select });
+
+    fixture.componentInstance.requestStatusChange(request, changeEvent);
+    fixture.componentInstance.confirmStatusChange();
+
+    expect(fixture.componentInstance.requests()[0].status).toBe('new');
+    expect(fixture.componentInstance.actionError()).toBeTruthy();
+    expect(fixture.componentInstance.actionError()).not.toContain('Invalid status detail');
     fixture.destroy();
   });
 });

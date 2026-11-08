@@ -92,6 +92,9 @@ describe('BusinessPage', () => {
     page.onProvinceChange();
     page.form.controls.municipality.setValue('Talatona');
 
+    page.submitForm();
+    page.submitForm();
+
     expect(
       Object.entries(page.form.controls)
         .filter(([, control]) => control.invalid)
@@ -114,6 +117,30 @@ describe('BusinessPage', () => {
       message: 'Proposta para o escritório',
     });
     expect(page.submitted()).toBe(true);
+    fixture.destroy();
+  });
+
+  it('clears the selected municipality when the province changes', () => {
+    const fixture = TestBed.createComponent(BusinessPage);
+    const page = fixture.componentInstance;
+    page.form.controls.province.setValue('luanda');
+    page.form.controls.municipality.setValue('Talatona');
+
+    page.onProvinceChange();
+
+    expect(page.form.controls.municipality.value).toBe('');
+    expect(page.municipalities()).toEqual(['Belas', 'Talatona']);
+    fixture.destroy();
+  });
+
+  it('rejects duplicate categories in the client-side form model', () => {
+    const fixture = TestBed.createComponent(BusinessPage);
+    const page = fixture.componentInstance;
+
+    page.form.controls.categories.setValue(['Portáteis', 'Portáteis']);
+
+    expect(page.form.controls.categories.hasError('duplicate')).toBe(true);
+    expect(page.form.controls.categories.invalid).toBe(true);
     fixture.destroy();
   });
 

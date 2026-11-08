@@ -29,9 +29,10 @@
 - [x] M1 — Catálogo público de ícones Font Awesome e escolha de ícones nas categorias
 - [x] Páginas institucionais · 404
 - [x] Consulta pública dos tipos de entrega activos
-- [x] Página pública de empresas informativa (benefícios; pedidos encaminhados por WhatsApp, sem formulário simulado)
+- [x] Página pública de empresas informativa, com benefícios, formulário M6 ligado à API e contacto alternativo por WhatsApp
 - [x] M2 — Destaques públicos na Home e gestão administrativa; carrosséis e transições da Home alinhados com a referência React
 - [x] M3 — Serviços activos na Home e gestão administrativa de serviços
+- [x] M6 — Formulário público de pedidos de orçamento B2B integrado com a API real
 - [x] SEO por página + JSON-LD de produto
 
 Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, o menu de categorias e as páginas de compra usam `mainImage.url` ou um ícone neutro.
@@ -57,7 +58,7 @@ Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, 
 - [x] M3 — Serviços (admin: criação, edição, estado activo, imagem e ícone do catálogo)
 - [x] M4 — Gestão administrativa de utilizadores (pesquisa, filtros, ordenação, paginação, detalhe, estado e papel)
 - [x] M5 — Associação de membros de empresa por e-mail no fluxo autenticado da empresa
-- [x] M6 — Pedidos de orçamento B2B (API pública e triagem administrativa; integração do formulário do front pendente)
+- [x] M6 — Triagem administrativa de pedidos de orçamento B2B (pesquisa, filtros, paginação e alteração de estado)
 - [ ] Métodos de pagamento (admin CRUD disponível; interface depende do âmbito administrativo aprovado)
 
 ## Fase 5 — Endurecimento
@@ -70,4 +71,4 @@ Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, 
 
 ## Futuro (depende do back-end)
 
-Perfil editável · Integração do formulário de orçamento com a API M6 · Registo empresarial · Inglês (`en`) · Refresh em cookie httpOnly.
+Perfil editável · Registo empresarial · Inglês (`en`) · Refresh em cookie httpOnly.
