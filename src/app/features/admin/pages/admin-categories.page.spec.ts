@@ -70,6 +70,7 @@ describe('AdminCategoriesPage', () => {
 
     fixture.componentInstance.openCreateForm();
     fixture.detectChanges();
+    expect(page.querySelector('[role="dialog"]')).not.toBeNull();
     expect(page.querySelector('select option[value="laptop"]')?.textContent).toContain('Portátil');
     fixture.componentInstance.form.setValue({ label: '  Acessórios  ', icon: 'laptop' });
     fixture.componentInstance.submitForm();
@@ -81,6 +82,8 @@ describe('AdminCategoriesPage', () => {
       'Portáteis',
     ]);
     expect(successMessages).toContain('Categoria criada.');
+    fixture.detectChanges();
+    expect(page.querySelector('[role="dialog"]')).toBeNull();
   });
 
   it('shows an explicit load error and allows retry', async () => {

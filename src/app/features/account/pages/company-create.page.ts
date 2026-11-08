@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { TranslocoPipe, TranslocoService } from '@jsverse/transloco';
 import { finalize } from 'rxjs';
 import { ApiError } from '../../../core/http/api-error.model';
+import { ModalComponent } from '../../../shared/ui/modal.component';
 import { CompanyApiService } from '../data-access/company-api.service';
 import { Company, CreateCompanyInput } from '../models/company.model';
 
 @Component({
   selector: 'qd-company-create-page',
-  imports: [ReactiveFormsModule, RouterLink, TranslocoPipe],
+  imports: [ModalComponent, ReactiveFormsModule, RouterLink, TranslocoPipe],
   templateUrl: './company-create.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -18,6 +19,7 @@ export class CompanyCreatePage {
   private readonly api = inject(CompanyApiService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(FormBuilder).nonNullable;
+  private readonly router = inject(Router);
   private readonly transloco = inject(TranslocoService);
 
   readonly saving = signal(false);
@@ -29,6 +31,10 @@ export class CompanyCreatePage {
     nif: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(20)]],
     sector: ['', Validators.maxLength(100)],
   });
+
+  closeModal(): void {
+    void this.router.navigateByUrl('/conta/empresas');
+  }
 
   submitForm(): void {
     if (this.form.invalid || this.saving() || this.createdCompany()) {

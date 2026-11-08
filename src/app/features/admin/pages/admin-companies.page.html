@@ -155,92 +155,85 @@
       </ul>
     }
 
-    @if (editingCompanyId()) {
-      <section
-        class="mt-8 rounded-2xl border border-line bg-surface p-5 sm:p-8"
-        aria-labelledby="qd-admin-company-form-heading"
+    <qd-modal
+      [open]="editingCompanyId() !== null"
+      [closeOnOverlay]="!saving()"
+      [closeable]="!saving()"
+      titleId="qd-admin-company-form-heading"
+      descriptionId="qd-admin-company-form-description"
+      labelledBy="qd-admin-company-form-heading"
+      describedBy="qd-admin-company-form-description"
+      (closed)="closeForm()"
+    >
+      <h2 id="qd-admin-company-form-heading" class="pr-10 text-lg font-semibold text-fg">
+        {{ 'admin.companies.editTitle' | transloco }}
+      </h2>
+      <p id="qd-admin-company-form-description" class="mt-1 text-sm text-fg-muted">
+        {{ 'admin.companies.formDescription' | transloco }}
+      </p>
+
+      @if (formError(); as message) {
+        <p
+          class="mt-5 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
+          role="alert"
+        >
+          {{ message }}
+        </p>
+      }
+
+      <form
+        class="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2"
+        [formGroup]="form"
+        (ngSubmit)="submitForm()"
       >
-        <div class="mb-6 flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <h2 id="qd-admin-company-form-heading" class="text-lg font-semibold text-fg">
-              {{ 'admin.companies.editTitle' | transloco }}
-            </h2>
-            <p class="mt-1 text-sm text-fg-muted">
-              {{ 'admin.companies.formDescription' | transloco }}
+        <div>
+          <label for="qd-company-name" class="mb-2 block text-sm font-medium text-fg">
+            {{ 'admin.companies.fields.name' | transloco }}
+          </label>
+          <input
+            id="qd-company-name"
+            type="text"
+            formControlName="name"
+            autofocus
+            maxlength="200"
+            required
+            class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+          />
+          @if (form.controls.name.touched && form.controls.name.invalid) {
+            <p class="mt-2 text-xs text-danger">
+              {{ 'admin.companies.validation.name' | transloco }}
             </p>
-          </div>
-          <button
-            type="button"
-            class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-            [disabled]="saving()"
-            (click)="closeForm()"
-          >
-            {{ 'admin.companies.cancel' | transloco }}
-          </button>
+          }
         </div>
 
-        @if (formError(); as message) {
-          <p
-            class="mb-5 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
-            role="alert"
+        <div>
+          <label for="qd-company-sector" class="mb-2 block text-sm font-medium text-fg">
+            {{ 'admin.companies.fields.sector' | transloco }}
+          </label>
+          <input
+            id="qd-company-sector"
+            type="text"
+            formControlName="sector"
+            maxlength="100"
+            class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+          />
+          @if (form.controls.sector.touched && form.controls.sector.invalid) {
+            <p class="mt-2 text-xs text-danger">
+              {{ 'admin.companies.validation.sector' | transloco }}
+            </p>
+          }
+        </div>
+
+        <div class="md:col-span-2">
+          <button
+            type="submit"
+            class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+            [disabled]="saving()"
           >
-            {{ message }}
-          </p>
-        }
-
-        <form
-          class="grid grid-cols-1 gap-5 md:grid-cols-2"
-          [formGroup]="form"
-          (ngSubmit)="submitForm()"
-        >
-          <div>
-            <label for="qd-company-name" class="mb-2 block text-sm font-medium text-fg">
-              {{ 'admin.companies.fields.name' | transloco }}
-            </label>
-            <input
-              id="qd-company-name"
-              type="text"
-              formControlName="name"
-              maxlength="200"
-              required
-              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
-            />
-            @if (form.controls.name.touched && form.controls.name.invalid) {
-              <p class="mt-2 text-xs text-danger">
-                {{ 'admin.companies.validation.name' | transloco }}
-              </p>
-            }
-          </div>
-
-          <div>
-            <label for="qd-company-sector" class="mb-2 block text-sm font-medium text-fg">
-              {{ 'admin.companies.fields.sector' | transloco }}
-            </label>
-            <input
-              id="qd-company-sector"
-              type="text"
-              formControlName="sector"
-              maxlength="100"
-              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
-            />
-            @if (form.controls.sector.touched && form.controls.sector.invalid) {
-              <p class="mt-2 text-xs text-danger">
-                {{ 'admin.companies.validation.sector' | transloco }}
-              </p>
-            }
-          </div>
-
-          <div class="md:col-span-2">
-            <button
-              type="submit"
-              class="min-h-11 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
-              [disabled]="saving()"
-            >
-              {{ (saving() ? 'admin.companies.saving' : 'admin.companies.save') | transloco }}
-            </button>
-          </div>
-        </form>
-      </section>
-    }
+            {{ (saving() ? 'admin.companies.saving' : 'admin.companies.save') | transloco }}
+          </button>
+        </div>
+      </form>
+    </qd-modal>
   </section>
 </main>

@@ -10,6 +10,7 @@ import { SeoService } from '../../../core/seo/seo.service';
 import { IconCatalogApiService } from '../../../shared/data-access/icon-catalog-api.service';
 import { IconCatalogEntry } from '../../../shared/models/icon-catalog.model';
 import { IconComponent } from '../../../shared/ui/icon.component';
+import { ModalComponent } from '../../../shared/ui/modal.component';
 import { AdminServiceApiService } from '../data-access/admin-service-api.service';
 import {
   AdminService,
@@ -22,7 +23,7 @@ const ACCEPTED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', '
 
 @Component({
   selector: 'qd-admin-services-page',
-  imports: [DecimalPipe, IconComponent, ReactiveFormsModule, TranslocoPipe],
+  imports: [DecimalPipe, IconComponent, ModalComponent, ReactiveFormsModule, TranslocoPipe],
   templateUrl: './admin-services.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -53,7 +54,7 @@ export class AdminServicesPage {
     name: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(120)]],
     description: ['', Validators.maxLength(5000)],
     icon: ['', [Validators.required, Validators.maxLength(60)]],
-    startsFromPrice: ['', Validators.pattern(/^\d+(\.\d+)?$/)],
+    startsFromPrice: this.formBuilder.control<number | null>(null, Validators.min(0)),
   });
 
   constructor() {
@@ -114,7 +115,7 @@ export class AdminServicesPage {
       name: service.name,
       description: service.description ?? '',
       icon: service.icon,
-      startsFromPrice: service.startsFromPrice === null ? '' : String(service.startsFromPrice),
+      startsFromPrice: service.startsFromPrice,
     });
     this.editingId.set(service.id);
     this.isFormOpen.set(true);
@@ -199,7 +200,7 @@ export class AdminServicesPage {
       icon: values.icon,
       isActive: true,
       ...(values.description.trim() ? { description: values.description.trim() } : {}),
-      ...(values.startsFromPrice.trim() ? { startsFromPrice: Number(values.startsFromPrice) } : {}),
+      ...(values.startsFromPrice !== null ? { startsFromPrice: values.startsFromPrice } : {}),
       ...(image ? { image } : {}),
     };
 
@@ -286,7 +287,7 @@ export class AdminServicesPage {
     const input: UpdateAdminServiceInput = {};
     const name = values.name.trim();
     const description = values.description.trim();
-    const startsFromPrice = values.startsFromPrice.trim();
+    const startsFromPrice = values.startsFromPrice;
     const image = this.selectedImage();
 
     if (name !== current.name) {
@@ -298,8 +299,8 @@ export class AdminServicesPage {
     if (values.icon !== current.icon) {
       input.icon = values.icon;
     }
-    if (startsFromPrice && Number(startsFromPrice) !== current.startsFromPrice) {
-      input.startsFromPrice = Number(startsFromPrice);
+    if (startsFromPrice !== null && startsFromPrice !== current.startsFromPrice) {
+      input.startsFromPrice = startsFromPrice;
     }
     if (image) {
       input.image = image;
@@ -313,7 +314,7 @@ export class AdminServicesPage {
       name: '',
       description: '',
       icon: '',
-      startsFromPrice: '',
+      startsFromPrice: null,
     });
     this.selectedImage.set(null);
     this.formError.set(null);

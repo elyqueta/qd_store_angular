@@ -36,6 +36,7 @@ describe('CompanyCreatePage', () => {
     const fixture = TestBed.createComponent(CompanyCreatePage);
     fixture.detectChanges();
 
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).not.toBeNull();
     fixture.componentInstance.form.setValue({
       name: '  QD Tecnologia  ',
       nif: '  005123456LA042  ',
@@ -51,6 +52,7 @@ describe('CompanyCreatePage', () => {
       sector: 'Tecnologia',
     });
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('QD Tecnologia');
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).not.toBeNull();
   });
 
   it('does not send an invalid company form', async () => {

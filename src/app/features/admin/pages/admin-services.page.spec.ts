@@ -63,11 +63,13 @@ describe('AdminServicesPage', () => {
     fixture.detectChanges();
 
     fixture.componentInstance.openCreateForm();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).not.toBeNull();
     fixture.componentInstance.form.setValue({
       name: ' Instalação ',
       description: ' Configuração no local ',
       icon: 'screwdriver-wrench',
-      startsFromPrice: '0',
+      startsFromPrice: 0,
     });
     const image = new File(['image'], 'instalacao.png', { type: 'image/png' });
     fixture.componentInstance.selectedImage.set(image);
@@ -88,6 +90,23 @@ describe('AdminServicesPage', () => {
       'Instalação',
     ]);
     expect(successMessages).toContain('Serviço criado.');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
+
+    fixture.componentInstance.openCreateForm();
+    fixture.componentInstance.form.setValue({
+      name: 'Montagem',
+      description: '',
+      icon: 'screwdriver-wrench',
+      startsFromPrice: null,
+    });
+    fixture.componentInstance.submitForm();
+
+    expect(createInputs[1]).toEqual({
+      name: 'Montagem',
+      icon: 'screwdriver-wrench',
+      isActive: true,
+    });
   });
 
   it('reactivates an inactive service and deactivates an active service', async () => {

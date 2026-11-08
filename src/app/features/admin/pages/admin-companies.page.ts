@@ -6,13 +6,14 @@ import { finalize } from 'rxjs';
 import { ApiError } from '../../../core/http/api-error.model';
 import { ToastService } from '../../../core/notifications/toast.service';
 import { SeoService } from '../../../core/seo/seo.service';
+import { ModalComponent } from '../../../shared/ui/modal.component';
 import { AdminCompanyApiService } from '../data-access/admin-company-api.service';
 import { AdminCompanyWithUsers } from '../models/admin-dashboard.model';
 import { UpdateAdminCompanyInput } from '../models/admin-company.model';
 
 @Component({
   selector: 'qd-admin-companies-page',
-  imports: [ReactiveFormsModule, TranslocoPipe],
+  imports: [ModalComponent, ReactiveFormsModule, TranslocoPipe],
   templateUrl: './admin-companies.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

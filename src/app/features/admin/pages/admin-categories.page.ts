@@ -9,13 +9,14 @@ import { SeoService } from '../../../core/seo/seo.service';
 import { IconCatalogApiService } from '../../../shared/data-access/icon-catalog-api.service';
 import { IconCatalogEntry } from '../../../shared/models/icon-catalog.model';
 import { IconComponent } from '../../../shared/ui/icon.component';
+import { ModalComponent } from '../../../shared/ui/modal.component';
 import { AdminCategoryApiService } from '../data-access/admin-category-api.service';
 import { ProductCategory } from '../../public/models/product.model';
 import { CreateAdminCategoryInput, UpdateAdminCategoryInput } from '../models/admin-category.model';
 
 @Component({
   selector: 'qd-admin-categories-page',
-  imports: [IconComponent, ReactiveFormsModule, TranslocoPipe],
+  imports: [IconComponent, ModalComponent, ReactiveFormsModule, TranslocoPipe],
   templateUrl: './admin-categories.page.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

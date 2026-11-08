@@ -72,6 +72,8 @@ describe('AdminCompaniesPage', () => {
     expect((fixture.nativeElement as HTMLElement).textContent).toContain('owner@example.com');
 
     fixture.componentInstance.openEditForm(company);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).not.toBeNull();
     fixture.componentInstance.form.setValue({ name: ' QD Store ', sector: '' });
     fixture.componentInstance.submitForm();
 
@@ -79,6 +81,8 @@ describe('AdminCompaniesPage', () => {
     expect(fixture.componentInstance.companies()[0].name).toBe('QD Store');
     expect(fixture.componentInstance.companies()[0].users).toEqual(company.users);
     expect(successMessages).toContain('Empresa actualizada.');
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
   });
 
   it('deactivates a company and updates its visible status without removing its record', async () => {
