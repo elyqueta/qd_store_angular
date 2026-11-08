@@ -55,6 +55,8 @@ Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, 
 - [x] Empresas (admin: listagem com membros, edição de nome/sector e desactivação)
 - [x] Destaques (admin: gestão de ordem, criação, edição, desactivação e upload de imagem)
 - [x] M3 — Serviços (admin: criação, edição, estado activo, imagem e ícone do catálogo)
+- [x] M4 — Gestão administrativa de utilizadores (pesquisa, filtros, ordenação, paginação, detalhe, estado e papel)
+- [x] M5 — Associação de membros de empresa por e-mail no fluxo autenticado da empresa
 - [ ] Métodos de pagamento (admin CRUD disponível; interface depende do âmbito administrativo aprovado)
 
 ## Fase 5 — Endurecimento
@@ -67,4 +69,4 @@ Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, 
 
 ## Futuro (depende do back-end)
 
-Perfil editável · Gestão de membros por pesquisa de utilizadores · Pedidos de orçamento por formulário (M6, dependente de endpoint) · Gestão administrativa de utilizadores (M4) · Registo empresarial · Inglês (`en`) · Refresh em cookie httpOnly.
+Perfil editável · Pedidos de orçamento por formulário (M6, dependente de endpoint) · Registo empresarial · Inglês (`en`) · Refresh em cookie httpOnly.

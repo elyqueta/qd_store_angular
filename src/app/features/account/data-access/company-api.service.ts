@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { API_URL } from '../../../core/config/api-url.token';
-import { Company, CompanyWithUsers, CreateCompanyInput } from '../models/company.model';
+import {
+  AssociateCompanyUserInput,
+  Company,
+  CompanyUserAssociation,
+  CompanyWithUsers,
+  CreateCompanyInput,
+} from '../models/company.model';
 
 interface ApiSingleResponse<T> {
   status: 'success';
@@ -17,6 +23,18 @@ export class CompanyApiService {
   listMine(): Observable<CompanyWithUsers[]> {
     return this.http
       .get<ApiSingleResponse<CompanyWithUsers[]>>(`${this.endpoint}/mine`)
+      .pipe(map((response) => response.data));
+  }
+
+  associateUser(
+    companyId: string,
+    input: AssociateCompanyUserInput,
+  ): Observable<CompanyUserAssociation> {
+    return this.http
+      .post<ApiSingleResponse<CompanyUserAssociation>>(
+        `${this.endpoint}/${encodeURIComponent(companyId)}/users`,
+        input,
+      )
       .pipe(map((response) => response.data));
   }
 

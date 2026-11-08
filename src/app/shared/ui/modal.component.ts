@@ -33,6 +33,8 @@ export class ModalComponent {
   readonly describedBy = input.required<string>();
   readonly alert = input(false);
   readonly closeOnOverlay = input(true);
+  readonly closeable = input(true);
+  readonly size = input<'md' | 'lg'>('md');
   readonly closed = output<void>();
 
   constructor() {
@@ -40,7 +42,7 @@ export class ModalComponent {
       if (this.open()) {
         this.show();
       } else {
-        this.document.body.classList.remove('overflow-hidden');
+        this.restoreFocus();
       }
     });
   }
@@ -49,12 +51,12 @@ export class ModalComponent {
     const activeElement = this.document.activeElement;
     this.previousActiveElement.set(activeElement instanceof HTMLElement ? activeElement : null);
     this.document.body.classList.add('overflow-hidden');
-    queueMicrotask(() => this.dialog?.nativeElement.querySelector<HTMLElement>('[autofocus]')?.focus());
+    queueMicrotask(() =>
+      this.dialog?.nativeElement.querySelector<HTMLElement>('[autofocus]')?.focus(),
+    );
   }
 
   hide(): void {
-    this.document.body.classList.remove('overflow-hidden');
-    this.previousActiveElement()?.focus();
     this.closed.emit();
   }
 
@@ -86,5 +88,11 @@ export class ModalComponent {
   @HostListener('document:keydown.escape')
   onEscape(): void {
     if (this.open() && this.closeOnOverlay()) this.hide();
+  }
+
+  private restoreFocus(): void {
+    this.document.body.classList.remove('overflow-hidden');
+    this.previousActiveElement()?.focus();
+    this.previousActiveElement.set(null);
   }
 }

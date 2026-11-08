@@ -82,4 +82,24 @@ describe('CompanyApiService', () => {
 
     await expect(response).resolves.toEqual(company);
   });
+
+  it('associates a company member by email and optional role only', async () => {
+    const association = {
+      userId: 'user-2',
+      companyId: 'company-1',
+      role: 'Gerente',
+      createdAt: '2026-01-02T00:00:00.000Z',
+    };
+    const response = firstValueFrom(
+      api.associateUser('company-1', { email: 'maria@example.test', role: 'Gerente' }),
+    );
+    const request = httpTesting.expectOne(`${endpoint}/company-1/users`);
+
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ email: 'maria@example.test', role: 'Gerente' });
+    expect(request.request.body).not.toHaveProperty('userId');
+    request.flush({ status: 'success', data: association });
+
+    await expect(response).resolves.toEqual(association);
+  });
 });

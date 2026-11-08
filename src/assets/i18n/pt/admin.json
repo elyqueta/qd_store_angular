@@ -10,6 +10,7 @@
       "deliveryTypes": "Tipos de entrega",
       "companies": "Empresas",
       "services": "Serviços",
+      "users": "Utilizadores",
       "openMenu": "Abrir menu administrativo",
       "closeMenu": "Fechar menu administrativo",
       "store": "Voltar à loja",
@@ -116,6 +117,103 @@
         "updated": "Empresa actualizada.",
         "deactivated": "Empresa desactivada.",
         "noChanges": "Não existem alterações por guardar."
+      }
+    },
+    "users": {
+      "seoTitle": "Utilizadores | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Gere contas, estados e papéis de utilizador na QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de utilizadores",
+      "description": "Pesquisa contas, consulta empresas associadas e gere estados e papéis. As alterações são validadas pela API.",
+      "listTitle": "Contas registadas",
+      "total": "{{ total }} utilizador(es)",
+      "empty": "Não foram encontrados utilizadores com estes critérios.",
+      "errorTitle": "Não foi possível carregar os utilizadores.",
+      "details": "Ver detalhe",
+      "detailTitle": "Detalhe do utilizador",
+      "detailDescription": "Dados da conta, empresas associadas e operações administrativas disponíveis.",
+      "openDetails": "Ver detalhe de {{ name }}",
+      "closeDetails": "Fechar detalhe",
+      "notProvided": "Não indicado",
+      "selfChangeBlocked": "Não podes alterar o teu próprio estado nem retirar o teu papel de administrador.",
+      "tokenNotice": "As alterações de estado ou papel podem não terminar imediatamente uma sessão já aberta. Um token de acesso emitido anteriormente pode continuar válido até 15 minutos.",
+      "filters": {
+        "search": "Pesquisa por nome ou email",
+        "role": "Papel",
+        "status": "Estado",
+        "accountType": "Tipo de conta",
+        "sort": "Ordenar por",
+        "all": "Todos",
+        "apply": "Aplicar filtros"
+      },
+      "fields": {
+        "user": "Utilizador",
+        "accountType": "Conta",
+        "role": "Papel",
+        "status": "Estado",
+        "createdAt": "Data de registo",
+        "phone": "Telefone",
+        "nif": "NIF",
+        "actions": "Acções"
+      },
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo",
+        "banned": "Suspenso"
+      },
+      "role": {
+        "customer": "Cliente",
+        "admin": "Administrador"
+      },
+      "accountType": {
+        "personal": "Pessoal",
+        "business": "Empresarial"
+      },
+      "sort": {
+        "createdAt": "Data de registo",
+        "name": "Nome",
+        "email": "Email",
+        "status": "Estado"
+      },
+      "pagination": {
+        "label": "Paginação de utilizadores",
+        "previous": "Anterior",
+        "next": "Seguinte",
+        "current": "Página {{ page }} de {{ totalPages }}"
+      },
+      "companies": {
+        "title": "Empresas associadas",
+        "empty": "Este utilizador não tem empresas associadas.",
+        "nif": "NIF"
+      },
+      "actions": {
+        "status": "Estado da conta",
+        "role": "Papel da conta",
+        "saveStatus": "Alterar estado",
+        "saveRole": "Alterar papel"
+      },
+      "confirm": {
+        "title": "Confirmar alteração",
+        "confirmAction": "Confirmar",
+        "cancel": "Cancelar",
+        "status": {
+          "active": "Pretendes activar a conta de “{{ name }}”?",
+          "inactive": "Pretendes desactivar a conta de “{{ name }}”?",
+          "banned": "Pretendes suspender a conta de “{{ name }}”?"
+        },
+        "role": {
+          "customer": "Pretendes retirar o papel de administrador a “{{ name }}”?",
+          "admin": "Pretendes atribuir o papel de administrador a “{{ name }}”?"
+        }
+      },
+      "errors": {
+        "forbidden": "A API recusou a operação por falta de permissões (403).",
+        "notFound": "O utilizador já não existe ou não está disponível (404).",
+        "conflict": "A alteração viola uma regra de segurança, como a protecção do último administrador activo (409).",
+        "validation": "Os dados enviados não são válidos (422)."
+      },
+      "messages": {
+        "updated": "Dados do utilizador actualizados."
       }
     },
     "products": {

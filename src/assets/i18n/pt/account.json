@@ -109,12 +109,34 @@
       "kicker": "Conta empresarial",
       "listTitle": "As minhas empresas",
       "listDescription": "Consulta as empresas associadas à tua conta e os utilizadores associados a cada uma.",
+      "loading": "A carregar as empresas associadas à tua conta.",
       "add": "Registar empresa",
       "empty": "Ainda não tens empresas associadas à tua conta.",
       "membersTitle": "Membros associados",
       "noMembers": "Não existem membros associados a esta empresa.",
       "noRole": "Cargo não indicado",
       "notProvided": "Não indicado",
+      "association": {
+        "addMember": "Associar membro",
+        "formTitle": "Associar membro à empresa",
+        "formDescription": "Indica o endereço de e-mail da conta que pretendes associar a “{{ name }}”.",
+        "email": "E-mail da conta",
+        "emailInvalid": "Indica um endereço de e-mail válido.",
+        "role": "Cargo na empresa (opcional)",
+        "roleOptional": "Por exemplo, Gerente",
+        "roleInvalid": "O cargo não pode exceder 100 caracteres.",
+        "submit": "Associar membro",
+        "submitting": "A associar…"
+      },
+      "errors": {
+        "forbidden": "Não tens permissões para associar utilizadores a esta empresa (403).",
+        "emailNotFound": "Não foi encontrada uma conta para este e-mail (404).",
+        "alreadyAssociated": "Esta conta já está associada à empresa (409).",
+        "invalidRequest": "O e-mail ou o cargo não são válidos (422)."
+      },
+      "messages": {
+        "memberAssociated": "Membro associado à empresa."
+      },
       "status": {
         "active": "Activa",
         "inactive": "Inactiva",

@@ -31,7 +31,11 @@
     </div>
 
     @if (isLoading()) {
-      <div class="grid grid-cols-1 gap-4 xl:grid-cols-2" role="status" aria-label="A carregar">
+      <div
+        class="grid grid-cols-1 gap-4 xl:grid-cols-2"
+        role="status"
+        [attr.aria-label]="'account.companies.loading' | transloco"
+      >
         @for (skeleton of [1, 2, 3, 4]; track skeleton) {
           <div class="rounded-2xl border border-line bg-surface p-5">
             <div
@@ -117,9 +121,118 @@
                 </p>
               }
             </section>
+
+            @if (canManageCompany(company)) {
+              <div class="mt-5 border-t border-line pt-4">
+                <button
+                  type="button"
+                  class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-semibold text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+                  [disabled]="associationSaving()"
+                  (click)="openAssociationForm(company)"
+                >
+                  {{ 'account.companies.association.addMember' | transloco }}
+                </button>
+              </div>
+            }
           </li>
         }
       </ul>
     }
   </section>
+
+  <qd-modal
+    [open]="associationCompanyId() !== null"
+    [closeOnOverlay]="!associationSaving()"
+    [closeable]="!associationSaving()"
+    titleId="qd-company-member-association-title"
+    descriptionId="qd-company-member-association-description"
+    labelledBy="qd-company-member-association-title"
+    describedBy="qd-company-member-association-description"
+    (closed)="closeAssociationForm()"
+  >
+    @if (associationCompany(); as company) {
+      <h2 id="qd-company-member-association-title" class="pr-10 text-lg font-semibold text-fg">
+        {{ 'account.companies.association.formTitle' | transloco }}
+      </h2>
+      <p id="qd-company-member-association-description" class="mt-2 text-sm text-fg-muted">
+        {{ 'account.companies.association.formDescription' | transloco: { name: company.name } }}
+      </p>
+
+      <form class="mt-6 space-y-4" [formGroup]="associationForm" (ngSubmit)="submitAssociation()">
+        <label class="flex flex-col gap-1 text-sm font-medium text-fg">
+          {{ 'account.companies.association.email' | transloco }}
+          <input
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            maxlength="255"
+            required
+            autofocus
+            class="min-h-11 rounded-xl border border-line bg-surface px-3 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [attr.aria-invalid]="
+              associationForm.controls.email.invalid && associationForm.controls.email.touched
+            "
+            [attr.aria-describedby]="
+              associationForm.controls.email.invalid && associationForm.controls.email.touched
+                ? 'qd-company-member-email-error'
+                : null
+            "
+          />
+          @if (associationForm.controls.email.invalid && associationForm.controls.email.touched) {
+            <span id="qd-company-member-email-error" class="text-xs text-danger" role="alert">
+              {{ 'account.companies.association.emailInvalid' | transloco }}
+            </span>
+          }
+        </label>
+
+        <label class="flex flex-col gap-1 text-sm font-medium text-fg">
+          {{ 'account.companies.association.role' | transloco }}
+          <input
+            type="text"
+            formControlName="role"
+            maxlength="100"
+            class="min-h-11 rounded-xl border border-line bg-surface px-3 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+            [placeholder]="'account.companies.association.roleOptional' | transloco"
+          />
+          @if (associationForm.controls.role.invalid && associationForm.controls.role.touched) {
+            <span class="text-xs text-danger" role="alert">
+              {{ 'account.companies.association.roleInvalid' | transloco }}
+            </span>
+          }
+        </label>
+
+        @if (associationError(); as message) {
+          <p
+            class="rounded-xl border border-danger/40 bg-surface-muted p-3 text-sm text-danger"
+            role="alert"
+          >
+            {{ message }}
+          </p>
+        }
+
+        <div class="flex flex-wrap justify-end gap-2">
+          <button
+            type="button"
+            class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+            [disabled]="associationSaving()"
+            (click)="closeAssociationForm()"
+          >
+            {{ 'account.companies.cancel' | transloco }}
+          </button>
+          <button
+            type="submit"
+            class="min-h-10 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+            [disabled]="associationSaving()"
+          >
+            {{
+              (associationSaving()
+                ? 'account.companies.association.submitting'
+                : 'account.companies.association.submit'
+              ) | transloco
+            }}
+          </button>
+        </div>
+      </form>
+    }
+  </qd-modal>
 </main>
