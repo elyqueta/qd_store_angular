@@ -94,6 +94,7 @@ export class CheckoutPage implements OnInit {
   readonly busyItems = signal<ReadonlySet<string>>(new Set());
   readonly selectedCompany = signal<CompanyWithUsers | null>(null);
   readonly companies = signal<CompanyWithUsers[]>([]);
+  readonly companySelectionOpen = signal(false);
   readonly companySnapshot = this.purchaseContext.companySnapshot;
   readonly newAddressMode = signal(false);
   readonly checkoutStep = signal<'address' | 'delivery' | 'payment' | 'review'>('address');
@@ -146,19 +147,17 @@ export class CheckoutPage implements OnInit {
             paymentMethodId: paymentMethods[0]?.id ?? '',
           });
           this.newAddressMode.set(!addresses.length);
-          if (companyId) {
-            this.companyApi
-              .listMine()
-              .pipe(takeUntilDestroyed(this.destroyRef))
-              .subscribe({
-                next: (companies) => {
-                  this.companies.set(companies);
-                  const company = companies.find((candidate) => candidate.id === companyId) ?? null;
-                  this.selectedCompany.set(company);
-                },
-                error: () => this.selectedCompany.set(null),
-              });
-          }
+          this.companyApi
+            .listMine()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: (companies) => {
+                this.companies.set(companies);
+                const company = companies.find((candidate) => candidate.id === companyId) ?? null;
+                this.selectedCompany.set(company);
+              },
+              error: () => this.selectedCompany.set(null),
+            });
           this.loading.set(false);
         },
         error: (error: unknown) => {
@@ -188,6 +187,10 @@ export class CheckoutPage implements OnInit {
     this.selectedCompany.set(
       this.companies().find((company) => company.id === companyId) ?? null,
     );
+  }
+
+  showCompanySelection(): void {
+    this.companySelectionOpen.set(true);
   }
 
   selectedPaymentMethodType(): PaymentMethodType | null {

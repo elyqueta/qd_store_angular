@@ -219,7 +219,10 @@
             @for (company of companies(); track company.id) {
               <button
                 type="button"
-                class="flex w-full items-center justify-between rounded-xl border border-line p-3 text-left hover:border-brand"
+                class="flex w-full items-center justify-between rounded-xl border p-3 text-left transition-colors hover:border-brand"
+                [class.border-brand]="selectedCompanyId() === company.id"
+                [class.bg-surface-muted]="selectedCompanyId() === company.id"
+                [class.border-line]="selectedCompanyId() !== company.id"
                 (click)="chooseCompany(company.id)"
               >
                 <span>
@@ -232,24 +235,35 @@
           </div>
           <button
             type="button"
-            class="mt-4 w-full rounded-full border border-line px-4 py-3 text-sm font-semibold text-fg"
+            class="mt-4 w-full rounded-full bg-brand px-4 py-3 text-sm font-semibold text-brand-fg disabled:cursor-not-allowed disabled:opacity-50"
+            [disabled]="!selectedCompanyId()"
+            (click)="continueWithSelectedCompany()"
+          >
+            {{ 'commerce.checkout.continueWithCompany' | transloco }}
+          </button>
+          <button
+            type="button"
+            class="mt-4 w-full rounded-full border border-brand/30 bg-brand/5 px-4 py-3 text-sm font-semibold text-brand transition-colors hover:border-brand hover:bg-brand/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
             (click)="openCompanyForm()"
           >
-            {{ 'commerce.checkout.useAnotherCompany' | transloco }}
+            <span class="inline-flex items-center justify-center gap-2">
+              <qd-icon name="building" [size]="14" aria-hidden="true"></qd-icon>
+              {{ 'commerce.checkout.useAnotherCompany' | transloco }}
+            </span>
           </button>
         } @else {
           <div class="space-y-4">
             <p class="text-sm text-fg-muted">{{ 'commerce.checkout.noCompany' | transloco }}</p>
             <button
               type="button"
-              class="w-full rounded-full bg-brand px-4 py-3 text-sm font-semibold text-brand-fg"
+              class="w-full rounded-full bg-brand px-4 py-3 text-sm font-semibold text-brand-fg shadow-[0_6px_14px_rgba(10,123,220,0.28)] transition-opacity hover:opacity-95 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
               (click)="openCompanyForm()"
             >
               {{ 'commerce.checkout.registerCompany' | transloco }}
             </button>
           </div>
         }
-      } @else {
+      } @else if (purchaseStep() === 'company-create') {
         <button
           type="button"
           class="mb-5 inline-flex items-center gap-1 rounded-lg py-1 text-sm text-fg-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
@@ -288,9 +302,7 @@
             {{ 'commerce.checkout.continue' | transloco }}
           </button>
         </form>
-      }
-
-      @if (purchaseStep() === 'company-save') {
+      } @else if (purchaseStep() === 'company-save') {
         <button
           type="button"
           class="mb-5 inline-flex items-center gap-1 rounded-lg py-1 text-sm text-fg-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"

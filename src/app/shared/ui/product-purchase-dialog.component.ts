@@ -64,6 +64,7 @@ export class ProductPurchaseDialogComponent {
   readonly accountType = signal<'personal' | 'business'>('personal');
   readonly quantity = signal(1);
   readonly companies = signal<CompanyWithUsers[]>([]);
+  readonly selectedCompanyId = signal<string | null>(null);
   readonly companyLoading = signal(false);
   readonly companyError = signal(false);
   readonly processing = signal(false);
@@ -106,9 +107,7 @@ export class ProductPurchaseDialogComponent {
       .subscribe({
         next: (companies) => {
           this.companies.set(companies);
-          if (companies.length === 1) {
-            this.purchaseSelected.emit({ companyId: companies[0].id, quantity: this.quantity() });
-          }
+          this.selectedCompanyId.set(companies.length === 1 ? companies[0].id : null);
         },
         error: (error: unknown) => {
           this.companyError.set(true);
@@ -122,7 +121,14 @@ export class ProductPurchaseDialogComponent {
   }
 
   chooseCompany(companyId: string): void {
-    this.purchaseSelected.emit({ companyId, quantity: this.quantity() });
+    this.selectedCompanyId.set(companyId);
+  }
+
+  continueWithSelectedCompany(): void {
+    const companyId = this.selectedCompanyId();
+    if (companyId) {
+      this.purchaseSelected.emit({ companyId, quantity: this.quantity() });
+    }
   }
 
   openCompanyForm(): void {
@@ -133,6 +139,24 @@ export class ProductPurchaseDialogComponent {
   createCompany(): void {
     if (this.companyForm.invalid || this.companyLoading()) {
       this.companyForm.markAllAsTouched();
+      return;
+    }
+
+    const values = this.companyForm.getRawValue();
+    const normalizedNif = values.nif.trim();
+    const normalizedRole = values.role.trim();
+
+    if (!normalizedNif || normalizedNif.length !== 9 || !/^\d{9}$/.test(normalizedNif)) {
+      this.companyForm.controls.nif.setErrors({ invalidNif: true });
+      this.companyForm.controls.nif.markAsTouched();
+      this.toast.error(this.transloco.translate('commerce.checkout.validation.nif'));
+      return;
+    }
+
+    if (!normalizedRole) {
+      this.companyForm.controls.role.setErrors({ required: true });
+      this.companyForm.controls.role.markAsTouched();
+      this.toast.error(this.transloco.translate('commerce.checkout.validation.role'));
       return;
     }
 
@@ -156,7 +180,11 @@ export class ProductPurchaseDialogComponent {
     this.processingProgress.set(35);
     this.companyRequest = this.companyApi
       .createCompany(
-        { name: snapshot.name, nif: snapshot.nif },
+        {
+          name: snapshot.name,
+          nif: snapshot.nif,
+          role: snapshot.role,
+        },
         globalThis.crypto?.randomUUID(),
       )
       .pipe(finalize(() => this.processing.set(false)))
@@ -167,11 +195,10 @@ export class ProductPurchaseDialogComponent {
         },
         error: (error: unknown) => {
           this.processingProgress.set(0);
-          this.toast.error(
-            error instanceof ApiError
-              ? error.message
-              : this.transloco.translate('commerce.checkout.companyCreateError'),
-          );
+          const details = error instanceof ApiError ? error.details : [];
+          const firstDetail = details[0]?.message ??
+            (error instanceof ApiError ? error.message : this.transloco.translate('commerce.checkout.companyCreateError'));
+          this.toast.error(firstDetail);
         },
       });
   }

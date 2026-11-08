@@ -101,9 +101,9 @@
                   </p>
                   <p class="mt-1 text-sm font-semibold text-fg">{{ company.name }}</p>
                   <p class="text-xs text-fg-muted">{{ company.nif }}</p>
-                  @if (companies().length > 1) {
+                  @if (companySelectionOpen()) {
                     <label class="mt-3 block text-xs font-medium text-fg-muted" for="qd-checkout-company">
-                      {{ 'commerce.checkout.changeCompany' | transloco }}
+                      {{ 'commerce.checkout.chooseCompany' | transloco }}
                     </label>
                     <select
                       id="qd-checkout-company"
@@ -116,6 +116,14 @@
                       }
                     </select>
                   }
+                  <button
+                    type="button"
+                    class="mt-3 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/5 px-3 py-2 text-sm font-semibold text-brand transition-colors hover:border-brand hover:bg-brand/10 focus-visible:outline-2 focus-visible:outline-brand"
+                    (click)="showCompanySelection()"
+                  >
+                    <qd-icon name="building" [size]="14" aria-hidden="true"></qd-icon>
+                    {{ 'commerce.checkout.useAnotherCompany' | transloco }}
+                  </button>
                 </div>
               } @else if (companySnapshot(); as snapshot) {
                 <div class="mb-4 rounded-xl bg-surface-muted p-4">
@@ -125,6 +133,42 @@
                   <p class="mt-1 text-sm font-semibold text-fg">{{ snapshot.name }}</p>
                   <p class="text-xs text-fg-muted">{{ snapshot.nif }}</p>
                 </div>
+              } @else if (companies().length) {
+                <div class="mb-4 rounded-xl border border-brand/30 bg-brand/5 p-4">
+                  <p class="text-sm font-semibold text-fg">
+                    {{ 'commerce.checkout.businessPurchase' | transloco }}
+                  </p>
+                  <label class="mt-3 block text-xs font-medium text-fg-muted" for="qd-checkout-company">
+                    {{ 'commerce.checkout.chooseCompany' | transloco }}
+                  </label>
+                  <select
+                    id="qd-checkout-company"
+                    formControlName="companyId"
+                    class="mt-1 w-full rounded-lg border border-line bg-surface px-3 py-2 text-sm text-fg"
+                    (change)="onCompanyChange()"
+                  >
+                    <option value="">{{ 'commerce.checkout.personalPurchase' | transloco }}</option>
+                    @for (option of companies(); track option.id) {
+                      <option [value]="option.id">{{ option.name }} — {{ option.nif }}</option>
+                    }
+                  </select>
+                  <button
+                    type="button"
+                    class="mt-3 inline-flex items-center gap-2 rounded-full border border-brand/30 bg-brand/5 px-3 py-2 text-sm font-semibold text-brand transition-colors hover:border-brand hover:bg-brand/10 focus-visible:outline-2 focus-visible:outline-brand"
+                    (click)="showCompanySelection()"
+                  >
+                    <qd-icon name="building" [size]="14" aria-hidden="true"></qd-icon>
+                    {{ 'commerce.checkout.useAnotherCompany' | transloco }}
+                  </button>
+                </div>
+              } @else {
+                <a
+                  routerLink="/conta/empresas/nova"
+                  class="mb-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-brand px-4 py-3 text-sm font-semibold text-brand-fg shadow-[0_6px_14px_rgba(10,123,220,0.28)] transition-opacity hover:opacity-95"
+                >
+                  <qd-icon name="building" [size]="14" aria-hidden="true"></qd-icon>
+                  {{ 'commerce.checkout.registerCompany' | transloco }}
+                </a>
               }
               @if (addresses().length && !newAddressMode()) {
                 <label class="mt-4 block text-sm font-medium text-fg" for="qd-checkout-address">{{

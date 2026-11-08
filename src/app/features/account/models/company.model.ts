@@ -25,5 +25,6 @@ export interface CompanyWithUsers extends Company {
 export interface CreateCompanyInput {
   name: string;
   nif: string;
+  role?: string;
   sector?: string;
 }
