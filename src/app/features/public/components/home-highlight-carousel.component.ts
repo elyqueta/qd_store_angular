@@ -1,17 +1,13 @@
 import { isPlatformBrowser } from '@angular/common';
 import {
-  afterNextRender,
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  ElementRef,
   effect,
   inject,
   input,
   PLATFORM_ID,
   signal,
-  viewChild,
-  viewChildren,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -26,14 +22,12 @@ export type HomeHighlightCarouselVariant = 'hero' | 'cards';
   selector: 'qd-home-highlight-carousel',
   imports: [IconComponent, RouterLink, TranslocoPipe],
   templateUrl: './home-highlight-carousel.component.html',
+  host: { class: 'block' },
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeHighlightCarouselComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly platformId = inject(PLATFORM_ID);
-  private readonly cardsTrack = viewChild<ElementRef<HTMLDivElement>>('cardsTrack');
-  private readonly cardElements = viewChildren<ElementRef<HTMLElement>>('cardItem');
-  private observer: IntersectionObserver | null = null;
 
   readonly highlights = input.required<Highlight[]>();
   readonly variant = input<HomeHighlightCarouselVariant>('cards');
@@ -41,9 +35,7 @@ export class HomeHighlightCarouselComponent {
   readonly activeIndex = signal(0);
   readonly paused = signal(false);
   readonly interacting = signal(false);
-  readonly visibleCardIds = signal<ReadonlySet<string>>(new Set());
-  readonly canScrollPrevious = signal(false);
-  readonly canScrollNext = signal(false);
+
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       interval(7000)
@@ -59,10 +51,6 @@ export class HomeHighlightCarouselComponent {
             this.goTo(this.activeIndex() + 1);
           }
         });
-
-      afterNextRender(() => this.observeCards());
-
-      this.destroyRef.onDestroy(() => this.observer?.disconnect());
     }
 
     effect(() => {
@@ -116,30 +104,6 @@ export class HomeHighlightCarouselComponent {
     }
   }
 
-  scrollCards(direction: -1 | 1): void {
-    const track = this.cardsTrack()?.nativeElement;
-    if (!track) {
-      return;
-    }
-
-    track.scrollBy({
-      left: direction * track.clientWidth * 0.85,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-    });
-  }
-
-  updateScrollControls(): void {
-    const track = this.cardsTrack()?.nativeElement;
-    if (!track) {
-      this.canScrollPrevious.set(false);
-      this.canScrollNext.set(false);
-      return;
-    }
-
-    this.canScrollPrevious.set(track.scrollLeft > 2);
-    this.canScrollNext.set(track.scrollLeft + track.clientWidth < track.scrollWidth - 2);
-  }
-
   safeCtaUrl(value: string | null | undefined): string | null {
     const candidate = value?.trim();
     if (!candidate || /[\u0000-\u001f\\]/.test(candidate)) {
@@ -169,48 +133,7 @@ export class HomeHighlightCarouselComponent {
     return !!candidate && /^https?:\/\//i.test(candidate);
   }
 
-  isCardVisible(id: string): boolean {
-    return (
-      !isPlatformBrowser(this.platformId) ||
-      typeof IntersectionObserver === 'undefined' ||
-      this.visibleCardIds().has(id)
-    );
-  }
-
   isLightTheme(highlight: Highlight): boolean {
     return highlight.theme === 'light';
-  }
-
-  private observeCards(): void {
-    if (!isPlatformBrowser(this.platformId)) {
-      return;
-    }
-
-    if (typeof IntersectionObserver === 'undefined') {
-      this.visibleCardIds.set(new Set(this.highlights().map((highlight) => highlight.id)));
-      return;
-    }
-
-    this.observer?.disconnect();
-    this.observer = new IntersectionObserver(
-      (entries) => {
-        const visibleIds = new Set(this.visibleCardIds());
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const id = (entry.target as HTMLElement).dataset['highlightId'];
-            if (id) {
-              visibleIds.add(id);
-            }
-            this.observer?.unobserve(entry.target);
-          }
-        }
-        this.visibleCardIds.set(visibleIds);
-      },
-      { rootMargin: '0px 0px -60px 0px', threshold: 0.1 },
-    );
-
-    for (const card of this.cardElements()) {
-      this.observer.observe(card.nativeElement);
-    }
   }
 }

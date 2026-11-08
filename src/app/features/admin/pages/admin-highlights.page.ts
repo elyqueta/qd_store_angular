@@ -41,19 +41,31 @@ export class AdminHighlightsPage {
   readonly formError = signal<string | null>(null);
   readonly saving = signal(false);
   readonly confirmingDeletionId = signal<string | null>(null);
+  readonly confirmingPermanentDeletionId = signal<string | null>(null);
   readonly pendingDeletionId = signal<string | null>(null);
   readonly productOptions = signal<AdminHighlightProduct[]>([]);
   readonly isLoadingProducts = signal(false);
   readonly productSearchTerm = signal('');
   private readonly productSearchInput = new Subject<string>();
 
+  readonly pageOptions = [
+    { value: '', label: 'Sem destino específico' },
+    { value: '/', label: 'Página inicial' },
+    { value: '/produtos', label: 'Catálogo de produtos' },
+    { value: '/sobre', label: 'Sobre nós' },
+    { value: '/empresas', label: 'Empresas' },
+    { value: '/contactos', label: 'Contactos' },
+    { value: '/tipos-entrega', label: 'Tipos de entrega' },
+  ] as const;
+
   readonly form = this.formBuilder.group({
     title: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(120)]],
-    subtitle: ['', Validators.maxLength(250)],
+    subtitle: ['', Validators.maxLength(255)],
     label: ['', Validators.maxLength(60)],
     ctaLabel: ['', Validators.maxLength(40)],
     ctaUrl: ['', Validators.maxLength(500)],
     productId: [''],
+    useProductContent: [false],
     placement: this.formBuilder.control<HighlightPlacement>('hero', Validators.required),
     theme: this.formBuilder.control<HighlightTheme>('dark', Validators.required),
     startsAt: [''],
@@ -124,6 +136,7 @@ export class AdminHighlightsPage {
       ctaLabel: highlight.ctaLabel ?? '',
       ctaUrl: highlight.ctaUrl ?? '',
       productId: highlight.product?.id ?? '',
+      useProductContent: false,
       placement: highlight.placement,
       theme: highlight.theme,
       startsAt: highlight.startsAt ?? '',
@@ -160,6 +173,18 @@ export class AdminHighlightsPage {
   onProductSelectionChanged(): void {
     if (this.form.controls.productId.value) {
       this.form.patchValue({ image: null, ctaUrl: '' });
+      if (this.form.controls.useProductContent.value) {
+        this.applySelectedProductContent();
+      }
+    }
+  }
+
+  onUseProductContentChanged(event: Event): void {
+    const input = event.target as HTMLInputElement | null;
+    const useProductContent = input?.checked ?? false;
+    this.form.controls.useProductContent.setValue(useProductContent);
+    if (useProductContent) {
+      this.applySelectedProductContent();
     }
   }
 
@@ -242,6 +267,41 @@ export class AdminHighlightsPage {
         },
         error: (error: unknown) => {
           this.confirmingDeletionId.set(null);
+          this.toastService.error(this.getErrorMessage(error));
+        },
+      });
+  }
+
+  requestPermanentDelete(highlight: AdminHighlight): void {
+    this.confirmingPermanentDeletionId.set(highlight.id);
+  }
+
+  cancelPermanentDelete(): void {
+    this.confirmingPermanentDeletionId.set(null);
+  }
+
+  confirmPermanentDelete(highlight: AdminHighlight): void {
+    if (this.pendingDeletionId()) {
+      return;
+    }
+
+    this.pendingDeletionId.set(highlight.id);
+    this.api
+      .deleteHighlightPermanently(highlight.id)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.pendingDeletionId.set(null)),
+      )
+      .subscribe({
+        next: () => {
+          this.highlights.update((items) => items.filter((item) => item.id !== highlight.id));
+          this.confirmingPermanentDeletionId.set(null);
+          this.toastService.success(
+            this.transloco.translate('admin.highlights.messages.permanentlyDeleted'),
+          );
+        },
+        error: (error: unknown) => {
+          this.confirmingPermanentDeletionId.set(null);
           this.toastService.error(this.getErrorMessage(error));
         },
       });
@@ -331,6 +391,18 @@ export class AdminHighlightsPage {
     };
   }
 
+  private applySelectedProductContent(): void {
+    const product = this.selectedProduct();
+    if (!product) {
+      return;
+    }
+
+    this.form.patchValue({
+      title: product.name.slice(0, 120),
+      subtitle: product.description?.trim().slice(0, 255) ?? '',
+    });
+  }
+
   private resetForm(): void {
     this.form.reset({
       title: '',
@@ -339,6 +411,7 @@ export class AdminHighlightsPage {
       ctaLabel: '',
       ctaUrl: '',
       productId: '',
+      useProductContent: false,
       placement: 'hero',
       theme: 'dark',
       startsAt: '',
@@ -352,6 +425,7 @@ export class AdminHighlightsPage {
     const options = products.map((product) => ({
       id: product.id,
       name: product.name,
+      description: product.description,
       price: product.price,
       mainImageUrl: product.mainImage?.url ?? null,
     }));
@@ -369,8 +443,11 @@ export class AdminHighlightsPage {
   ): AdminHighlightProduct[] {
     const byId = new Map(primary.map((product) => [product.id, product]));
     for (const product of additional) {
-      if (!byId.has(product.id)) {
+      const current = byId.get(product.id);
+      if (!current) {
         byId.set(product.id, product);
+      } else {
+        byId.set(product.id, { ...product, ...current });
       }
     }
     return [...byId.values()];

@@ -4,6 +4,7 @@ export type HighlightTheme = 'dark' | 'light' | 'brand' | 'neutral';
 export interface AdminHighlightProduct {
   id: string;
   name: string;
+  description?: string | null;
   price: number;
   mainImageUrl: string | null;
 }

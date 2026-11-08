@@ -50,38 +50,30 @@
   }
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="mb-8 flex items-end justify-between gap-4">
-      <div>
-        <p class="text-xs font-medium uppercase tracking-[0.22em] text-fg-muted">
-          {{ 'public.categories.label' | transloco }}
-        </p>
-        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
-          {{ 'public.categories.title' | transloco }}
-        </h2>
-      </div>
-      <a
-        [routerLink]="'/produtos'"
-        class="text-sm font-medium text-brand transition-colors hover:text-brand/80"
-      >
-        {{ 'public.categories.viewAll' | transloco }}
-      </a>
+    <div class="mb-8 flex flex-col items-center text-center">
+      <p class="text-xs font-medium uppercase tracking-[0.22em] text-fg-muted">
+        {{ 'public.categories.label' | transloco }}
+      </p>
+      <h2 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+        {{ 'public.categories.title' | transloco }}
+      </h2>
     </div>
 
     @if (categories().length) {
-      <div class="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-6">
+      <div class="flex flex-wrap items-center justify-center gap-4">
         @for (category of categories(); track category.id) {
           <a
             [routerLink]="'/produtos'"
             [queryParams]="{ categoria: category.slug }"
-            class="rounded-2xl border border-line bg-surface p-4 text-center shadow-sm transition-transform hover:-translate-y-1 hover:border-brand"
+            class="group flex w-full max-w-[220px] flex-col items-center rounded-[28px] border border-line bg-surface px-5 py-6 text-center shadow-[0_18px_45px_rgba(0,0,0,0.06)] transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_50px_rgba(0,113,227,0.14)]"
           >
             <div
-              class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-surface-muted text-brand"
+              class="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-surface-muted text-brand transition-colors group-hover:bg-brand group-hover:text-brand-fg"
               aria-hidden="true"
             >
-              <qd-icon [name]="category.icon ?? 'box'" [size]="22" />
+              <qd-icon [name]="category.icon ?? 'box'" [size]="24" />
             </div>
-            <p class="font-medium text-fg">{{ category.label }}</p>
+            <p class="text-base font-medium text-fg">{{ category.label }}</p>
           </a>
         }
       </div>
@@ -93,39 +85,19 @@
   </section>
 
   @if (showcaseHighlights().length) {
-    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div class="mb-8 text-center">
-        <p class="text-xs font-medium uppercase tracking-[0.15em] text-fg-muted">
-          {{ 'public.highlights.showcaseLabel' | transloco }}
-        </p>
-        <h2 class="mt-2 text-3xl font-medium tracking-tight text-fg md:text-[2.2rem]">
-          {{ 'public.highlights.showcaseTitle' | transloco }}
-        </h2>
-      </div>
-      <qd-home-highlight-carousel
-        variant="cards"
-        [highlights]="showcaseHighlights()"
-        [label]="'public.highlights.showcaseTitle' | transloco"
-      />
-    </section>
+    <qd-home-highlight-carousel
+      variant="cards"
+      [highlights]="showcaseHighlights()"
+      [label]="'public.highlights.showcaseTitle' | transloco"
+    />
   }
 
   @if (categoryBlockHighlights().length) {
-    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-      <div class="mb-8 text-center">
-        <p class="text-xs font-medium uppercase tracking-[0.15em] text-fg-muted">
-          {{ 'public.highlights.categoryBlockLabel' | transloco }}
-        </p>
-        <h2 class="mt-2 text-3xl font-medium tracking-tight text-fg md:text-[2.2rem]">
-          {{ 'public.highlights.categoryBlockTitle' | transloco }}
-        </h2>
-      </div>
-      <qd-home-highlight-carousel
-        variant="cards"
-        [highlights]="categoryBlockHighlights()"
-        [label]="'public.highlights.categoryBlockTitle' | transloco"
-      />
-    </section>
+    <qd-home-highlight-carousel
+      variant="cards"
+      [highlights]="categoryBlockHighlights()"
+      [label]="'public.highlights.categoryBlockTitle' | transloco"
+    />
   }
 
   <section class="mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">

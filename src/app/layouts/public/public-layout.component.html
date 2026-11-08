@@ -4,6 +4,25 @@
 >
   {{ 'a11y.skipToContent' | transloco }}
 </a>
+@if (isHome() && showPreloader()) {
+  <div class="fixed inset-0 z-[120] flex items-center justify-center bg-surface-muted text-fg">
+    <div class="flex w-full max-w-xl flex-col items-center gap-6 px-6">
+      <img src="/favicon.webp" alt="" class="h-15 w-auto object-contain" />
+
+      <div class="h-1.5 w-full overflow-hidden rounded-full bg-surface/80 ring-1 ring-line">
+        <div
+          class="h-full rounded-full bg-brand transition-[width] duration-200 ease-out"
+          [style.width.%]="progress()"
+        ></div>
+      </div>
+
+      <div class="flex w-full justify-end text-[10px] font-medium uppercase tracking-[0.25em] text-fg-muted">
+        <span>{{ progress() }}%</span>
+      </div>
+    </div>
+  </div>
+}
+
 <qd-site-navbar />
 <div id="qd-main-content" tabindex="-1" [class]="isHome() ? '' : 'pt-[70px]'">
   <router-outlet />

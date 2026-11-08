@@ -65,6 +65,18 @@ describe('HomeHighlightCarouselComponent', () => {
     return fixture;
   }
 
+  function createShowcaseCarousel(): ComponentFixture<HomeHighlightCarouselComponent> {
+    const fixture = TestBed.createComponent(HomeHighlightCarouselComponent);
+    fixture.componentRef.setInput('variant', 'cards');
+    fixture.componentRef.setInput(
+      'highlights',
+      highlights.map((highlight) => ({ ...highlight, placement: 'showcase' as const })),
+    );
+    fixture.componentRef.setInput('label', 'Destaques de produtos');
+    fixture.detectChanges();
+    return fixture;
+  }
+
   it('navigates between configured hero slides and validates CTA destinations', () => {
     const fixture = createHeroCarousel();
     const carousel = fixture.componentInstance;
@@ -124,6 +136,28 @@ describe('HomeHighlightCarouselComponent', () => {
     fixture.componentInstance.onPointerLeave();
     vi.advanceTimersByTime(7000);
     expect(fixture.componentInstance.activeIndex()).toBe(1);
+    fixture.destroy();
+  });
+
+  it('renders showcase highlights as full-screen slides with correctly directed chevrons', () => {
+    const fixture = createShowcaseCarousel();
+    const section: HTMLElement = fixture.nativeElement.querySelector('section');
+    const arrowButtons: NodeListOf<HTMLButtonElement> = section.querySelectorAll(
+      'article[aria-hidden="false"] button',
+    );
+
+    expect(section.classList.contains('h-[100svh]')).toBe(true);
+    expect(section.classList.contains('min-h-[500px]')).toBe(true);
+    expect(arrowButtons[0].querySelector('span')?.classList.contains('-rotate-180')).toBe(true);
+    expect(arrowButtons[3].querySelector('span')).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('a.bg-contrast-surface.text-contrast-fg'),
+    ).not.toBeNull();
+
+    arrowButtons[3].click();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.activeIndex()).toBe(1);
+
     fixture.destroy();
   });
 });

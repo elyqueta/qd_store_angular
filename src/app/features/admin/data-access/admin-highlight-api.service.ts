@@ -60,6 +60,12 @@ export class AdminHighlightApiService {
     return this.http.delete<void>(`${this.endpoint}/${encodeURIComponent(id)}`).pipe(map(() => undefined));
   }
 
+  deleteHighlightPermanently(id: string): Observable<void> {
+    return this.http
+      .delete<void>(`${this.endpoint}/${encodeURIComponent(id)}/permanent`)
+      .pipe(map(() => undefined));
+  }
+
   private toFormData(input: Partial<CreateAdminHighlightInput>): FormData {
     const formData = new FormData();
 
@@ -79,7 +85,7 @@ export class AdminHighlightApiService {
       formData.append('ctaLabel', input.ctaLabel?.trim() ?? '');
     }
 
-    if (input.ctaUrl !== undefined) {
+    if (input.ctaUrl !== undefined && !input.productId) {
       formData.append('ctaUrl', input.ctaUrl?.trim() ?? '');
     }
 

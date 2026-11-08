@@ -92,4 +92,43 @@ describe('AdminHighlightApiService', () => {
     request.flush({ status: 'success', data: { ...highlight, isActive: true } });
     await expect(updatePromise).resolves.toMatchObject({ isActive: true });
   });
+
+  it('permanently deletes a highlight using the explicit permanent endpoint', async () => {
+    const deletePromise = firstValueFrom(api.deleteHighlightPermanently(highlight.id));
+    const request = httpTesting.expectOne(`${apiRoot}/highlights/${highlight.id}/permanent`);
+
+    expect(request.request.method).toBe('DELETE');
+    request.flush(null);
+
+    await expect(deletePromise).resolves.toBeUndefined();
+  });
+
+  it('does not send a product page URL when a product is selected', async () => {
+    const productId = '00000000-0000-4000-8000-000000000001';
+    const createdPromise = firstValueFrom(
+      api.createHighlight({
+        title: 'Destaque com produto',
+        subtitle: 'Descrição curta do produto.',
+        ctaLabel: 'Ver produto',
+        ctaUrl: '/produtos/abc-123',
+        productId,
+        placement: 'hero',
+        theme: 'dark',
+      }),
+    );
+
+    const request = httpTesting.expectOne(`${apiRoot}/highlights`);
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body instanceof FormData).toBe(true);
+
+    const formData = request.request.body as FormData;
+    expect(formData.get('productId')).toBe(productId);
+    expect(formData.get('title')).toBe('Destaque com produto');
+    expect(formData.get('subtitle')).toBe('Descrição curta do produto.');
+    expect(formData.has('ctaUrl')).toBe(false);
+    expect(formData.has('image')).toBe(false);
+
+    request.flush({ status: 'success', data: { ...highlight, id: 'highlight-product' } });
+    await expect(createdPromise).resolves.toMatchObject({ id: 'highlight-product' });
+  });
 });
