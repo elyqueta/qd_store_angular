@@ -42,6 +42,8 @@ Estados: 400 JSON inválido · 401 sem/ token inválido · 403 sem permissão ·
 
 **Destaques** (`/api/v1/highlights`): `GET /?placement=hero|showcase|category_block` público, devolvendo apenas destaques activos dentro da janela `startsAt`/`endsAt`, ordenados por `displayOrder`, com produto e categoria resumidos. O back-office usa `GET /admin`, `POST /` e `PATCH /:id` em `multipart/form-data` com a imagem no campo `image`, `PATCH /reorder` com `{ items: [{ id, displayOrder }] }` e `DELETE /:id` para desactivar. Imagens são sempre carregadas pela API para o Cloudinary; URLs arbitrárias não são aceites.
 
+**Serviços** (`/api/v1/services`): `GET /` público devolve serviços activos; `GET /?includeInactive=true` requer autenticação administrativa. `POST /` e `PATCH /:id` são admin e usam `multipart/form-data`, com `name`, `description?`, `icon`, `startsFromPrice?`, `isActive?` e imagem opcional no campo `image`. O ícone tem de existir no catálogo `GET /api/v1/icons`; a imagem é carregada pela API para o Cloudinary.
+
 **Categorias** (`/api/v1/categories`): `GET /` e `GET /:id` públicos; `POST { label, icon? }`, `PATCH /:id { label?, icon? }` e `DELETE /:id` admin (409 se tiver produtos). `label` tem entre 1 e 100 caracteres; `icon` é opcional e pode ser `null` num PATCH para o remover, com nome Font Awesome em kebab-case e máximo de 60 caracteres. O nome tem de existir em `GET /api/v1/icons`; emojis legados foram migrados na base de dados.
 
 **Produtos** (`/api/v1/products`): `GET /?page&limit(≤100)&categoryId&status&search&sort&priceMin&priceMax&availableOnly&excludeId` público (inclui `categoryName` e `mainImage`); `GET /:id?include=images,specifications` público; `POST`, `PATCH /:id`, `DELETE /:id` admin (409 se referenciado por carrinhos ou pedidos).

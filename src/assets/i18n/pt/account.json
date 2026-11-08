@@ -73,6 +73,13 @@
       "saving": "A guardar…",
       "cancel": "Cancelar",
       "photo": "Fotografia de perfil",
+      "choosePhoto": "Escolher do dispositivo",
+      "takePhoto": "Tirar fotografia",
+      "photoPreview": "Pré-visualização da fotografia",
+      "photoReady": "Pronta para carregar",
+      "clearPhoto": "Remover fotografia seleccionada",
+      "uploading": "A carregar fotografia…",
+      "cancelUpload": "Cancelar carregamento",
       "removePhoto": "Remover fotografia",
       "currentPassword": "Palavra-passe actual",
       "newPassword": "Nova palavra-passe",
@@ -83,7 +90,9 @@
         "banned": "Suspenso"
       },
       "validation": {
-        "currentPassword": "Indica a palavra-passe actual para alterar o e-mail ou a palavra-passe."
+        "currentPassword": "Indica a palavra-passe actual para alterar o e-mail ou a palavra-passe.",
+        "photoType": "Selecciona uma imagem JPEG, PNG, WebP ou AVIF.",
+        "photoSize": "A fotografia não pode exceder 8 MB."
       },
       "messages": {
         "updated": "Perfil actualizado.",

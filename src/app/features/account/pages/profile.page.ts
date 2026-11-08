@@ -41,9 +41,22 @@ export class ProfilePage implements OnInit {
   readonly editing = signal(false);
   readonly saving = signal(false);
   readonly removingPhoto = signal(false);
+  readonly uploadProgress = signal(0);
   readonly error = signal<string | null>(null);
   readonly formError = signal<string | null>(null);
   readonly selectedPhoto = signal<File | null>(null);
+  readonly selectedPhotoPreview = signal<string | null>(null);
+  private uploadSubscription?: { unsubscribe: () => void };
+
+  constructor() {
+    this.destroyRef.onDestroy(() => {
+      this.uploadSubscription?.unsubscribe();
+      const preview = this.selectedPhotoPreview();
+      if (preview) {
+        URL.revokeObjectURL(preview);
+      }
+    });
+  }
 
   readonly form = this.formBuilder.group({
     fullName: ['', [Validators.required, Validators.pattern(/\S/), Validators.maxLength(150)]],
@@ -98,6 +111,7 @@ export class ProfilePage implements OnInit {
   }
 
   cancelEditing(): void {
+    this.cancelUpload();
     const profile = this.profile();
     if (profile) {
       this.resetForm(profile);
@@ -109,14 +123,39 @@ export class ProfilePage implements OnInit {
 
   selectPhoto(event: Event): void {
     const input = event.target as HTMLInputElement;
-    this.selectedPhoto.set(input.files?.[0] ?? null);
+    const file = input.files?.[0] ?? null;
+    if (!file) {
+      return;
+    }
+
+    const acceptedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+    if (!acceptedTypes.includes(file.type)) {
+      this.formError.set(this.transloco.translate('account.profile.validation.photoType'));
+      input.value = '';
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      this.formError.set(this.transloco.translate('account.profile.validation.photoSize'));
+      input.value = '';
+      return;
+    }
+
+    this.formError.set(null);
+    this.setSelectedPhoto(file);
   }
 
   clearSelectedPhoto(): void {
-    this.selectedPhoto.set(null);
+    this.setSelectedPhoto(null);
     if (this.photoInput) {
       this.photoInput.nativeElement.value = '';
     }
+  }
+
+  cancelUpload(): void {
+    this.uploadSubscription?.unsubscribe();
+    this.uploadSubscription = undefined;
+    this.uploadProgress.set(0);
+    this.saving.set(false);
   }
 
   save(): void {
@@ -157,8 +196,13 @@ export class ProfilePage implements OnInit {
 
     this.saving.set(true);
     this.formError.set(null);
-    this.api
-      .updateMine(data)
+    const request = photo
+      ? this.api.uploadMine(data, (progress) => this.uploadProgress.set(progress))
+      : this.api.updateMine(data);
+    if (photo) {
+      this.uploadProgress.set(0);
+    }
+    this.uploadSubscription = request
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.saving.set(false)),
@@ -168,11 +212,15 @@ export class ProfilePage implements OnInit {
           this.profile.set(profile);
           this.authStore.updateUser(profile);
           this.resetForm(profile);
-          this.selectedPhoto.set(null);
+          this.setSelectedPhoto(null);
+          this.uploadSubscription = undefined;
           this.editing.set(false);
           this.toast.success(this.transloco.translate('account.profile.messages.updated'));
         },
-        error: (error: unknown) => this.formError.set(this.getErrorMessage(error)),
+        error: (error: unknown) => {
+          this.uploadSubscription = undefined;
+          this.formError.set(this.getErrorMessage(error));
+        },
       });
   }
 
@@ -206,6 +254,15 @@ export class ProfilePage implements OnInit {
       currentPassword: '',
       newPassword: '',
     });
+  }
+
+  private setSelectedPhoto(file: File | null): void {
+    const preview = this.selectedPhotoPreview();
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+    this.selectedPhoto.set(file);
+    this.selectedPhotoPreview.set(file ? URL.createObjectURL(file) : null);
   }
 
   private getErrorMessage(error: unknown): string {
