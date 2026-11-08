@@ -1,105 +1,186 @@
-<div class="min-h-screen bg-surface-muted">
+<ng-template #adminNavigation>
+  <nav class="flex flex-col gap-1 p-3" [attr.aria-label]="'admin.layout.navigation' | transloco">
+    <a
+      routerLink="/admin"
+      routerLinkActive="bg-brand/10 text-brand"
+      ariaCurrentWhenActive="page"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.dashboard' | transloco }}
+    </a>
+    <a
+      routerLink="/admin/destaques"
+      routerLinkActive="bg-brand/10 text-brand"
+      ariaCurrentWhenActive="page"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.highlights' | transloco }}
+    </a>
+    <a
+      routerLink="/admin/categorias"
+      routerLinkActive="bg-brand/10 text-brand"
+      ariaCurrentWhenActive="page"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.categories' | transloco }}
+    </a>
+    <a
+      routerLink="/admin/produtos"
+      routerLinkActive="bg-brand/10 text-brand"
+      ariaCurrentWhenActive="page"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.products' | transloco }}
+    </a>
+    <a
+      routerLink="/admin/tipos-entrega"
+      routerLinkActive="bg-brand/10 text-brand"
+      ariaCurrentWhenActive="page"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.deliveryTypes' | transloco }}
+    </a>
+    <a
+      routerLink="/admin/servicos"
+      routerLinkActive="bg-brand/10 text-brand"
+      ariaCurrentWhenActive="page"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.services' | transloco }}
+    </a>
+    <a
+      routerLink="/admin/empresas"
+      routerLinkActive="bg-brand/10 text-brand"
+      ariaCurrentWhenActive="page"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.companies' | transloco }}
+    </a>
+  </nav>
+
+  <div class="mt-auto space-y-1 border-t border-line p-3">
+    <a
+      routerLink="/"
+      class="flex min-h-11 items-center rounded-xl px-4 py-2.5 text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg"
+      (click)="closeSidebar()"
+    >
+      {{ 'admin.layout.store' | transloco }}
+    </a>
+    <button
+      type="button"
+      class="flex min-h-11 w-full items-center gap-3 rounded-xl px-4 py-2.5 text-left text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      [attr.aria-label]="'nav.themeToggle' | transloco"
+      (click)="toggleTheme()"
+    >
+      @if (themeService.effective() === 'dark') {
+        <qd-icon name="sun" [size]="18" />
+      } @else {
+        <qd-icon name="moon" [size]="18" />
+      }
+      {{ 'nav.themeToggle' | transloco }}
+    </button>
+    <button
+      type="button"
+      class="flex min-h-11 w-full items-center rounded-xl px-4 py-2.5 text-left text-sm font-medium text-fg-muted transition-colors hover:bg-surface-muted hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      (click)="logout()"
+    >
+      {{ 'admin.layout.logout' | transloco }}
+    </button>
+  </div>
+</ng-template>
+
+<div class="min-h-screen bg-surface-muted" (keydown.escape)="closeSidebar()">
   <a
     href="#qd-main-content"
     class="sr-only fixed left-4 top-4 z-[100] rounded-full bg-brand px-5 py-3 text-sm font-semibold text-brand-fg focus:not-sr-only"
   >
     {{ 'a11y.skipToContent' | transloco }}
   </a>
-  <header class="border-b border-line bg-surface">
-    <div
-      class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8"
-    >
+
+  <div class="flex min-h-screen">
+    <aside class="hidden w-72 shrink-0 flex-col border-r border-line bg-surface lg:flex">
       <a
         routerLink="/admin"
-        class="flex items-center gap-3 text-lg font-semibold tracking-tight text-fg"
+        class="flex h-[73px] shrink-0 items-center border-b border-line px-6"
         [attr.aria-label]="'admin.layout.title' | transloco"
       >
         <img src="/favicon.webp" alt="" class="h-12 w-auto" />
       </a>
+      <ng-container [ngTemplateOutlet]="adminNavigation" />
+    </aside>
 
-      <nav
-        class="flex flex-wrap items-center gap-2 sm:gap-4"
-        [attr.aria-label]="'admin.layout.navigation' | transloco"
+    <div class="min-w-0 flex-1">
+      <header
+        class="sticky top-0 z-30 flex h-[73px] items-center justify-between border-b border-line bg-surface px-4 sm:px-6 lg:hidden"
       >
         <a
           routerLink="/admin"
-          routerLinkActive="text-brand"
-          ariaCurrentWhenActive="page"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
+          class="flex items-center"
+          [attr.aria-label]="'admin.layout.title' | transloco"
         >
-          {{ 'admin.layout.dashboard' | transloco }}
-        </a>
-        <a
-          routerLink="/admin/destaques"
-          routerLinkActive="text-brand"
-          ariaCurrentWhenActive="page"
-          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
-        >
-          {{ 'admin.layout.highlights' | transloco }}
-        </a>
-        <a
-          routerLink="/admin/categorias"
-          routerLinkActive="text-brand"
-          ariaCurrentWhenActive="page"
-          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
-        >
-          {{ 'admin.layout.categories' | transloco }}
-        </a>
-        <a
-          routerLink="/admin/produtos"
-          routerLinkActive="text-brand"
-          ariaCurrentWhenActive="page"
-          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
-        >
-          {{ 'admin.layout.products' | transloco }}
-        </a>
-        <a
-          routerLink="/admin/tipos-entrega"
-          routerLinkActive="text-brand"
-          ariaCurrentWhenActive="page"
-          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
-        >
-          {{ 'admin.layout.deliveryTypes' | transloco }}
-        </a>
-        <a
-          routerLink="/admin/empresas"
-          routerLinkActive="text-brand"
-          ariaCurrentWhenActive="page"
-          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
-        >
-          {{ 'admin.layout.companies' | transloco }}
-        </a>
-        <a
-          routerLink="/"
-          class="rounded-full px-3 py-2 text-sm font-medium text-fg-muted transition-colors hover:text-brand"
-        >
-          {{ 'admin.layout.store' | transloco }}
+          <img src="/favicon.webp" alt="" class="h-11 w-auto" />
         </a>
         <button
           type="button"
-          class="rounded-full border border-line px-3 py-2 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-          [attr.aria-label]="'nav.themeToggle' | transloco"
-          (click)="toggleTheme()"
+          class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-fg transition-colors hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          [attr.aria-label]="
+            (sidebarOpen() ? 'admin.layout.closeMenu' : 'admin.layout.openMenu') | transloco
+          "
+          aria-controls="qd-admin-mobile-sidebar"
+          [attr.aria-expanded]="sidebarOpen()"
+          (click)="toggleSidebar()"
         >
-          @if (themeService.effective() === 'dark') {
-            <qd-icon name="sun" [size]="18" />
-          } @else {
-            <qd-icon name="moon" [size]="18" />
-          }
+          <qd-icon [name]="sidebarOpen() ? 'xmark' : 'bars'" [size]="20" />
         </button>
-        <button
-          type="button"
-          class="rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition-colors hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
-          (click)="logout()"
-        >
-          {{ 'admin.layout.logout' | transloco }}
-        </button>
-      </nav>
-    </div>
-  </header>
+      </header>
 
-  <div id="qd-main-content" tabindex="-1">
-    <router-outlet />
+      @if (sidebarOpen()) {
+        <button
+          type="button"
+          class="fixed inset-0 z-40 bg-fg/50 lg:hidden"
+          [attr.aria-label]="'admin.layout.closeMenu' | transloco"
+          (click)="closeSidebar()"
+        ></button>
+        <aside
+          id="qd-admin-mobile-sidebar"
+          class="fixed inset-y-0 left-0 z-50 flex w-[min(20rem,85vw)] flex-col border-r border-line bg-surface shadow-2xl lg:hidden"
+          [attr.aria-label]="'admin.layout.navigation' | transloco"
+        >
+          <div
+            class="flex h-[73px] shrink-0 items-center justify-between border-b border-line px-5"
+          >
+            <a
+              routerLink="/admin"
+              class="flex items-center"
+              [attr.aria-label]="'admin.layout.title' | transloco"
+              (click)="closeSidebar()"
+            >
+              <img src="/favicon.webp" alt="" class="h-11 w-auto" />
+            </a>
+            <button
+              type="button"
+              class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg transition-colors hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+              [attr.aria-label]="'admin.layout.closeMenu' | transloco"
+              (click)="closeSidebar()"
+            >
+              <qd-icon name="xmark" [size]="18" />
+            </button>
+          </div>
+          <ng-container [ngTemplateOutlet]="adminNavigation" />
+        </aside>
+      }
+
+      <main id="qd-main-content" tabindex="-1">
+        <router-outlet />
+      </main>
+    </div>
   </div>
 </div>

@@ -109,7 +109,7 @@ Alvo:
 1. **Hero em ecrã inteiro** com slides, título/subtítulo/CTA e imagem de fundo, **gerido por destaques** (ver §7.1) em vez de dados hardcoded. Manter o estilo (`tesla-section`, overlay em gradiente, pontos de navegação).
 2. **Secções em ecrã inteiro** (estilo Tesla) para produtos/serviços em destaque, também geridas por destaques.
 3. **Blocos por categoria** (Desktops, Gaming e Som, Extra) com cartões de produto e link "Ver todos".
-4. **Serviços**: o utilizador pede também "produtos e serviços". O contrato actual não tem serviços. Ver `20-…` (proposta de entidade `service` ou `highlight` genérico). Não inventar dados.
+4. **Serviços**: apresentar na Home os serviços activos de `GET /api/v1/services`; gerir os registos no back-office pela rota `/admin/servicos`. Os serviços são informativos, não produtos compráveis.
 5. **CTA WhatsApp** final ("Precisa de ajuda?").
 6. Animações de entrada ao scroll (`useReveal` / Framer Motion) recriadas com CSS + `IntersectionObserver` numa directiva `qdReveal`, desactivadas com `prefers-reduced-motion`.
 7. Cartões de produto: efeito de elevação no hover, selo de desconto em vermelho com percentagem, preço riscado, "Poupas X Kz", como no React. Remover o efeito tilt 3D se ficar pesado, mas manter a elevação.

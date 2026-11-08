@@ -12,6 +12,11 @@ export const adminRoutes: Routes = [
       import('./pages/admin-delivery-types.page').then((module) => module.AdminDeliveryTypesPage),
   },
   {
+    path: 'servicos',
+    loadComponent: () =>
+      import('./pages/admin-services.page').then((module) => module.AdminServicesPage),
+  },
+  {
     path: 'produtos/novo',
     loadComponent: () =>
       import('./pages/admin-product-form.page').then((module) => module.AdminProductFormPage),

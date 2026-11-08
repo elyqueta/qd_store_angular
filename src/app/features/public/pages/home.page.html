@@ -137,4 +137,86 @@
       </div>
     }
   </section>
+
+  <section class="bg-surface px-4 py-16 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-7xl">
+      <div class="mb-8 text-center">
+        <p class="text-xs font-medium uppercase tracking-[0.22em] text-fg-muted">
+          {{ 'public.services.label' | transloco }}
+        </p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-fg">
+          {{ 'public.services.title' | transloco }}
+        </h2>
+      </div>
+
+      @if (servicesLoading()) {
+        <p
+          role="status"
+          aria-live="polite"
+          class="rounded-2xl border border-line bg-surface-muted p-8 text-center text-fg-muted"
+        >
+          {{ 'common.loading' | transloco }}
+        </p>
+      } @else if (servicesError()) {
+        <div
+          role="alert"
+          class="rounded-2xl border border-danger/30 bg-danger/10 p-6 text-center text-danger"
+        >
+          <p>{{ 'public.errors.services' | transloco }}</p>
+          <button
+            type="button"
+            class="mt-4 rounded-full border border-danger/40 px-4 py-2 text-sm font-medium text-danger transition-colors hover:bg-danger/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-danger"
+            (click)="loadServices()"
+          >
+            {{ 'common.retry' | transloco }}
+          </button>
+        </div>
+      } @else if (!services().length) {
+        <p class="rounded-2xl border border-line bg-surface-muted p-8 text-center text-fg-muted">
+          {{ 'public.services.empty' | transloco }}
+        </p>
+      } @else {
+        <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+          @for (service of services(); track service.id) {
+            <article
+              class="group overflow-hidden rounded-3xl border border-line bg-surface transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-xl motion-reduce:transition-none"
+            >
+              @if (service.imageUrl) {
+                <img
+                  [src]="service.imageUrl"
+                  alt=""
+                  class="h-52 w-full bg-surface-muted object-cover transition-transform duration-500 group-hover:scale-[1.02] motion-reduce:transition-none"
+                  loading="lazy"
+                />
+              }
+              <div class="p-6">
+                <div class="flex items-start gap-4">
+                  <span
+                    class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand/10 text-brand"
+                    aria-hidden="true"
+                  >
+                    <qd-icon [name]="service.icon" [size]="22" />
+                  </span>
+                  <div class="min-w-0">
+                    <h3 class="text-lg font-semibold text-fg">{{ service.name }}</h3>
+                    @if (service.startsFromPrice !== null) {
+                      <p class="mt-1 text-sm font-semibold text-brand">
+                        {{ 'public.services.startsFrom' | transloco }}
+                        {{ service.startsFromPrice | number }} Kz
+                      </p>
+                    }
+                  </div>
+                </div>
+                @if (service.description) {
+                  <p class="mt-4 whitespace-pre-line text-sm leading-6 text-fg-muted">
+                    {{ service.description }}
+                  </p>
+                }
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </div>
+  </section>
 </main>

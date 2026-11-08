@@ -9,6 +9,9 @@
       "products": "Produtos",
       "deliveryTypes": "Tipos de entrega",
       "companies": "Empresas",
+      "services": "Serviços",
+      "openMenu": "Abrir menu administrativo",
+      "closeMenu": "Fechar menu administrativo",
       "store": "Voltar à loja",
       "logout": "Terminar sessão"
     },
@@ -331,6 +334,62 @@
         "deleted": "Destaque desactivado.",
         "permanentlyDeleted": "Destaque eliminado definitivamente.",
         "activated": "Destaque activado."
+      }
+    },
+    "services": {
+      "seoTitle": "Serviços | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Gere os serviços apresentados na loja QD · ItSOLUTIONS.",
+      "kicker": "Área administrativa",
+      "title": "Gestão de serviços",
+      "description": "Cria e actualiza os serviços apresentados na loja. Os serviços não são produtos compráveis.",
+      "listTitle": "Serviços",
+      "add": "Adicionar serviço",
+      "empty": "Ainda não existem serviços configurados.",
+      "errorTitle": "Não foi possível carregar os serviços.",
+      "errorDescription": "Verifica a ligação e tenta carregar a lista novamente.",
+      "edit": "Editar",
+      "activate": "Activar",
+      "deactivate": "Desactivar",
+      "confirmTitle": "Confirmar desactivação do serviço",
+      "confirmDescription": "Pretendes desactivar “{{ name }}”? Deixará de aparecer na loja pública.",
+      "confirmAction": "Sim, desactivar",
+      "createTitle": "Adicionar serviço",
+      "editTitle": "Editar serviço",
+      "formDescription": "Escolhe o ícone no catálogo e, se necessário, carrega uma imagem. Não são aceites URLs de imagem.",
+      "selectIcon": "Selecciona um ícone",
+      "iconsLoading": "A carregar o catálogo de ícones…",
+      "iconsError": "Não foi possível carregar o catálogo de ícones.",
+      "startsFrom": "A partir de",
+      "startsFromHelp": "O preço é opcional. Se estiver vazio durante a edição, o valor actual não será alterado.",
+      "status": {
+        "active": "Activo",
+        "inactive": "Inactivo"
+      },
+      "fields": {
+        "name": "Nome",
+        "description": "Descrição",
+        "icon": "Ícone",
+        "startsFromPrice": "Preço inicial (Kz, opcional)",
+        "image": "Imagem (opcional)"
+      },
+      "validation": {
+        "name": "Indica um nome com até 120 caracteres.",
+        "icon": "Selecciona um ícone do catálogo.",
+        "startsFromPrice": "Indica um preço numérico igual ou superior a zero.",
+        "image": "Selecciona uma imagem JPEG, PNG, WebP ou AVIF com até 8 MB."
+      },
+      "create": "Criar serviço",
+      "save": "Guardar alterações",
+      "saving": "A guardar…",
+      "cancel": "Cancelar",
+      "errors": {
+        "unavailable": "Este serviço já não está disponível. Actualiza a lista e tenta novamente."
+      },
+      "messages": {
+        "created": "Serviço criado.",
+        "updated": "Serviço actualizado.",
+        "activated": "Serviço activado.",
+        "deactivated": "Serviço desactivado."
       }
     }
   }

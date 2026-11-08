@@ -25,6 +25,12 @@
       "title": "Produtos disponíveis",
       "empty": "Não existem produtos disponíveis neste momento."
     },
+    "services": {
+      "label": "Serviços",
+      "title": "Apoio para além dos produtos",
+      "startsFrom": "A partir de",
+      "empty": "Não existem serviços disponíveis neste momento."
+    },
     "highlights": {
       "showcaseLabel": "Destaques",
       "showcaseTitle": "Campanhas e novidades",
@@ -162,6 +168,7 @@
       "categories": "Não foi possível carregar as categorias.",
       "featured": "Não foi possível carregar os produtos em destaque.",
       "highlights": "Não foi possível carregar os destaques da página inicial.",
+      "services": "Não foi possível carregar os serviços disponíveis.",
       "catalog": "Não foi possível carregar o catálogo.",
       "product": "Não foi possível carregar a informação do produto.",
       "relatedProducts": "Não foi possível carregar produtos relacionados.",
