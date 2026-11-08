@@ -154,7 +154,58 @@
         }
       },
       "contactTitle": "Precisas de uma proposta para a tua empresa?",
-      "contactDescription": "Envia uma mensagem à equipa. O pedido será tratado na conversa; não existe um formulário de orçamento nesta página."
+      "contactDescription": "Se preferires, podes também falar directamente com a nossa equipa pelo WhatsApp.",
+      "form": {
+        "kicker": "Pedido de orçamento",
+        "title": "Conta-nos o que a tua empresa precisa",
+        "description": "Preenche os dados para a equipa analisar o pedido. Os campos assinalados como obrigatórios são necessários para o envio.",
+        "fields": {
+          "companyName": "Nome da empresa",
+          "nif": "NIF",
+          "contactName": "Nome do contacto",
+          "email": "E-mail",
+          "phone": "Telefone",
+          "province": "Província",
+          "municipality": "Município",
+          "sector": "Sector de actividade",
+          "volume": "Quantidade ou volume pretendido",
+          "categories": "Categorias de interesse",
+          "message": "Informação adicional (opcional)"
+        },
+        "selectProvince": "Selecciona uma província",
+        "selectMunicipality": "Selecciona um município",
+        "categoriesHelp": "Escolhe entre 1 e 30 categorias. As opções são carregadas do catálogo actual.",
+        "loadingProvinces": "A carregar províncias…",
+        "loadingMunicipalities": "A carregar municípios…",
+        "loadingCategories": "A carregar categorias…",
+        "noCategories": "Não existem categorias disponíveis para seleccionar.",
+        "submit": "Enviar pedido de orçamento",
+        "submitting": "A enviar pedido…",
+        "successTitle": "Pedido enviado com sucesso",
+        "successDescription": "A equipa recebeu o teu pedido de orçamento. Não é enviada uma confirmação por e-mail nesta fase.",
+        "serverFieldError": "Confirma este campo e tenta novamente.",
+        "validation": {
+          "companyName": "Indica o nome da empresa, até 200 caracteres.",
+          "nif": "Indica um NIF com exactamente 9 dígitos.",
+          "contactName": "Indica o nome do contacto, até 150 caracteres.",
+          "email": "Indica um e-mail válido, até 255 caracteres.",
+          "phone": "Indica um número angolano válido, por exemplo +244 923 456 789.",
+          "province": "Selecciona uma província válida.",
+          "municipality": "Selecciona um município da província escolhida.",
+          "sector": "Indica o sector de actividade, até 100 caracteres.",
+          "volume": "Indica a quantidade ou volume pretendido, até 100 caracteres.",
+          "categories": "Escolhe entre 1 e 30 categorias sem repetir.",
+          "message": "A informação adicional não pode exceder 5000 caracteres.",
+          "location": "Confirma a província e o município seleccionados."
+        },
+        "errors": {
+          "validation": "Alguns dados precisam de ser corrigidos. Verifica os campos assinalados.",
+          "rateLimit": "Atingiste o limite de pedidos por agora. Tenta novamente mais tarde.",
+          "network": "Não foi possível enviar o pedido. Verifica a ligação e tenta novamente.",
+          "locations": "Não foi possível carregar as localizações.",
+          "categories": "Não foi possível carregar as categorias."
+        }
+      }
     },
     "nav": {
       "viewCategory": "Ver todos os produtos desta categoria"

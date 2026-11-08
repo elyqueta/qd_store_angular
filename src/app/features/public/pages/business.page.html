@@ -39,6 +39,406 @@
     }
   </section>
 
+  <section class="mx-auto max-w-6xl px-4 pb-14 sm:px-6 lg:px-8" aria-labelledby="qd-business-quote">
+    <div class="rounded-3xl border border-line bg-surface p-6 sm:p-8 lg:p-10">
+      <header class="mb-8 max-w-3xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
+          {{ 'public.business.form.kicker' | transloco }}
+        </p>
+        <h2 id="qd-business-quote" class="mt-2 text-2xl font-semibold tracking-tight text-fg">
+          {{ 'public.business.form.title' | transloco }}
+        </h2>
+        <p class="mt-3 text-sm leading-6 text-fg-muted">
+          {{ 'public.business.form.description' | transloco }}
+        </p>
+      </header>
+
+      @if (submitted()) {
+        <div
+          class="rounded-2xl border border-success/30 bg-success/5 p-5 text-sm text-fg"
+          role="status"
+          aria-live="polite"
+        >
+          <h3 class="font-semibold">{{ 'public.business.form.successTitle' | transloco }}</h3>
+          <p class="mt-2 leading-6">{{ 'public.business.form.successDescription' | transloco }}</p>
+        </div>
+      } @else {
+        @if (formError(); as message) {
+          <p
+            class="mb-6 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
+            role="alert"
+            aria-live="assertive"
+          >
+            {{ message }}
+          </p>
+        }
+
+        <form
+          class="grid grid-cols-1 gap-5 md:grid-cols-2"
+          [formGroup]="form"
+          (ngSubmit)="submitForm()"
+          novalidate
+        >
+          <div>
+            <label for="qd-quote-company" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.companyName' | transloco }}
+            </label>
+            <input
+              id="qd-quote-company"
+              type="text"
+              formControlName="companyName"
+              maxlength="200"
+              autocomplete="organization"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="
+                form.controls.companyName.touched && hasFieldError('companyName')
+              "
+              [attr.aria-describedby]="
+                hasFieldError('companyName') && form.controls.companyName.touched
+                  ? 'qd-quote-company-error'
+                  : null
+              "
+            />
+            @if (form.controls.companyName.touched && hasFieldError('companyName')) {
+              <p id="qd-quote-company-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('companyName') | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-nif" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.nif' | transloco }}
+            </label>
+            <input
+              id="qd-quote-nif"
+              type="text"
+              formControlName="nif"
+              inputmode="numeric"
+              autocomplete="off"
+              maxlength="9"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.nif.touched && hasFieldError('nif')"
+              [attr.aria-describedby]="
+                hasFieldError('nif') && form.controls.nif.touched ? 'qd-quote-nif-error' : null
+              "
+            />
+            @if (form.controls.nif.touched && hasFieldError('nif')) {
+              <p id="qd-quote-nif-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('nif') | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-contact" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.contactName' | transloco }}
+            </label>
+            <input
+              id="qd-quote-contact"
+              type="text"
+              formControlName="contactName"
+              maxlength="150"
+              autocomplete="name"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="
+                form.controls.contactName.touched && hasFieldError('contactName')
+              "
+              [attr.aria-describedby]="
+                hasFieldError('contactName') && form.controls.contactName.touched
+                  ? 'qd-quote-contact-error'
+                  : null
+              "
+            />
+            @if (form.controls.contactName.touched && hasFieldError('contactName')) {
+              <p id="qd-quote-contact-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('contactName') | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-email" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.email' | transloco }}
+            </label>
+            <input
+              id="qd-quote-email"
+              type="email"
+              formControlName="email"
+              maxlength="255"
+              autocomplete="email"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.email.touched && hasFieldError('email')"
+              [attr.aria-describedby]="
+                hasFieldError('email') && form.controls.email.touched
+                  ? 'qd-quote-email-error'
+                  : null
+              "
+            />
+            @if (form.controls.email.touched && hasFieldError('email')) {
+              <p id="qd-quote-email-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('email') | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-phone" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.phone' | transloco }}
+            </label>
+            <input
+              id="qd-quote-phone"
+              type="tel"
+              formControlName="phone"
+              autocomplete="tel"
+              placeholder="+244 923 456 789"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.phone.touched && hasFieldError('phone')"
+              [attr.aria-describedby]="
+                hasFieldError('phone') && form.controls.phone.touched
+                  ? 'qd-quote-phone-error'
+                  : null
+              "
+            />
+            @if (form.controls.phone.touched && hasFieldError('phone')) {
+              <p id="qd-quote-phone-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('phone') | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-province" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.province' | transloco }}
+            </label>
+            <select
+              id="qd-quote-province"
+              formControlName="province"
+              required
+              [disabled]="provincesLoading() || provincesError()"
+              (change)="onProvinceChange()"
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60"
+              [attr.aria-invalid]="form.controls.province.touched && hasFieldError('province')"
+              [attr.aria-describedby]="
+                hasFieldError('province') && form.controls.province.touched
+                  ? 'qd-quote-province-error'
+                  : null
+              "
+            >
+              <option value="">{{ 'public.business.form.selectProvince' | transloco }}</option>
+              @for (province of provinces(); track province.slug) {
+                <option [value]="province.slug">{{ province.name }}</option>
+              }
+            </select>
+            @if (form.controls.province.touched && hasFieldError('province')) {
+              <p id="qd-quote-province-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('province') | transloco }}
+              </p>
+            }
+            @if (provincesLoading()) {
+              <p class="mt-1 text-xs text-fg-muted" role="status">
+                {{ 'public.business.form.loadingProvinces' | transloco }}
+              </p>
+            } @else if (provincesError()) {
+              <div class="mt-2 text-xs text-danger" role="alert">
+                <span>{{ 'public.business.form.errors.locations' | transloco }}</span>
+                <button type="button" class="ml-2 underline" (click)="loadProvinces()">
+                  {{ 'common.retry' | transloco }}
+                </button>
+              </div>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-municipality" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.municipality' | transloco }}
+            </label>
+            <select
+              id="qd-quote-municipality"
+              formControlName="municipality"
+              required
+              [disabled]="
+                !form.controls.province.value ||
+                municipalitiesLoading() ||
+                municipalitiesError() ||
+                !municipalities().length
+              "
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20 disabled:opacity-60"
+              [attr.aria-invalid]="
+                form.controls.municipality.touched && hasFieldError('municipality')
+              "
+              [attr.aria-describedby]="
+                hasFieldError('municipality') && form.controls.municipality.touched
+                  ? 'qd-quote-municipality-error'
+                  : null
+              "
+            >
+              <option value="">{{ 'public.business.form.selectMunicipality' | transloco }}</option>
+              @for (municipality of municipalities(); track municipality) {
+                <option [value]="municipality">{{ municipality }}</option>
+              }
+            </select>
+            @if (form.controls.municipality.touched && hasFieldError('municipality')) {
+              <p id="qd-quote-municipality-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('municipality') | transloco }}
+              </p>
+            }
+            @if (municipalitiesLoading()) {
+              <p class="mt-1 text-xs text-fg-muted" role="status">
+                {{ 'public.business.form.loadingMunicipalities' | transloco }}
+              </p>
+            } @else if (municipalitiesError()) {
+              <div class="mt-2 text-xs text-danger" role="alert">
+                <span>{{ 'public.business.form.errors.locations' | transloco }}</span>
+                <button type="button" class="ml-2 underline" (click)="loadMunicipalities()">
+                  {{ 'common.retry' | transloco }}
+                </button>
+              </div>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-sector" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.sector' | transloco }}
+            </label>
+            <input
+              id="qd-quote-sector"
+              type="text"
+              formControlName="sector"
+              maxlength="100"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.sector.touched && hasFieldError('sector')"
+              [attr.aria-describedby]="
+                hasFieldError('sector') && form.controls.sector.touched
+                  ? 'qd-quote-sector-error'
+                  : null
+              "
+            />
+            @if (form.controls.sector.touched && hasFieldError('sector')) {
+              <p id="qd-quote-sector-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('sector') | transloco }}
+              </p>
+            }
+          </div>
+
+          <div>
+            <label for="qd-quote-volume" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.volume' | transloco }}
+            </label>
+            <input
+              id="qd-quote-volume"
+              type="text"
+              formControlName="volume"
+              maxlength="100"
+              required
+              class="min-h-11 w-full rounded-xl border border-line bg-surface px-4 py-2.5 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.volume.touched && hasFieldError('volume')"
+              [attr.aria-describedby]="
+                hasFieldError('volume') && form.controls.volume.touched
+                  ? 'qd-quote-volume-error'
+                  : null
+              "
+            />
+            @if (form.controls.volume.touched && hasFieldError('volume')) {
+              <p id="qd-quote-volume-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('volume') | transloco }}
+              </p>
+            }
+          </div>
+
+          <fieldset class="md:col-span-2" [attr.aria-describedby]="'qd-quote-categories-help'">
+            <legend class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.categories' | transloco }}
+            </legend>
+            <p id="qd-quote-categories-help" class="mb-3 text-xs text-fg-muted">
+              {{ 'public.business.form.categoriesHelp' | transloco }}
+            </p>
+            @if (categoriesLoading()) {
+              <p class="text-sm text-fg-muted" role="status">
+                {{ 'public.business.form.loadingCategories' | transloco }}
+              </p>
+            } @else if (categoriesError()) {
+              <div class="text-sm text-danger" role="alert">
+                <span>{{ 'public.business.form.errors.categories' | transloco }}</span>
+                <button type="button" class="ml-2 underline" (click)="loadCategories()">
+                  {{ 'common.retry' | transloco }}
+                </button>
+              </div>
+            } @else if (!categories().length) {
+              <p class="text-sm text-fg-muted">
+                {{ 'public.business.form.noCategories' | transloco }}
+              </p>
+            } @else {
+              <div class="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                @for (category of categories(); track category.id) {
+                  <label
+                    class="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-line px-3 py-2 text-sm text-fg hover:border-brand"
+                  >
+                    <input
+                      type="checkbox"
+                      [checked]="form.controls.categories.value.includes(category.label)"
+                      (change)="toggleCategory(category.label, $event)"
+                      class="h-4 w-4 accent-brand"
+                    />
+                    <span>{{ category.label }}</span>
+                  </label>
+                }
+              </div>
+            }
+            @if (form.controls.categories.touched && hasFieldError('categories')) {
+              <p class="mt-2 text-sm text-danger">
+                {{ fieldErrorKey('categories') | transloco }}
+              </p>
+            }
+          </fieldset>
+
+          <div class="md:col-span-2">
+            <label for="qd-quote-message" class="mb-2 block text-sm font-medium text-fg">
+              {{ 'public.business.form.fields.message' | transloco }}
+            </label>
+            <textarea
+              id="qd-quote-message"
+              formControlName="message"
+              maxlength="5000"
+              rows="5"
+              class="w-full rounded-xl border border-line bg-surface px-4 py-3 text-sm text-fg outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
+              [attr.aria-invalid]="form.controls.message.touched && hasFieldError('message')"
+              [attr.aria-describedby]="
+                hasFieldError('message') && form.controls.message.touched
+                  ? 'qd-quote-message-error'
+                  : null
+              "
+            ></textarea>
+            @if (form.controls.message.touched && hasFieldError('message')) {
+              <p id="qd-quote-message-error" class="mt-1 text-sm text-danger">
+                {{ fieldErrorKey('message') | transloco }}
+              </p>
+            }
+          </div>
+
+          <div class="md:col-span-2">
+            <button
+              type="submit"
+              class="inline-flex min-h-11 items-center justify-center rounded-full bg-brand px-6 py-3 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:cursor-not-allowed disabled:opacity-60"
+              [disabled]="submitting() || provincesLoading() || categoriesLoading()"
+            >
+              {{
+                (submitting() ? 'public.business.form.submitting' : 'public.business.form.submit')
+                  | transloco
+              }}
+            </button>
+          </div>
+        </form>
+      }
+    </div>
+  </section>
+
   <section class="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
     <div class="rounded-3xl border border-line bg-surface p-8 text-center sm:p-10">
       <h2 class="text-2xl font-semibold tracking-tight text-fg">

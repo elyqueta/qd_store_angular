@@ -38,6 +38,11 @@ export interface ProvinceWithMunicipalities {
   municipalities: string[];
 }
 
+export interface Province {
+  slug: string;
+  name: string;
+}
+
 export interface ApiSingleResponse<T> {
   status: 'success';
   data: T;

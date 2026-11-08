@@ -6,6 +6,11 @@ export const adminRoutes: Routes = [
     loadComponent: () => import('./pages/admin-users.page').then((module) => module.AdminUsersPage),
   },
   {
+    path: 'pedidos-orcamento',
+    loadComponent: () =>
+      import('./pages/admin-quote-requests.page').then((module) => module.AdminQuoteRequestsPage),
+  },
+  {
     path: 'empresas',
     loadComponent: () =>
       import('./pages/admin-companies.page').then((module) => module.AdminCompaniesPage),

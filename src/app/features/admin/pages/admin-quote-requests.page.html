@@ -1,0 +1,297 @@
+<main class="mx-auto min-h-[60vh] max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+  <header class="mb-8">
+    <p class="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-brand">
+      {{ 'admin.quoteRequests.kicker' | transloco }}
+    </p>
+    <h1 class="text-3xl font-semibold tracking-tight text-fg">
+      {{ 'admin.quoteRequests.title' | transloco }}
+    </h1>
+    <p class="mt-2 max-w-3xl text-sm text-fg-muted">
+      {{ 'admin.quoteRequests.description' | transloco }}
+    </p>
+  </header>
+
+  <form
+    class="mb-6 grid grid-cols-1 gap-3 rounded-2xl border border-line bg-surface p-4 sm:grid-cols-3"
+    [formGroup]="filters"
+    (ngSubmit)="applyFilters()"
+  >
+    <label class="flex flex-col gap-1 text-sm font-medium text-fg sm:col-span-2">
+      {{ 'admin.quoteRequests.filters.search' | transloco }}
+      <input
+        formControlName="search"
+        type="search"
+        autocomplete="off"
+        class="min-h-11 rounded-xl border border-line bg-surface px-3 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      />
+    </label>
+
+    <label class="flex flex-col gap-1 text-sm font-medium text-fg">
+      {{ 'admin.quoteRequests.filters.status' | transloco }}
+      <select
+        formControlName="status"
+        class="min-h-11 rounded-xl border border-line bg-surface px-3 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+      >
+        <option value="">{{ 'admin.quoteRequests.filters.all' | transloco }}</option>
+        <option value="new">{{ 'admin.quoteRequests.status.new' | transloco }}</option>
+        <option value="contacted">{{ 'admin.quoteRequests.status.contacted' | transloco }}</option>
+        <option value="closed">{{ 'admin.quoteRequests.status.closed' | transloco }}</option>
+      </select>
+    </label>
+
+    <div class="sm:col-span-3">
+      <button
+        type="submit"
+        class="min-h-11 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-brand-fg transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+        [disabled]="isLoading()"
+      >
+        {{ 'admin.quoteRequests.filters.apply' | transloco }}
+      </button>
+    </div>
+  </form>
+
+  <section aria-labelledby="qd-admin-quote-requests-heading">
+    <div class="mb-4 flex flex-wrap items-end justify-between gap-2">
+      <h2 id="qd-admin-quote-requests-heading" class="text-lg font-semibold text-fg">
+        {{ 'admin.quoteRequests.listTitle' | transloco }}
+      </h2>
+      @if (!isLoading() && !hasLoadError()) {
+        <p class="text-sm text-fg-muted">
+          {{ 'admin.quoteRequests.total' | transloco: { total: pagination().total } }}
+        </p>
+      }
+    </div>
+
+    @if (actionError(); as error) {
+      <p
+        class="mb-4 rounded-xl border border-danger/30 bg-danger/5 p-4 text-sm text-danger"
+        role="alert"
+      >
+        {{ error }}
+      </p>
+    }
+
+    @if (isLoading()) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted" role="status">
+        {{ 'common.loading' | transloco }}
+      </p>
+    } @else if (hasLoadError()) {
+      <section
+        class="rounded-2xl border border-danger/40 bg-surface p-6"
+        aria-labelledby="qd-admin-quote-requests-load-error"
+        role="alert"
+      >
+        <h3 id="qd-admin-quote-requests-load-error" class="font-semibold text-fg">
+          {{ 'admin.quoteRequests.errorTitle' | transloco }}
+        </h3>
+        <p class="mt-2 text-sm text-fg-muted">{{ loadError() }}</p>
+        <button
+          type="button"
+          class="mt-4 min-h-10 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          (click)="loadRequests()"
+        >
+          {{ 'common.retry' | transloco }}
+        </button>
+      </section>
+    } @else if (!requests().length) {
+      <p class="rounded-2xl border border-line bg-surface p-6 text-sm text-fg-muted">
+        {{ 'admin.quoteRequests.empty' | transloco }}
+      </p>
+    } @else {
+      <ul class="space-y-4">
+        @for (request of requests(); track request.id) {
+          <li class="rounded-2xl border border-line bg-surface p-5 sm:p-6">
+            <article>
+              <header
+                class="flex flex-col gap-3 border-b border-line pb-4 sm:flex-row sm:items-start sm:justify-between"
+              >
+                <div>
+                  <h3 class="text-lg font-semibold text-fg">{{ request.companyName }}</h3>
+                  <p class="mt-1 text-sm text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.contact' | transloco }}:
+                    {{ request.contactName }}
+                  </p>
+                  <p class="mt-1 text-xs text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.createdAt' | transloco }}:
+                    <time [attr.datetime]="request.createdAt">
+                      {{ request.createdAt | date: 'medium' }}
+                    </time>
+                  </p>
+                </div>
+                <span
+                  class="w-fit rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold text-brand"
+                >
+                  {{ statusLabel(request.status) }}
+                </span>
+              </header>
+
+              <dl class="mt-4 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                <div>
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.nif' | transloco }}
+                  </dt>
+                  <dd class="mt-1 break-all text-fg">{{ request.nif }}</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.email' | transloco }}
+                  </dt>
+                  <dd class="mt-1 break-all">
+                    <a
+                      class="text-brand underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-brand"
+                      [href]="'mailto:' + request.email"
+                    >
+                      {{ request.email }}
+                    </a>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.phone' | transloco }}
+                  </dt>
+                  <dd class="mt-1 break-all">
+                    <a
+                      class="text-brand underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-brand"
+                      [href]="'tel:' + request.phone"
+                    >
+                      {{ request.phone }}
+                    </a>
+                  </dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.location' | transloco }}
+                  </dt>
+                  <dd class="mt-1 text-fg">{{ request.municipality }}, {{ request.province }}</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.sector' | transloco }}
+                  </dt>
+                  <dd class="mt-1 text-fg">{{ request.sector }}</dd>
+                </div>
+                <div>
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.volume' | transloco }}
+                  </dt>
+                  <dd class="mt-1 text-fg">{{ request.volume }}</dd>
+                </div>
+                <div class="sm:col-span-2 lg:col-span-3">
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.categories' | transloco }}
+                  </dt>
+                  <dd class="mt-1 text-fg">{{ request.categories.join(', ') }}</dd>
+                </div>
+                <div class="sm:col-span-2 lg:col-span-3">
+                  <dt class="text-xs font-medium text-fg-muted">
+                    {{ 'admin.quoteRequests.fields.message' | transloco }}
+                  </dt>
+                  <dd class="mt-1 whitespace-pre-line break-words text-fg">
+                    {{ request.message || ('admin.quoteRequests.notProvided' | transloco) }}
+                  </dd>
+                </div>
+              </dl>
+
+              <div
+                class="mt-5 grid gap-3 border-t border-line pt-4 sm:grid-cols-[minmax(12rem,1fr)_auto] sm:items-end"
+              >
+                <label class="flex flex-col gap-1 text-sm font-medium text-fg">
+                  {{ 'admin.quoteRequests.changeStatus' | transloco }}
+                  <select
+                    class="min-h-11 rounded-xl border border-line bg-surface px-3 text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+                    [value]="
+                      pendingStatusChange()?.requestId === request.id
+                        ? pendingStatusChange()?.status
+                        : request.status
+                    "
+                    [disabled]="pendingActionId() !== null"
+                    [attr.aria-label]="
+                      'admin.quoteRequests.changeStatusFor'
+                        | transloco: { company: request.companyName }
+                    "
+                    (change)="requestStatusChange(request, $event)"
+                  >
+                    <option value="new">{{ 'admin.quoteRequests.status.new' | transloco }}</option>
+                    <option value="contacted">
+                      {{ 'admin.quoteRequests.status.contacted' | transloco }}
+                    </option>
+                    <option value="closed">
+                      {{ 'admin.quoteRequests.status.closed' | transloco }}
+                    </option>
+                  </select>
+                </label>
+              </div>
+
+              @if (pendingStatusChange(); as pending) {
+                @if (pending.requestId === request.id) {
+                  <div
+                    class="mt-4 rounded-xl border border-warning/30 bg-warning/5 p-4"
+                    role="group"
+                    [attr.aria-label]="'admin.quoteRequests.confirm.title' | transloco"
+                  >
+                    <p class="text-sm text-fg">
+                      {{
+                        'admin.quoteRequests.confirm.description'
+                          | transloco: { status: statusLabel(pending.status) }
+                      }}
+                    </p>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        class="min-h-10 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-brand-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+                        [disabled]="pendingActionId() !== null"
+                        (click)="confirmStatusChange()"
+                      >
+                        {{ 'admin.quoteRequests.confirm.action' | transloco }}
+                      </button>
+                      <button
+                        type="button"
+                        class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-60"
+                        [disabled]="pendingActionId() !== null"
+                        (click)="cancelStatusChange()"
+                      >
+                        {{ 'admin.quoteRequests.confirm.cancel' | transloco }}
+                      </button>
+                    </div>
+                  </div>
+                }
+              }
+            </article>
+          </li>
+        }
+      </ul>
+
+      <nav
+        class="mt-5 flex items-center justify-between gap-3"
+        [attr.aria-label]="'admin.quoteRequests.pagination.label' | transloco"
+      >
+        <button
+          type="button"
+          class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
+          [disabled]="isLoading() || pagination().page <= 1"
+          (click)="goToPage(pagination().page - 1)"
+        >
+          {{ 'admin.quoteRequests.pagination.previous' | transloco }}
+        </button>
+        <p class="text-sm text-fg-muted" aria-live="polite">
+          {{
+            'admin.quoteRequests.pagination.current'
+              | transloco
+                : {
+                    page: pagination().page,
+                    totalPages: pagination().totalPages > 0 ? pagination().totalPages : 1,
+                  }
+          }}
+        </p>
+        <button
+          type="button"
+          class="min-h-10 rounded-full border border-line px-4 py-2 text-sm font-medium text-fg transition hover:border-brand hover:text-brand focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-50"
+          [disabled]="isLoading() || pagination().page >= pagination().totalPages"
+          (click)="goToPage(pagination().page + 1)"
+        >
+          {{ 'admin.quoteRequests.pagination.next' | transloco }}
+        </button>
+      </nav>
+    }
+  </section>
+</main>

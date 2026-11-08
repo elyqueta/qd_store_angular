@@ -11,6 +11,7 @@
       "companies": "Empresas",
       "services": "Serviços",
       "users": "Utilizadores",
+      "quoteRequests": "Pedidos de orçamento",
       "openMenu": "Abrir menu administrativo",
       "closeMenu": "Fechar menu administrativo",
       "store": "Voltar à loja",
@@ -214,6 +215,61 @@
       },
       "messages": {
         "updated": "Dados do utilizador actualizados."
+      }
+    },
+    "quoteRequests": {
+      "seoTitle": "Pedidos de orçamento | Administração | QD · ItSOLUTIONS",
+      "seoDescription": "Consulta e trata os pedidos de orçamento empresarial.",
+      "kicker": "Área administrativa",
+      "title": "Pedidos de orçamento B2B",
+      "description": "Pesquisa os pedidos recebidos e acompanha o respectivo estado de tratamento.",
+      "filters": {
+        "search": "Pesquisar empresa, contacto ou e-mail",
+        "status": "Estado",
+        "all": "Todos os estados",
+        "apply": "Aplicar filtros"
+      },
+      "listTitle": "Pedidos recebidos",
+      "total": "{{ total }} pedidos",
+      "empty": "Não existem pedidos para os filtros seleccionados.",
+      "errorTitle": "Não foi possível carregar os pedidos.",
+      "status": {
+        "new": "Novo",
+        "contacted": "Contactado",
+        "closed": "Fechado"
+      },
+      "fields": {
+        "contact": "Contacto",
+        "createdAt": "Recebido em",
+        "nif": "NIF",
+        "email": "E-mail",
+        "phone": "Telefone",
+        "location": "Localização",
+        "sector": "Sector",
+        "volume": "Volume pretendido",
+        "categories": "Categorias",
+        "message": "Mensagem"
+      },
+      "notProvided": "Não indicada",
+      "changeStatus": "Estado do pedido",
+      "changeStatusFor": "Alterar estado do pedido de {{ company }}",
+      "confirm": {
+        "title": "Confirmar alteração do estado",
+        "description": "Pretendes alterar o estado do pedido para {{ status }}?",
+        "action": "Confirmar alteração",
+        "cancel": "Cancelar"
+      },
+      "pagination": {
+        "label": "Paginação dos pedidos de orçamento",
+        "previous": "Anterior",
+        "next": "Seguinte",
+        "current": "Página {{ page }} de {{ totalPages }}"
+      },
+      "errors": {
+        "unauthorized": "A sessão expirou. Inicia sessão novamente (401).",
+        "forbidden": "A API recusou o acesso aos pedidos por falta de permissões (403).",
+        "notFound": "O pedido já não existe ou não está disponível (404).",
+        "validation": "O estado enviado não é válido (422)."
       }
     },
     "products": {
