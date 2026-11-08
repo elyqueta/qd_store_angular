@@ -57,6 +57,7 @@ Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, 
 - [x] M3 — Serviços (admin: criação, edição, estado activo, imagem e ícone do catálogo)
 - [x] M4 — Gestão administrativa de utilizadores (pesquisa, filtros, ordenação, paginação, detalhe, estado e papel)
 - [x] M5 — Associação de membros de empresa por e-mail no fluxo autenticado da empresa
+- [x] M6 — Pedidos de orçamento B2B (API pública e triagem administrativa; integração do formulário do front pendente)
 - [ ] Métodos de pagamento (admin CRUD disponível; interface depende do âmbito administrativo aprovado)
 
 ## Fase 5 — Endurecimento
@@ -69,4 +70,4 @@ Nota: listagem e detalhe incluem `mainImage: ProductImage | null`; os cartões, 
 
 ## Futuro (depende do back-end)
 
-Perfil editável · Pedidos de orçamento por formulário (M6, dependente de endpoint) · Registo empresarial · Inglês (`en`) · Refresh em cookie httpOnly.
+Perfil editável · Integração do formulário de orçamento com a API M6 · Registo empresarial · Inglês (`en`) · Refresh em cookie httpOnly.
