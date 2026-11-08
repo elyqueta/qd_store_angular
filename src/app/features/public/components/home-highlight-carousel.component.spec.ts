@@ -93,6 +93,45 @@ describe('HomeHighlightCarouselComponent', () => {
     fixture.destroy();
   });
 
+  it('keeps hero and showcase highlight text contrasted independently of the app theme', () => {
+    const heroFixture = createHeroCarousel();
+    const heroElement = heroFixture.nativeElement as HTMLElement;
+    const activeHero = heroElement.querySelector('article[aria-hidden="false"]');
+    const darkHeroPanel = activeHero?.querySelector<HTMLElement>('.backdrop-blur-md');
+
+    expect(darkHeroPanel?.classList.contains('bg-black/75')).toBe(true);
+    expect(activeHero?.querySelector('h1')?.classList.contains('text-white')).toBe(true);
+
+    heroFixture.componentInstance.next();
+    heroFixture.detectChanges();
+
+    const lightHero = heroElement.querySelector('article[aria-hidden="false"]');
+    const lightHeroPanel = lightHero?.querySelector<HTMLElement>('.backdrop-blur-md');
+    expect(lightHeroPanel?.classList.contains('bg-white/90')).toBe(true);
+    expect(lightHero?.querySelector('h1')?.classList.contains('text-neutral-950')).toBe(true);
+    expect(
+      lightHero?.querySelector<HTMLButtonElement>('button')?.classList.contains('text-neutral-950'),
+    ).toBe(true);
+    heroFixture.destroy();
+
+    const showcaseFixture = createShowcaseCarousel();
+    const showcaseElement = showcaseFixture.nativeElement as HTMLElement;
+    const activeShowcase = showcaseElement.querySelector('article[aria-hidden="false"]');
+    const showcasePanel = activeShowcase?.querySelector<HTMLElement>('.backdrop-blur-md');
+    expect(showcasePanel?.classList.contains('bg-black/75')).toBe(true);
+
+    showcaseFixture.componentInstance.next();
+    showcaseFixture.detectChanges();
+    const lightShowcase = showcaseElement.querySelector('article[aria-hidden="false"]');
+    expect(
+      lightShowcase
+        ?.querySelector<HTMLElement>('.backdrop-blur-md')
+        ?.classList.contains('bg-white/90'),
+    ).toBe(true);
+    expect(lightShowcase?.querySelector('h2')?.classList.contains('text-neutral-950')).toBe(true);
+    showcaseFixture.destroy();
+  });
+
   it('automatically advances the hero carousel every seven seconds', () => {
     Object.defineProperty(window, 'matchMedia', {
       configurable: true,
